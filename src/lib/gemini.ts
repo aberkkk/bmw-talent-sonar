@@ -134,6 +134,14 @@ export async function employeeChat(employeeName: string, question: string, allEm
   return `**${emp.name} — Quick Profile:**\n\n• **Role:** ${emp.role} in ${emp.dept}\n• **Tenure:** ${emp.tenure} years\n• **Performance:** ${emp.score}/10 (${emp.trend})\n• **Potential:** ${emp.potential}/10\n• **Risk:** ${emp.risk}${emp.flag ? ` — ${emp.flag}` : ""}\n• **Salary:** €${emp.salary}k\n• **Skills:** ${emp.skills.join(", ")}\n\nYou can ask me about:\n- **Retention** — "How do we keep them?"\n- **Promotion** — "Are they ready?"\n- **Compensation** — "Is their salary competitive?"\n- **Skills** — "What should they learn?"\n- **Risk** — "What are the concerns?"\n\n⚠️ *All recommendations are data-driven suggestions.*`;
 }
 
+interface ScenarioChanges {
+  employeeId: number;
+  employeeName: string;
+  salaryChange?: number;
+  newRole?: string;
+  resetPromo?: boolean;
+}
+
 interface ScenarioResult {
   title: string;
   probability: number;
@@ -141,6 +149,7 @@ interface ScenarioResult {
   risk: "Low" | "Medium" | "High" | "Critical";
   description: string;
   reasoning: string;
+  changes?: ScenarioChanges;
 }
 
 export async function scenarioChat(message: string, allEmployees: Employee[]): Promise<{ analysis: string; scenarios: ScenarioResult[] }> {
@@ -184,6 +193,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
 
   if (isPromotion) {
     const promoCost = Math.round(emp.salary * 0.2);
+    const nextRole = "Senior " + emp.role;
     scenarios = [
       {
         title: "Promote Now",
@@ -192,6 +202,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: emp.trend === "declining" ? "Medium" : "Low",
         description: `Promoting ${emp.name} signals career investment. ${isHighPotential ? "Their 9+ potential strongly supports this." : "Score of " + emp.score + " suggests they can grow into the role."}`,
         reasoning: `Probability based on potential (${emp.potential}/10), performance (${emp.score}/10), trend (${emp.trend}). Cost ~20% salary increase (industry standard).`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: promoCost, newRole: nextRole, resetPromo: true },
       },
       {
         title: "Promote in 6 Months",
@@ -200,6 +211,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: isHighRisk ? "High" : "Medium",
         description: `Delayed promotion with stretch assignments. ${isHighRisk ? `Risk: ${emp.name} may not wait.` : "Allows time to build a stronger case."}`,
         reasoning: `6-month delay drops probability because ${isHighRisk ? `risk is ${emp.risk}` : "market conditions may shift"}.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(promoCost * 0.5) },
       },
       {
         title: "Lateral Move Instead",
@@ -208,6 +220,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: "Medium",
         description: `Cross-functional role move. Broadens experience without full promotion commitment.`,
         reasoning: `Lateral moves have ~${emp.trend === "improving" ? "70" : "50"}% success rate based on trend and skill breadth (${emp.skills.length} skills).`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(promoCost * 0.3), resetPromo: true },
       },
     ];
     analysis = `**Promotion Analysis for ${emp.name}** (${emp.role})\n\nKey factors: potential ${emp.potential}/10, score ${emp.score}/10, trend ${emp.trend}, last promoted ${emp.lastPromo} months ago.`;
@@ -226,6 +239,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: closesGap ? "Low" : "Medium",
         description: `A ${pct}% raise brings ${emp.name} from €${emp.salary}k to €${newSalary}k. ${closesGap ? "Meets market benchmark." : `Still below benchmark (€${marketBenchmark}k).`}`,
         reasoning: `Market benchmark: €${marketBenchmark}k (${marketGap}% gap). ${closesGap ? "Gap closed." : `Only closes ${Math.round((pct / marketGap) * 100)}% of gap.`}`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: raiseCost },
       },
       {
         title: `Market-Rate (${marketGap}%)`,
@@ -234,6 +248,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: "Low",
         description: `Full market alignment to €${marketBenchmark}k. Maximum retention impact.`,
         reasoning: `Full alignment has 90% retention probability. Cost vs replacement (€${replacementCost}k) is economically sound.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: marketBenchmark - emp.salary },
       },
       {
         title: "Non-Monetary Package",
@@ -255,6 +270,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: isHighRisk ? "Medium" : "Low",
         description: `Emergency retention: compensation review + career discussion within 48 hours.`,
         reasoning: `Retention success: ${isHighRisk ? "60% (elevated risk)" : "80% (manageable risk)"}. Early intervention is 3x more effective.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(emp.salary * 0.15), resetPromo: true },
       },
       {
         title: "Accept & Plan Succession",
@@ -271,6 +287,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: "Medium",
         description: `Competitive counter-offer: market salary + enhanced scope.`,
         reasoning: `Counter-offer success: ${isHighPotential ? "70% for high-potential" : "50% average"}.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: marketBenchmark - emp.salary, resetPromo: true },
       },
     ];
     analysis = `**Departure Risk — ${emp.name}** (${emp.role})\n\nRisk: **${emp.risk}**. Replacement cost: ~€${replacementCost}k.`;
@@ -314,6 +331,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: "Low",
         description: `Immediate action: address ${emp.flag || "development needs"} with a tailored plan.`,
         reasoning: `Based on potential (${emp.potential}/10) and trend (${emp.trend}). ${isHighPotential ? "85%+" : "~70%"} success rate.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(actionCost * 0.5), resetPromo: true },
       },
       {
         title: "Delayed Action",
@@ -330,6 +348,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: "Medium",
         description: `Hybrid: ${isHighPotential ? "mentorship + stretch project" : "cross-training + rotation"}.`,
         reasoning: `~65% success rate. Lower cost but depends on responsiveness.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(actionCost * 0.3) },
       },
     ];
     analysis = `**Scenario Analysis for ${emp.name}** (${emp.role})\n\nPerformance ${emp.score}/10, potential ${emp.potential}/10, risk ${emp.risk}, salary €${emp.salary}k.`;
