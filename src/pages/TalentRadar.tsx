@@ -94,9 +94,14 @@ export default function TalentRadar() {
             <h1 className="text-2xl font-bold">Talent Radar</h1>
             <p className="text-muted-foreground text-sm mt-1">Real-time workforce intelligence overview</p>
           </div>
-          <button onClick={() => setAddModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
-            <Plus className="w-4 h-4" /> Add Employee
-          </button>
+          <div className="flex gap-2">
+            <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors">
+              <FileSpreadsheet className="w-4 h-4" /> Bulk Import
+            </button>
+            <button onClick={() => setAddModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
+              <Plus className="w-4 h-4" /> Add Employee
+            </button>
+          </div>
         </div>
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
@@ -104,13 +109,19 @@ export default function TalentRadar() {
           </div>
           <h2 className="text-xl font-bold mb-2 text-foreground">No employees added yet</h2>
           <p className="text-sm text-muted-foreground max-w-md mb-6">
-            Add your first employee to start building your workforce intelligence dashboard
+            Add your first employee or bulk import from a CSV to start building your workforce intelligence dashboard
           </p>
-          <button onClick={() => setAddModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
-            <Plus className="w-4 h-4" /> Add Employee +
-          </button>
+          <div className="flex gap-3">
+            <button onClick={() => setBulkModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors border border-border">
+              <FileSpreadsheet className="w-4 h-4" /> Bulk Import CSV
+            </button>
+            <button onClick={() => setAddModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
+              <Plus className="w-4 h-4" /> Add Employee +
+            </button>
+          </div>
         </div>
         <AddEmployeeModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onAdd={addEmployee} />
+        <BulkImportModal open={bulkModalOpen} onClose={() => setBulkModalOpen(false)} onImport={addEmployees} />
       </div>
     );
   }
