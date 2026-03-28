@@ -5,7 +5,7 @@ import { X, Upload, FileSpreadsheet, AlertCircle, CheckCircle2, Download } from 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onImport: (employees: Omit<Employee, "id">[]) => void;
+  onImport: (employees: Omit<Employee, "id" | "employeeId">[]) => void;
 }
 
 const EXPECTED_HEADERS = ["name", "role", "dept", "skills", "tenure", "score", "salary", "trend", "lastPromo", "potential"];
