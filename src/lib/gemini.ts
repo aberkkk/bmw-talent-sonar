@@ -20,11 +20,16 @@ export async function simulateScenarios(prompt: string): Promise<{
   scenarioB: { title: string; probability: number; cost: string; risk: string; description: string };
   scenarioC: { title: string; probability: number; cost: string; risk: string; description: string };
 }> {
-  const result = await model.generateContent([
-    `You are an HR scenario simulator. Given the following employee decision context, respond ONLY with this exact JSON format, no markdown, no code fences, just raw JSON:\n{"scenarioA":{"title":"...","probability":number,"cost":"€...","risk":"Low|Medium|High|Critical","description":"Two sentence outcome."},"scenarioB":{"title":"...","probability":number,"cost":"€...","risk":"Low|Medium|High|Critical","description":"Two sentence outcome."},"scenarioC":{"title":"...","probability":number,"cost":"€...","risk":"Low|Medium|High|Critical","description":"Two sentence outcome."}}\n\nContext:\n${prompt}`
-  ]);
-  const text = result.response.text().replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-  return JSON.parse(text);
+  try {
+    const result = await model.generateContent([
+      `You are an HR scenario simulator. Given the following employee decision context, respond ONLY with this exact JSON format, no markdown, no code fences, just raw JSON:\n{"scenarioA":{"title":"...","probability":number,"cost":"€...","risk":"Low|Medium|High|Critical","description":"Two sentence outcome."},"scenarioB":{"title":"...","probability":number,"cost":"€...","risk":"Low|Medium|High|Critical","description":"Two sentence outcome."},"scenarioC":{"title":"...","probability":number,"cost":"€...","risk":"Low|Medium|High|Critical","description":"Two sentence outcome."}}\n\nContext:\n${prompt}`
+    ]);
+    const text = result.response.text().replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    return JSON.parse(text);
+  } catch (error) {
+    console.error("Gemini simulate error:", error);
+    throw error;
+  }
 }
 
 export async function advisorChat(message: string, history: { role: string; content: string }[]): Promise<string> {
