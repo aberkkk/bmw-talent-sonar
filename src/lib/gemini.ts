@@ -270,6 +270,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: isHighRisk ? "Medium" : "Low",
         description: `Emergency retention: compensation review + career discussion within 48 hours.`,
         reasoning: `Retention success: ${isHighRisk ? "60% (elevated risk)" : "80% (manageable risk)"}. Early intervention is 3x more effective.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(emp.salary * 0.15), resetPromo: true },
       },
       {
         title: "Accept & Plan Succession",
@@ -286,6 +287,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: "Medium",
         description: `Competitive counter-offer: market salary + enhanced scope.`,
         reasoning: `Counter-offer success: ${isHighPotential ? "70% for high-potential" : "50% average"}.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: marketBenchmark - emp.salary, resetPromo: true },
       },
     ];
     analysis = `**Departure Risk — ${emp.name}** (${emp.role})\n\nRisk: **${emp.risk}**. Replacement cost: ~€${replacementCost}k.`;
