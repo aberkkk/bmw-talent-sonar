@@ -10,12 +10,8 @@ export interface Employee {
   startDate: string; // ISO date string
   skills: string[];
   tenure: number;
-  score: number;
   salary: number;
-  trend: string;
   lastPromo: number;
-  potential: number;
-  lastReviewScore: number; // 1-5
   trainingHours: number;
   risk: "Low" | "Medium" | "High" | "Critical";
   flag: string | null;

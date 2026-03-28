@@ -6,17 +6,7 @@ export async function deepDiveAnalysis(employeeInfo: string, allEmployees: Emplo
   const emp = allEmployees.find(e => employeeInfo.includes(e.name));
   if (!emp) return "Employee not found in database.";
 
-  const strengths = emp.score >= 8.5
-    ? `${emp.name} demonstrates exceptional performance (${emp.score}/10) with a trajectory that is ${emp.trend}. Core competencies in ${emp.skills.join(", ")} position them as a top-tier contributor in ${emp.dept}.`
-    : emp.score >= 7.5
-    ? `${emp.name} is a solid performer (${emp.score}/10) with reliable expertise in ${emp.skills.join(", ")}. Their ${emp.trend} trend in ${emp.dept} reflects consistent delivery.`
-    : `${emp.name} shows baseline competency (${emp.score}/10) in ${emp.skills.join(", ")}. Performance trend is ${emp.trend}, requiring attention.`;
-
-  const potential = emp.potential >= 9
-    ? `Hidden Potential: Exceptionally high (${emp.potential}/10). ${emp.name} is a future leadership candidate with rapid skill acquisition. Consider fast-tracking into strategic roles.`
-    : emp.potential >= 7.5
-    ? `Hidden Potential: Above average (${emp.potential}/10). ${emp.name} shows capacity for expanded responsibilities with targeted development.`
-    : `Hidden Potential: Moderate (${emp.potential}/10). Growth opportunities exist but may require structured mentoring and clear milestones.`;
+  const strengths = `${emp.name} brings expertise in ${emp.skills.join(", ")} with ${emp.tenure} years of tenure in ${emp.dept}. ${emp.tenure >= 5 ? "Deep institutional knowledge positions them as a key contributor." : emp.tenure >= 3 ? "Solid experience base with room to grow." : "Relatively new but building capabilities."}`;
 
   const riskSection = emp.risk === "Critical"
     ? `Risk Factors: CRITICAL — ${emp.flag || "Multiple warning indicators detected"}. Immediate intervention required. ${emp.lastPromo > 24 ? `No promotion in ${emp.lastPromo} months is a significant retention concern.` : ""}`
@@ -27,12 +17,12 @@ export async function deepDiveAnalysis(employeeInfo: string, allEmployees: Emplo
     : `Risk Factors: LOW — Stable engagement indicators. ${emp.name} appears well-positioned and satisfied in current role.`;
 
   const action = emp.risk === "Critical" || emp.risk === "High"
-    ? `Recommended Action: Schedule 1:1 within 5 business days. ${emp.flag?.includes("Underpaid") ? "Initiate compensation review immediately." : emp.flag?.includes("promotion") ? "Explore promotion or lateral move options." : "Develop a tailored retention plan."} Consider a ${emp.potential >= 9 ? "leadership development track" : "skills advancement program"}.`
+    ? `Recommended Action: Schedule 1:1 within 5 business days. ${emp.flag?.includes("Underpaid") ? "Initiate compensation review immediately." : emp.flag?.includes("promotion") ? "Explore promotion or lateral move options." : "Develop a tailored retention plan."} Consider a leadership development track.`
     : emp.risk === "Medium"
     ? `Recommended Action: Review career development plan within 30 days. ${emp.lastPromo > 12 ? "Discuss growth opportunities and timeline expectations." : "Continue current trajectory with quarterly reviews."}`
     : `Recommended Action: Maintain current engagement. Recognize contributions in ${emp.dept} and explore stretch assignments aligned with ${emp.skills[0]} expertise.`;
 
-  return `**1) Key Strengths**\n${strengths}\n\n**2) ${potential}**\n\n**3) ${riskSection}**\n\n**4) ${action}**\n\n⚠️ *Note: This analysis is AI-generated. All personnel decisions must be validated by HR leadership and direct managers.*`;
+  return `**1) Key Strengths**\n${strengths}\n\n**2) ${riskSection}**\n\n**3) ${action}**\n\n⚠️ *Note: This analysis is AI-generated. All personnel decisions must be validated by HR leadership and direct managers.*`;
 }
 
 export async function advisorChat(message: string, history: { role: string; content: string }[], allEmployees: Employee[]): Promise<string> {
@@ -45,21 +35,19 @@ export async function advisorChat(message: string, history: { role: string; cont
   const lower = message.toLowerCase();
 
   if (lower.includes("risk") && lower.includes("leaving") || lower.includes("flight risk") || lower.includes("attrition")) {
-    const atRisk = allEmployees.filter(e => e.risk === "Critical" || e.risk === "High").sort((a, b) => b.potential - a.potential);
+    const atRisk = allEmployees.filter(e => e.risk === "Critical" || e.risk === "High").sort((a, b) => b.tenure - a.tenure);
     if (atRisk.length === 0) return "No employees are currently flagged as high or critical flight risk.\n\n⚠️ *Final decisions should involve direct managers and HR leadership.*";
     return `Based on current workforce data, the highest flight risks are:\n\n${atRisk.map((e, i) => `${i + 1}. **${e.name}** (${e.role}) — Risk: ${e.risk} | ${e.flag || "Multiple indicators"}`).join("\n")}\n\nPriority action: ${atRisk[0]?.name} requires immediate attention due to ${atRisk[0]?.flag?.toLowerCase() || "critical risk indicators"}.\n\n⚠️ *Final decisions should involve direct managers and HR leadership.*`;
   }
 
   if (lower.includes("succession") || lower.includes("gap")) {
-    const highPotential = allEmployees.filter(e => e.potential >= 9).sort((a, b) => b.potential - a.potential);
-    const declining = allEmployees.filter(e => e.trend === "declining");
-    return `**Succession Gap Analysis:**\n\n${declining.length > 0 ? `⚠️ ${declining.map(e => e.name).join(", ")} show${declining.length === 1 ? "s" : ""} declining performance — succession planning is urgent for ${declining[0].dept}.` : "No immediate succession emergencies detected."}\n\n**Ready-now successors:** ${highPotential.length > 0 ? highPotential.map(e => `${e.name} (potential: ${e.potential})`).join(", ") : "None identified yet"}.\n\n⚠️ *All succession decisions require validation by senior leadership.*`;
+    const experienced = allEmployees.filter(e => e.tenure >= 5).sort((a, b) => b.tenure - a.tenure);
+    return `**Succession Gap Analysis:**\n\n**Ready-now successors (5+ yr tenure):** ${experienced.length > 0 ? experienced.map(e => `${e.name} (${e.tenure}yr)`).join(", ") : "None identified yet"}.\n\n⚠️ *All succession decisions require validation by senior leadership.*`;
   }
 
   if (lower.includes("promot") || lower.includes("advance")) {
-    const candidates = allEmployees.filter(e => e.score >= 8.5 && e.potential >= 9).sort((a, b) => b.score - a.score);
-    const overdue = allEmployees.filter(e => e.lastPromo > 18 && e.score >= 7.5);
-    return `**Promotion Candidates:**\n\n${candidates.length > 0 ? candidates.map(e => `✅ **${e.name}** — Score: ${e.score}, Potential: ${e.potential}, Trend: ${e.trend}`).join("\n") : "No standout candidates at this time."}\n\n${overdue.length > 0 ? `**Overdue for review:** ${overdue.map(e => `${e.name} (${e.lastPromo} months since last promotion)`).join(", ")}` : ""}\n\n⚠️ *Promotion decisions must be reviewed by department heads.*`;
+    const overdue = allEmployees.filter(e => e.lastPromo > 18).sort((a, b) => b.lastPromo - a.lastPromo);
+    return `**Promotion Candidates:**\n\n${overdue.length > 0 ? overdue.map(e => `✅ **${e.name}** — Last promo: ${e.lastPromo} months ago, Tenure: ${e.tenure}yr`).join("\n") : "No standout candidates at this time."}\n\n⚠️ *Promotion decisions must be reviewed by department heads.*`;
   }
 
   if (lower.includes("compensation") || lower.includes("salary") || lower.includes("pay") || lower.includes("underpaid")) {
@@ -72,8 +60,7 @@ export async function advisorChat(message: string, history: { role: string; cont
     const depts = [...new Set(allEmployees.map(e => e.dept))];
     const summary = depts.map(d => {
       const team = allEmployees.filter(e => e.dept === d);
-      const avgScore = (team.reduce((s, e) => s + e.score, 0) / team.length).toFixed(1);
-      return `**${d}:** ${team.length} employees, avg score ${avgScore}, ${team.filter(e => e.risk === "High" || e.risk === "Critical").length} at risk`;
+      return `**${d}:** ${team.length} employees, ${team.filter(e => e.risk === "High" || e.risk === "Critical").length} at risk`;
     });
     return `**Team Overview:**\n\n${summary.join("\n")}\n\nTotal workforce: ${allEmployees.length} employees across ${depts.length} departments.\n\n⚠️ *Strategic workforce decisions require cross-functional alignment.*`;
   }
@@ -92,7 +79,6 @@ export async function employeeChat(employeeName: string, question: string, allEm
   if (lower.includes("retain") || lower.includes("keep") || lower.includes("retention")) {
     const strategies: string[] = [];
     if (emp.lastPromo > 12) strategies.push(`accelerate promotion timeline (overdue by ${emp.lastPromo - 12} months)`);
-    if (emp.potential >= 9) strategies.push("assign a high-visibility strategic project to signal investment in their growth");
     if (emp.salary < 80) strategies.push(`conduct market compensation review — current €${emp.salary}k may be below competitive range`);
     if (emp.tenure <= 2) strategies.push("pair with a senior mentor to deepen organizational ties");
     strategies.push("schedule quarterly career development conversations");
@@ -100,12 +86,10 @@ export async function employeeChat(employeeName: string, question: string, allEm
   }
 
   if (lower.includes("promot") || lower.includes("ready") || lower.includes("advance")) {
-    const readiness = emp.potential >= 9 && emp.score >= 8.5 ? "strong" : emp.potential >= 7.5 ? "moderate" : "not yet";
+    const readiness = emp.tenure >= 5 && emp.lastPromo > 12 ? "strong" : emp.tenure >= 3 ? "moderate" : "not yet";
     const gaps: string[] = [];
-    if (emp.potential < 9) gaps.push("leadership assessment score needs improvement");
     if (emp.tenure < 3) gaps.push(`only ${emp.tenure}yr tenure — consider minimum 2-3yr threshold`);
-    if (emp.trend === "declining") gaps.push("declining performance trend must reverse first");
-    return `**Promotion Readiness — ${emp.name}:**\n\nReadiness level: **${readiness.toUpperCase()}**\n\n• Potential: ${emp.potential}/10 ${emp.potential >= 9 ? "✅" : "⚠️"}\n• Performance: ${emp.score}/10 ${emp.score >= 8 ? "✅" : "⚠️"}\n• Trend: ${emp.trend} ${emp.trend === "improving" || emp.trend === "rapidly improving" ? "✅" : "⚠️"}\n• Last promotion: ${emp.lastPromo} months ago ${emp.lastPromo > 18 ? "⚠️ overdue" : "✅"}\n${gaps.length > 0 ? `\n**Gaps to address:**\n${gaps.map(g => `- ${g}`).join("\n")}` : "\n✅ No major gaps identified."}\n\n⚠️ *Promotion decisions require department head approval.*`;
+    return `**Promotion Readiness — ${emp.name}:**\n\nReadiness level: **${readiness.toUpperCase()}**\n\n• Tenure: ${emp.tenure}yr ${emp.tenure >= 3 ? "✅" : "⚠️"}\n• Last promotion: ${emp.lastPromo} months ago ${emp.lastPromo > 18 ? "⚠️ overdue" : "✅"}\n• Salary: €${emp.salary}k\n${gaps.length > 0 ? `\n**Gaps to address:**\n${gaps.map(g => `- ${g}`).join("\n")}` : "\n✅ No major gaps identified."}\n\n⚠️ *Promotion decisions require department head approval.*`;
   }
 
   if (lower.includes("salary") || lower.includes("pay") || lower.includes("compensation") || lower.includes("raise") || lower.includes("market")) {
@@ -115,23 +99,23 @@ export async function employeeChat(employeeName: string, question: string, allEm
   }
 
   if (lower.includes("skill") || lower.includes("train") || lower.includes("develop") || lower.includes("learn") || lower.includes("upskill")) {
-    return `**Skills & Development — ${emp.name}:**\n\n**Current skills:** ${emp.skills.join(", ")}\n**Proficiency level:** ${emp.score >= 8.5 ? "Expert" : emp.score >= 7.5 ? "Advanced" : "Intermediate"} (based on ${emp.score}/10 performance score)\n\n**Recommended development areas:**\n${emp.potential >= 9 ? "- Leadership & people management\n- Strategic thinking & executive communication" : "- Deepening technical expertise in " + emp.skills[0] + "\n- Cross-functional collaboration skills"}\n\n⚠️ *Development plans should be co-created with the employee and their manager.*`;
+    return `**Skills & Development — ${emp.name}:**\n\n**Current skills:** ${emp.skills.join(", ")}\n**Tenure:** ${emp.tenure} years in ${emp.dept}\n\n**Recommended development areas:**\n${emp.tenure >= 5 ? "- Leadership & people management\n- Strategic thinking & executive communication" : "- Deepening technical expertise in " + emp.skills[0] + "\n- Cross-functional collaboration skills"}\n\n⚠️ *Development plans should be co-created with the employee and their manager.*`;
   }
 
   if (lower.includes("team") || lower.includes("fit") || lower.includes("culture") || lower.includes("peer")) {
     const deptPeers = allEmployees.filter(e => e.dept === emp.dept && e.id !== emp.id);
-    return `**Team Dynamics — ${emp.name}:**\n\n**Department:** ${emp.dept} (${deptPeers.length + 1} members)\n**Tenure:** ${emp.tenure} years\n\n${deptPeers.length > 0 ? `**Peer comparison:**\n${deptPeers.map(p => `- ${p.name}: Score ${p.score}, Risk ${p.risk}`).join("\n")}` : "No other employees in this department yet."}\n\n⚠️ *Team assessments should be supplemented with 360° feedback.*`;
+    return `**Team Dynamics — ${emp.name}:**\n\n**Department:** ${emp.dept} (${deptPeers.length + 1} members)\n**Tenure:** ${emp.tenure} years\n\n${deptPeers.length > 0 ? `**Peers:**\n${deptPeers.map(p => `- ${p.name}: Risk ${p.risk}`).join("\n")}` : "No other employees in this department yet."}\n\n⚠️ *Team assessments should be supplemented with 360° feedback.*`;
   }
 
   if (lower.includes("strength") || lower.includes("good at") || lower.includes("best")) {
-    return `**Key Strengths — ${emp.name}:**\n\n1. **Technical expertise** in ${emp.skills.slice(0, 2).join(" & ")}\n2. **Performance** — ${emp.score}/10 with ${emp.trend} trajectory\n3. **${emp.tenure >= 5 ? "Institutional knowledge" : "Fresh perspective"}** — ${emp.tenure}yr tenure\n${emp.potential >= 9 ? `4. **Leadership potential** — ${emp.potential}/10` : ""}\n\n⚠️ *Strength assessments should be validated with the direct manager.*`;
+    return `**Key Strengths — ${emp.name}:**\n\n1. **Technical expertise** in ${emp.skills.slice(0, 2).join(" & ")}\n2. **${emp.tenure >= 5 ? "Institutional knowledge" : "Fresh perspective"}** — ${emp.tenure}yr tenure\n3. **Skills breadth** — ${emp.skills.length} competencies\n\n⚠️ *Strength assessments should be validated with the direct manager.*`;
   }
 
   if (lower.includes("risk") || lower.includes("concern") || lower.includes("worry") || lower.includes("flag")) {
-    return `**Risk Assessment — ${emp.name}:**\n\n**Current risk level:** ${emp.risk}\n${emp.flag ? `**Active flag:** ⚠️ ${emp.flag}` : "**No active flags.**"}\n\n**Risk factors analyzed:**\n- Promotion recency: ${emp.lastPromo} months ${emp.lastPromo > 18 ? "⚠️" : "✅"}\n- Compensation: €${emp.salary}k ${emp.salary < 75 ? "⚠️ below typical range" : "✅"}\n- Performance trend: ${emp.trend} ${emp.trend === "declining" ? "⚠️" : "✅"}\n- Tenure: ${emp.tenure}yr ${emp.tenure <= 1 ? "⚠️ very new" : "✅"}\n\n⚠️ *Risk assessments are probabilistic — always verify with qualitative manager input.*`;
+    return `**Risk Assessment — ${emp.name}:**\n\n**Current risk level:** ${emp.risk}\n${emp.flag ? `**Active flag:** ⚠️ ${emp.flag}` : "**No active flags.**"}\n\n**Risk factors analyzed:**\n- Promotion recency: ${emp.lastPromo} months ${emp.lastPromo > 18 ? "⚠️" : "✅"}\n- Compensation: €${emp.salary}k ${emp.salary < 75 ? "⚠️ below typical range" : "✅"}\n- Tenure: ${emp.tenure}yr ${emp.tenure <= 1 ? "⚠️ very new" : "✅"}\n\n⚠️ *Risk assessments are probabilistic — always verify with qualitative manager input.*`;
   }
 
-  return `**${emp.name} — Quick Profile:**\n\n• **Role:** ${emp.role} in ${emp.dept}\n• **Tenure:** ${emp.tenure} years\n• **Performance:** ${emp.score}/10 (${emp.trend})\n• **Potential:** ${emp.potential}/10\n• **Risk:** ${emp.risk}${emp.flag ? ` — ${emp.flag}` : ""}\n• **Salary:** €${emp.salary}k\n• **Skills:** ${emp.skills.join(", ")}\n\nYou can ask me about:\n- **Retention** — "How do we keep them?"\n- **Promotion** — "Are they ready?"\n- **Compensation** — "Is their salary competitive?"\n- **Skills** — "What should they learn?"\n- **Risk** — "What are the concerns?"\n\n⚠️ *All recommendations are data-driven suggestions.*`;
+  return `**${emp.name} — Quick Profile:**\n\n• **Role:** ${emp.role} in ${emp.dept}\n• **Tenure:** ${emp.tenure} years\n• **Risk:** ${emp.risk}${emp.flag ? ` — ${emp.flag}` : ""}\n• **Salary:** €${emp.salary}k\n• **Skills:** ${emp.skills.join(", ")}\n\nYou can ask me about:\n- **Retention** — "How do we keep them?"\n- **Promotion** — "Are they ready?"\n- **Compensation** — "Is their salary competitive?"\n- **Skills** — "What should they learn?"\n- **Risk** — "What are the concerns?"\n\n⚠️ *All recommendations are data-driven suggestions.*`;
 }
 
 interface ScenarioChanges {
@@ -185,7 +169,6 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
   const marketBenchmark = Math.round(emp.salary * 1.12);
   const marketGap = Math.round(((marketBenchmark - emp.salary) / emp.salary) * 100);
   const isHighRisk = emp.risk === "High" || emp.risk === "Critical";
-  const isHighPotential = emp.potential >= 9;
   const replacementCost = Math.round(emp.salary * 1.5);
 
   let scenarios: ScenarioResult[] = [];
@@ -197,11 +180,11 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
     scenarios = [
       {
         title: "Promote Now",
-        probability: isHighPotential ? 92 : emp.score >= 7.5 ? 75 : 55,
+        probability: emp.tenure >= 5 ? 92 : emp.tenure >= 3 ? 75 : 55,
         cost: `€${promoCost}k/yr increase`,
-        risk: emp.trend === "declining" ? "Medium" : "Low",
-        description: `Promoting ${emp.name} signals career investment. ${isHighPotential ? "Their 9+ potential strongly supports this." : "Score of " + emp.score + " suggests they can grow into the role."}`,
-        reasoning: `Probability based on potential (${emp.potential}/10), performance (${emp.score}/10), trend (${emp.trend}). Cost ~20% salary increase (industry standard).`,
+        risk: emp.lastPromo > 24 ? "Low" : "Medium",
+        description: `Promoting ${emp.name} signals career investment. ${emp.tenure >= 5 ? "Their long tenure strongly supports this." : `${emp.tenure}yr tenure — consider readiness.`}`,
+        reasoning: `Probability based on tenure (${emp.tenure}yr), last promo (${emp.lastPromo} months ago). Cost ~20% salary increase (industry standard).`,
         changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: promoCost, newRole: nextRole, resetPromo: true },
       },
       {
@@ -215,15 +198,15 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
       },
       {
         title: "Lateral Move Instead",
-        probability: emp.trend === "improving" ? 70 : 50,
+        probability: 60,
         cost: `€${Math.round(promoCost * 0.3)}k`,
         risk: "Medium",
         description: `Cross-functional role move. Broadens experience without full promotion commitment.`,
-        reasoning: `Lateral moves have ~${emp.trend === "improving" ? "70" : "50"}% success rate based on trend and skill breadth (${emp.skills.length} skills).`,
+        reasoning: `Lateral moves have ~60% success rate based on skill breadth (${emp.skills.length} skills).`,
         changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(promoCost * 0.3), resetPromo: true },
       },
     ];
-    analysis = `**Promotion Analysis for ${emp.name}** (${emp.role})\n\nKey factors: potential ${emp.potential}/10, score ${emp.score}/10, trend ${emp.trend}, last promoted ${emp.lastPromo} months ago.`;
+    analysis = `**Promotion Analysis for ${emp.name}** (${emp.role})\n\nKey factors: tenure ${emp.tenure}yr, last promoted ${emp.lastPromo} months ago, salary €${emp.salary}k.`;
 
   } else if (isRaise) {
     const pct = raisePercent || 15;
@@ -256,7 +239,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         cost: "€3-5k",
         risk: isHighRisk ? "High" : "Medium",
         description: `Flexible hours, remote options, training budget instead of raise. ${isHighRisk ? "⚠️ May be insufficient given risk level." : ""}`,
-        reasoning: `Non-monetary benefits have ${emp.tenure <= 2 ? "moderate" : "variable"} effectiveness based on tenure and trend.`,
+        reasoning: `Non-monetary benefits have ${emp.tenure <= 2 ? "moderate" : "variable"} effectiveness based on tenure.`,
       },
     ];
     analysis = `**Compensation Scenario for ${emp.name}** (€${emp.salary}k → ${pct}% raise)\n\nMarket benchmark: €${marketBenchmark}k (${marketGap}% gap).`;
@@ -282,11 +265,11 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
       },
       {
         title: "Counter-Offer",
-        probability: isHighPotential ? 70 : 50,
+        probability: emp.tenure >= 5 ? 70 : 50,
         cost: `€${Math.round(emp.salary * 0.25)}k`,
         risk: "Medium",
         description: `Competitive counter-offer: market salary + enhanced scope.`,
-        reasoning: `Counter-offer success: ${isHighPotential ? "70% for high-potential" : "50% average"}.`,
+        reasoning: `Counter-offer success: ${emp.tenure >= 5 ? "70% for experienced staff" : "50% average"}.`,
         changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: marketBenchmark - emp.salary, resetPromo: true },
       },
     ];
@@ -300,7 +283,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         cost: "€0 direct",
         risk: isHighRisk ? "High" : "Low",
         description: `No intervention. ${isHighRisk ? `${emp.risk} risk suggests 25-60% departure chance.` : "Low immediate risk."}`,
-        reasoning: `Based on risk (${emp.risk}), trend (${emp.trend}), promotion gap (${emp.lastPromo} months).`,
+        reasoning: `Based on risk (${emp.risk}), promotion gap (${emp.lastPromo} months).`,
       },
       {
         title: "Status Quo (12 months)",
@@ -319,18 +302,18 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         reasoning: `Check-ins improve retention by 15-20% (Gallup data).`,
       },
     ];
-    analysis = `**Inaction Analysis — ${emp.name}**\n\nRisk ${emp.risk}, Trend ${emp.trend}, ${emp.lastPromo} months since promotion.`;
+    analysis = `**Inaction Analysis — ${emp.name}**\n\nRisk ${emp.risk}, ${emp.lastPromo} months since promotion.`;
 
   } else {
     const actionCost = Math.round(emp.salary * 0.15);
     scenarios = [
       {
         title: "Proactive Approach",
-        probability: isHighPotential ? 85 : 70,
+        probability: emp.tenure >= 5 ? 85 : 70,
         cost: `€${actionCost}k`,
         risk: "Low",
         description: `Immediate action: address ${emp.flag || "development needs"} with a tailored plan.`,
-        reasoning: `Based on potential (${emp.potential}/10) and trend (${emp.trend}). ${isHighPotential ? "85%+" : "~70%"} success rate.`,
+        reasoning: `Based on tenure (${emp.tenure}yr). ${emp.tenure >= 5 ? "85%+" : "~70%"} success rate.`,
         changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(actionCost * 0.5), resetPromo: true },
       },
       {
@@ -346,12 +329,12 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         probability: 65,
         cost: `€${Math.round(actionCost * 0.4)}k`,
         risk: "Medium",
-        description: `Hybrid: ${isHighPotential ? "mentorship + stretch project" : "cross-training + rotation"}.`,
+        description: `Hybrid: ${emp.tenure >= 5 ? "mentorship + stretch project" : "cross-training + rotation"}.`,
         reasoning: `~65% success rate. Lower cost but depends on responsiveness.`,
         changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(actionCost * 0.3) },
       },
     ];
-    analysis = `**Scenario Analysis for ${emp.name}** (${emp.role})\n\nPerformance ${emp.score}/10, potential ${emp.potential}/10, risk ${emp.risk}, salary €${emp.salary}k.`;
+    analysis = `**Scenario Analysis for ${emp.name}** (${emp.role})\n\nRisk ${emp.risk}, salary €${emp.salary}k, tenure ${emp.tenure}yr.`;
   }
 
   return { analysis, scenarios };

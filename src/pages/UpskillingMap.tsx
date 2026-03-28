@@ -25,18 +25,18 @@ function SkillGap({ skills }: { skills: string[] }) {
 function generateCareerPath(emp: ReturnType<typeof useEmployees>["employees"][0]) {
   const dept = emp.dept.toLowerCase();
   if (dept.includes("engineer") || dept.includes("tech") || dept.includes("data")) {
-    return { next: "Lead Engineer", nextSkills: ["System Design", "Team Mgmt"], nextReason: `Score ${emp.score}/10 with ${emp.skills.join(", ")} expertise. System Design & Team Mgmt are standard gaps for IC→Lead transition.`, future: "VP Engineering", futureSkills: ["Budgeting", "Strategy"], futureReason: `Lead→VP requires business acumen. Potential: ${emp.potential}/10.` };
+    return { next: "Lead Engineer", nextSkills: ["System Design", "Team Mgmt"], nextReason: `${emp.tenure}yr tenure with ${emp.skills.join(", ")} expertise. System Design & Team Mgmt are standard gaps for IC→Lead transition.`, future: "VP Engineering", futureSkills: ["Budgeting", "Strategy"], futureReason: `Lead→VP requires business acumen. ${emp.tenure >= 5 ? "Strong tenure supports this path." : "Needs more experience."}` };
   }
   if (dept.includes("sales")) {
     return { next: "Sales Director", nextSkills: ["P&L Management", "Team Scaling"], nextReason: `${emp.tenure}yr tenure. P&L Management needed at director level.`, future: "VP Sales", futureSkills: ["Board Reporting", "Global Markets"], futureReason: `VP requires board-level communication and multi-market experience.` };
   }
   if (dept.includes("operation")) {
-    return { next: "Operations Manager", nextSkills: ["Budget Planning", "Vendor Mgmt"], nextReason: `Potential ${emp.potential}/10. Budget & Vendor Mgmt are prerequisites for manager-level.`, future: "Operations Director", futureSkills: ["C-Suite Comm.", "M&A Ops"], futureReason: `Director requires executive presence. Trend: ${emp.trend}.` };
+    return { next: "Operations Manager", nextSkills: ["Budget Planning", "Vendor Mgmt"], nextReason: `${emp.tenure}yr tenure. Budget & Vendor Mgmt are prerequisites for manager-level.`, future: "Operations Director", futureSkills: ["C-Suite Comm.", "M&A Ops"], futureReason: `Director requires executive presence.` };
   }
   if (dept.includes("leader") || dept.includes("product")) {
     return { next: "Senior " + emp.role, nextSkills: ["Data Analytics", "Innovation"], nextReason: `${emp.tenure}yr tenure. Analytics and Innovation address common growth gaps.`, future: "Director", futureSkills: ["Board Pres.", "Portfolio Strategy"], futureReason: `Director competencies based on industry frameworks.` };
   }
-  return { next: "Senior " + emp.role, nextSkills: ["Leadership", "Strategic Planning"], nextReason: `Based on ${emp.score}/10 performance and ${emp.trend} trend.`, future: dept.charAt(0).toUpperCase() + dept.slice(1) + " Director", futureSkills: ["P&L Ownership", "Executive Comm."], futureReason: `Director-level requires full P&L and exec communication.` };
+  return { next: "Senior " + emp.role, nextSkills: ["Leadership", "Strategic Planning"], nextReason: `Based on ${emp.tenure}yr tenure and ${emp.skills.length} current skills.`, future: dept.charAt(0).toUpperCase() + dept.slice(1) + " Director", futureSkills: ["P&L Ownership", "Executive Comm."], futureReason: `Director-level requires full P&L and exec communication.` };
 }
 
 export default function UpskillingMap() {

@@ -24,10 +24,9 @@ export default function CompensationPulse() {
 
   const data = employees.map((e) => {
     const baseMult = gradeMultiplier[e.jobGrade] || 1.12;
-    const potentialAdj = e.potential >= 9 ? 0.05 : e.score >= 8 ? 0.03 : 0;
-    const benchmark = Math.round(e.salary * (baseMult + potentialAdj));
+    const benchmark = Math.round(e.salary * baseMult);
     const gap = Math.round(((benchmark - e.salary) / e.salary) * 100);
-    const source = e.potential >= 9 ? "Levels.fyi + LinkedIn Salary" : "Hays Salary Guide 2024";
+    const source = "Hays Salary Guide 2024";
     const reasoning = gap > 15
       ? `${e.name}'s salary (€${e.salary}k) is ${gap}% below benchmark (€${benchmark}k) for "${e.role}" roles. This gap increases flight risk.`
       : `${e.name}'s salary (€${e.salary}k) is within ${gap}% of benchmark (€${benchmark}k). Market-aligned.`;
@@ -44,7 +43,7 @@ export default function CompensationPulse() {
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
         <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
         <div className="text-sm text-muted-foreground leading-relaxed">
-          <span className="font-semibold text-foreground">Methodology:</span> Benchmarks from industry salary surveys for equivalent roles in the DACH region. Gap &gt;15% flagged as "Below Market". Benchmark multiplier adjusts based on potential and performance scores.
+          <span className="font-semibold text-foreground">Methodology:</span> Benchmarks from industry salary surveys for equivalent roles in the DACH region. Gap &gt;15% flagged as "Below Market". Benchmark multiplier adjusts based on job grade.
         </div>
       </div>
 
