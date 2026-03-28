@@ -134,6 +134,14 @@ export async function employeeChat(employeeName: string, question: string, allEm
   return `**${emp.name} — Quick Profile:**\n\n• **Role:** ${emp.role} in ${emp.dept}\n• **Tenure:** ${emp.tenure} years\n• **Performance:** ${emp.score}/10 (${emp.trend})\n• **Potential:** ${emp.potential}/10\n• **Risk:** ${emp.risk}${emp.flag ? ` — ${emp.flag}` : ""}\n• **Salary:** €${emp.salary}k\n• **Skills:** ${emp.skills.join(", ")}\n\nYou can ask me about:\n- **Retention** — "How do we keep them?"\n- **Promotion** — "Are they ready?"\n- **Compensation** — "Is their salary competitive?"\n- **Skills** — "What should they learn?"\n- **Risk** — "What are the concerns?"\n\n⚠️ *All recommendations are data-driven suggestions.*`;
 }
 
+interface ScenarioChanges {
+  employeeId: number;
+  employeeName: string;
+  salaryChange?: number;
+  newRole?: string;
+  resetPromo?: boolean;
+}
+
 interface ScenarioResult {
   title: string;
   probability: number;
@@ -141,6 +149,7 @@ interface ScenarioResult {
   risk: "Low" | "Medium" | "High" | "Critical";
   description: string;
   reasoning: string;
+  changes?: ScenarioChanges;
 }
 
 export async function scenarioChat(message: string, allEmployees: Employee[]): Promise<{ analysis: string; scenarios: ScenarioResult[] }> {
