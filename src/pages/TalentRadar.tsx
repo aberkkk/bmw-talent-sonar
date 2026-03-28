@@ -12,11 +12,9 @@ const departments = (emps: Employee[]) => ["All", ...Array.from(new Set(emps.map
 function riskReasoning(emp: Employee) {
   const reasons: string[] = [];
   if (emp.lastPromo > 18) reasons.push(`no promotion in ${emp.lastPromo} months`);
-  if (emp.trend === "declining") reasons.push("declining performance trend");
-  if (emp.potential >= 9 && emp.salary < 75) reasons.push("high potential but below-market compensation");
-  if (emp.tenure <= 2 && emp.potential >= 9) reasons.push("short tenure with high poaching risk");
+  if (emp.tenure <= 2) reasons.push("short tenure with high poaching risk");
   if (emp.flag) reasons.push(emp.flag.toLowerCase());
-  if (reasons.length === 0) reasons.push("stable performance, competitive compensation, recent promotion");
+  if (reasons.length === 0) reasons.push("stable indicators, competitive compensation, recent promotion");
   return reasons.join("; ");
 }
 
@@ -59,7 +57,7 @@ export default function TalentRadar() {
     setChatMessages([]);
     setChatInput("");
     try {
-      const info = `Name: ${emp.name}, Role: ${emp.role}, Department: ${emp.dept}, Skills: ${emp.skills.join(", ")}, Tenure: ${emp.tenure} years, Performance Score: ${emp.score}, Salary: €${emp.salary}k, Trend: ${emp.trend}, Last Promotion: ${emp.lastPromo} months ago, Potential Score: ${emp.potential}, Risk Level: ${emp.risk}${emp.flag ? `, Flag: ${emp.flag}` : ""}`;
+      const info = `Name: ${emp.name}, Role: ${emp.role}, Department: ${emp.dept}, Skills: ${emp.skills.join(", ")}, Tenure: ${emp.tenure} years, Salary: €${emp.salary}k, Last Promotion: ${emp.lastPromo} months ago, Risk Level: ${emp.risk}${emp.flag ? `, Flag: ${emp.flag}` : ""}`;
       const result = await deepDiveAnalysis(info, employees);
       setModalContent(result);
     } catch {
@@ -146,7 +144,7 @@ export default function TalentRadar() {
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
         <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
         <div className="text-sm text-muted-foreground leading-relaxed">
-          <span className="font-semibold text-foreground">How scores are calculated:</span> <span className="text-gold font-medium">Potential</span> is a composite of learning agility, leadership assessment, and 360° feedback (scale 1–10). <span className="font-medium text-foreground">Risk level</span> is determined by: promotion recency, compensation gap vs. market, performance trend, and tenure-to-potential ratio.
+          <span className="font-semibold text-foreground">How risk is calculated:</span> <span className="font-medium text-foreground">Risk level</span> is determined by: promotion recency, compensation gap vs. market benchmark, and tenure-to-poaching ratio.
         </div>
       </div>
 
@@ -175,8 +173,8 @@ export default function TalentRadar() {
               ))}
             </div>
             <div className="flex items-center gap-3 mb-3">
-              <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-gold/10 text-gold border border-gold/25 glow-amber">⭐ {emp.potential.toFixed(1)}</span>
               <RiskBadge risk={emp.risk} />
+              <span className="text-xs text-muted-foreground">{emp.tenure}yr tenure · €{emp.salary}k</span>
             </div>
             {emp.flag && (
               <div className="bg-risk-high/5 border border-risk-high/15 rounded-lg px-3 py-2 mb-3">

@@ -2,17 +2,17 @@ import { useEmployees } from "@/context/EmployeeContext";
 import { Info } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 
-function readinessColor(potential: number) {
-  if (potential > 9) return { bg: "bg-risk-low/10", border: "border-risk-low/25", text: "text-risk-low", label: "Ready Now" };
-  if (potential >= 7) return { bg: "bg-risk-medium/10", border: "border-risk-medium/25", text: "text-risk-medium", label: "Ready in 1yr" };
+function readinessColor(tenure: number, lastPromo: number) {
+  if (tenure >= 5 && lastPromo <= 12) return { bg: "bg-risk-low/10", border: "border-risk-low/25", text: "text-risk-low", label: "Ready Now" };
+  if (tenure >= 3) return { bg: "bg-risk-medium/10", border: "border-risk-medium/25", text: "text-risk-medium", label: "Ready in 1yr" };
   return { bg: "bg-risk-high/10", border: "border-risk-high/25", text: "text-risk-high", label: "Needs Development" };
 }
 
 function readinessReasoning(emp: ReturnType<typeof useEmployees>["employees"][0], rank: number) {
-  const r = readinessColor(emp.potential);
-  if (r.label === "Ready Now") return `Ranked #${rank} — Potential ${emp.potential.toFixed(1)} (above 9.0). ${emp.tenure}yr tenure. Score: ${emp.score.toFixed(1)}/10.`;
-  if (r.label === "Ready in 1yr") return `Ranked #${rank} — Potential ${emp.potential.toFixed(1)} (7.0–9.0). Trend: ${emp.trend}. ${emp.flag ? `Note: ${emp.flag}.` : ""}`;
-  return `Ranked #${rank} — Potential ${emp.potential.toFixed(1)} (below 7.0). ${emp.trend === "declining" ? "Declining trend." : ""} ${emp.flag ? `Flag: ${emp.flag}.` : ""}`;
+  const r = readinessColor(emp.tenure, emp.lastPromo);
+  if (r.label === "Ready Now") return `Ranked #${rank} — ${emp.tenure}yr tenure, promoted ${emp.lastPromo} months ago. Strong experience base.`;
+  if (r.label === "Ready in 1yr") return `Ranked #${rank} — ${emp.tenure}yr tenure. ${emp.flag ? `Note: ${emp.flag}.` : "Building toward readiness."}`;
+  return `Ranked #${rank} — ${emp.tenure}yr tenure. ${emp.flag ? `Flag: ${emp.flag}.` : "Needs more experience."}`;
 }
 
 export default function SuccessionPlanner() {
@@ -35,7 +35,7 @@ export default function SuccessionPlanner() {
   const positions = depts.slice(0, 3).map(d => {
     const deptEmps = employees.filter(e => e.dept === d);
     const title = d === "Engineering" ? "VP Engineering" : d === "Sales" ? "Head of Sales" : `${d} Director`;
-    return { title, candidateIds: deptEmps.sort((a, b) => b.potential - a.potential).slice(0, 3).map(e => e.id) };
+    return { title, candidateIds: deptEmps.sort((a, b) => b.tenure - a.tenure).slice(0, 3).map(e => e.id) };
   });
 
   return (
@@ -48,7 +48,7 @@ export default function SuccessionPlanner() {
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
         <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
         <div className="text-sm text-muted-foreground leading-relaxed">
-          <span className="font-semibold text-foreground">Methodology:</span> Candidates ranked by potential score. Thresholds: <span className="text-risk-low font-medium">"Ready Now" (&gt;9.0)</span>, <span className="text-risk-medium font-medium">"Ready in 1yr" (7.0–9.0)</span>, <span className="text-risk-high font-medium">"Needs Development" (&lt;7.0)</span>.
+          <span className="font-semibold text-foreground">Methodology:</span> Candidates ranked by tenure and promotion recency. Thresholds: <span className="text-risk-low font-medium">"Ready Now" (5+ yr tenure, recent promo)</span>, <span className="text-risk-medium font-medium">"Ready in 1yr" (3+ yr tenure)</span>, <span className="text-risk-high font-medium">"Needs Development" (&lt;3yr)</span>.
         </div>
       </div>
 
@@ -64,7 +64,7 @@ export default function SuccessionPlanner() {
               <div className="flex justify-center"><div className="w-0.5 h-6 bg-border" /></div>
               <div className="space-y-3">
                 {candidates.map((emp, i) => {
-                  const r = readinessColor(emp.potential);
+                  const r = readinessColor(emp.tenure, emp.lastPromo);
                   return (
                     <div key={emp.id} className={`${r.bg} border ${r.border} rounded-xl p-4 card-glow`}>
                       <div className="flex items-center justify-between mb-1">
@@ -74,8 +74,8 @@ export default function SuccessionPlanner() {
                       <h4 className="font-semibold text-card-foreground">{emp.name}</h4>
                       <p className="text-xs text-muted-foreground">{emp.role} · {emp.tenure}yr tenure</p>
                       <div className="mt-2 flex items-center gap-2">
-                        <span className="text-xs text-gold font-bold">Potential: {emp.potential.toFixed(1)}</span>
-                        <span className="text-xs text-muted-foreground">Score: {emp.score.toFixed(1)}</span>
+                        <span className="text-xs text-muted-foreground">Last promo: {emp.lastPromo}mo ago</span>
+                        <span className="text-xs text-muted-foreground">€{emp.salary}k</span>
                       </div>
                       <p className="mt-2 text-[11px] text-muted-foreground leading-relaxed italic border-t border-border/50 pt-2">
                         {readinessReasoning(emp, i + 1)}

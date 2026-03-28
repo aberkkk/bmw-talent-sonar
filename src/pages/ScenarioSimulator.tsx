@@ -87,7 +87,6 @@ export default function ScenarioSimulator() {
     if (salaryChange) changes.salary = Math.round(emp.salary + salaryChange);
     if (newRole) changes.role = newRole;
     if (resetPromo) changes.lastPromo = 0;
-    if (newRole) changes.trend = "improving";
 
     updateEmployee(employeeId, changes);
 

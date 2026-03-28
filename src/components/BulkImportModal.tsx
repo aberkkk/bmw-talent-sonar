@@ -8,12 +8,12 @@ interface Props {
   onImport: (employees: Omit<Employee, "id" | "employeeId">[]) => void;
 }
 
-const EXPECTED_HEADERS = ["name", "role", "dept", "skills", "tenure", "score", "salary", "trend", "lastPromo", "potential"];
+const EXPECTED_HEADERS = ["name", "role", "dept", "skills", "tenure", "salary", "lastPromo"];
 
-const SAMPLE_CSV = `name,role,dept,skills,tenure,score,salary,trend,lastPromo,potential,jobGrade,managerName,deptCode,startDate,lastReviewScore,trainingHours
-Anna Müller,Senior Engineer,Engineering,"Python, ML, Battery Systems",4.5,8.2,82,improving,6,9.1,L4,Thomas Schmidt,ENG-01,2021-06-15,4.5,32
-Markus Weber,Product Manager,Product,"Agile, Roadmapping, UX",3,7.5,78,stable,14,7.8,L3,Lisa König,PRD-01,2022-03-01,3.8,24
-Sofia Rossi,Data Scientist,Analytics,"R, Python, Tableau",2,9.1,71,rapidly improving,3,9.5,L3,Marco Bianchi,ANA-01,2023-01-10,4.8,48`;
+const SAMPLE_CSV = `name,role,dept,skills,tenure,salary,lastPromo,jobGrade,managerName,deptCode,startDate,trainingHours
+Anna Müller,Senior Engineer,Engineering,"Python, ML, Battery Systems",4.5,82,6,L4,Thomas Schmidt,ENG-01,2021-06-15,32
+Markus Weber,Product Manager,Product,"Agile, Roadmapping, UX",3,78,14,L3,Lisa König,PRD-01,2022-03-01,24
+Sofia Rossi,Data Scientist,Analytics,"R, Python, Tableau",2,71,3,L3,Marco Bianchi,ANA-01,2023-01-10,48`;
 
 function parseCSV(text: string): string[][] {
   const rows: string[][] = [];
@@ -54,27 +54,20 @@ function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "i
   const dept = get("dept");
   const skillsRaw = get("skills");
   const tenureRaw = get("tenure");
-  const scoreRaw = get("score");
   const salaryRaw = get("salary");
-  const trend = get("trend") || "stable";
-  const lastPromoRaw = get("lastPromo") || get("lastpromo") || get("last_promo");
-  const potentialRaw = get("potential");
+  const lastPromoRaw = get("lastpromo") || get("lastPromo") || get("last_promo");
 
   if (!name) errors.push("Missing name");
   if (!role) errors.push("Missing role");
   if (!dept) errors.push("Missing dept");
 
   const tenure = parseFloat(tenureRaw);
-  const score = parseFloat(scoreRaw);
   const salary = parseFloat(salaryRaw);
   const lastPromo = parseInt(lastPromoRaw);
-  const potential = parseFloat(potentialRaw);
 
   if (isNaN(tenure)) errors.push("Invalid tenure");
-  if (isNaN(score) || score < 1 || score > 10) errors.push("Invalid score (1-10)");
   if (isNaN(salary)) errors.push("Invalid salary");
   if (isNaN(lastPromo)) errors.push("Invalid lastPromo");
-  if (isNaN(potential) || potential < 1 || potential > 10) errors.push("Invalid potential (1-10)");
 
   if (errors.length > 0) return { emp: null, errors };
 
@@ -82,7 +75,6 @@ function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "i
   const managerNameVal = get("managername") || get("managerName") || "";
   const deptCodeVal = get("deptcode") || get("deptCode") || "";
   const startDateVal = get("startdate") || get("startDate") || "";
-  const lastReviewScoreVal = parseFloat(get("lastreviewscore") || get("lastReviewScore") || "3");
   const trainingHoursVal = parseInt(get("traininghours") || get("trainingHours") || "0");
 
   return {
@@ -93,10 +85,8 @@ function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "i
       managerName: managerNameVal,
       startDate: startDateVal,
       skills: skillsRaw.split(",").map(s => s.trim()).filter(Boolean),
-      tenure, score, salary,
-      trend: ["improving", "rapidly improving", "stable", "declining"].includes(trend) ? trend : "stable",
-      lastPromo, potential,
-      lastReviewScore: isNaN(lastReviewScoreVal) ? 3 : lastReviewScoreVal,
+      tenure, salary,
+      lastPromo,
       trainingHours: isNaN(trainingHoursVal) ? 0 : trainingHoursVal,
       risk: "Low" as const,
       flag: null,
@@ -187,7 +177,7 @@ export default function BulkImportModal({ open, onClose, onImport }: Props) {
           <div className="space-y-5">
             <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 text-sm text-muted-foreground">
               <p className="font-semibold text-foreground mb-1">CSV Format Required</p>
-              <p>Columns: <code className="text-primary text-xs">name, role, dept, skills, tenure, score, salary, trend, lastPromo, potential</code></p>
+              <p>Columns: <code className="text-primary text-xs">name, role, dept, skills, tenure, salary, lastPromo</code></p>
               <p className="mt-1">Skills should be comma-separated within quotes. Risk & flags are auto-calculated.</p>
               <button onClick={downloadTemplate} className="mt-3 px-4 py-2 rounded-lg text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5">
                 <Download className="w-3.5 h-3.5" /> Download Template CSV
@@ -211,7 +201,7 @@ export default function BulkImportModal({ open, onClose, onImport }: Props) {
               <textarea
                 value={pasteText}
                 onChange={e => setPasteText(e.target.value)}
-                placeholder={`name,role,dept,skills,tenure,score,salary,trend,lastPromo,potential\nAnna Müller,Senior Engineer,Engineering,"Python, ML",4.5,8.2,82,improving,6,9.1`}
+                placeholder={`name,role,dept,skills,tenure,salary,lastPromo\nAnna Müller,Senior Engineer,Engineering,"Python, ML",4.5,82,6`}
                 rows={5}
                 className={inputCls + " font-mono text-xs"}
               />

@@ -29,17 +29,13 @@ function computeRiskAndFlag(emp: Employee): Pick<Employee, "risk" | "flag"> {
 
   if (emp.lastPromo > 18) flags.push(`No promotion in ${emp.lastPromo} months`);
   if (salaryGap > 10) flags.push(`Underpaid vs market by ${salaryGap}%`);
-  if (emp.trend === "declining") flags.push("Declining performance trend");
-  if (emp.potential >= 9 && emp.tenure <= 2) flags.push("High potential, at risk of poaching");
-  if (emp.score < 6) flags.push("Below performance threshold");
+  if (emp.tenure <= 2) flags.push("Short tenure, at risk of poaching");
 
   let risk: Employee["risk"] = "Low";
   let score = 0;
   if (emp.lastPromo > 24) score += 3; else if (emp.lastPromo > 18) score += 2; else if (emp.lastPromo > 12) score += 1;
   if (salaryGap > 20) score += 3; else if (salaryGap > 10) score += 2; else if (salaryGap > 5) score += 1;
-  if (emp.trend === "declining") score += 3; else if (emp.trend === "stable") score += 1;
-  if (emp.potential >= 9 && emp.tenure <= 2) score += 2;
-  if (emp.score < 6) score += 1;
+  if (emp.tenure <= 2) score += 2;
 
   if (score >= 7) risk = "Critical";
   else if (score >= 5) risk = "High";
@@ -55,16 +51,25 @@ function applyAutoFields(emp: Employee): Employee {
 }
 
 function migrateEmployee(e: any): Employee {
-  return {
-    ...e,
+  const base: Employee = {
+    id: e.id,
     employeeId: e.employeeId || `BMW-${String(e.id).padStart(4, "0")}`,
+    name: e.name || "",
+    role: e.role || "",
+    dept: e.dept || "",
+    deptCode: e.deptCode || "",
     jobGrade: e.jobGrade || "L3",
     managerName: e.managerName || "",
     startDate: e.startDate || "",
-    deptCode: e.deptCode || "",
-    lastReviewScore: e.lastReviewScore || 3,
+    skills: e.skills || [],
+    tenure: e.tenure || 0,
+    salary: e.salary || 0,
+    lastPromo: e.lastPromo || 0,
     trainingHours: e.trainingHours || 0,
+    risk: e.risk || "Low",
+    flag: e.flag || null,
   };
+  return base;
 }
 
 export function EmployeeProvider({ children }: { children: ReactNode }) {
