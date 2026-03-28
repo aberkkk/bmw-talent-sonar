@@ -94,7 +94,7 @@ export function EmployeeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <EmployeeContext.Provider value={{ employees, addEmployee, updateEmployee, removeEmployee }}>
+    <EmployeeContext.Provider value={{ employees, addEmployee, addEmployees, updateEmployee, removeEmployee }}>
       {children}
     </EmployeeContext.Provider>
   );
