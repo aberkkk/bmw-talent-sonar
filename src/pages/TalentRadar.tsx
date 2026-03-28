@@ -22,7 +22,7 @@ export default function TalentRadar() {
             onClick={() => setFilter(d)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
               filter === d
-                ? "bg-primary text-primary-foreground"
+                ? "btn-gradient text-foreground"
                 : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
             }`}
           >
@@ -33,7 +33,7 @@ export default function TalentRadar() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
         {filtered.map((emp) => (
-          <div key={emp.id} className="bg-card border border-border rounded-xl p-5 hover:border-primary/40 transition-all group">
+          <div key={emp.id} className="bg-card border border-border rounded-xl p-5 transition-all card-glow">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h3 className="font-semibold text-card-foreground">{emp.name}</h3>
@@ -46,24 +46,24 @@ export default function TalentRadar() {
 
             <div className="flex flex-wrap gap-1.5 mb-4">
               {emp.skills.map((s) => (
-                <span key={s} className="px-2 py-0.5 rounded-md text-xs bg-secondary text-secondary-foreground">{s}</span>
+                <span key={s} className="px-2 py-0.5 rounded-md text-xs bg-secondary text-muted-foreground">{s}</span>
               ))}
             </div>
 
             <div className="flex items-center gap-3 mb-3">
-              <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-gold/15 text-gold border border-gold/30">
+              <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-gold/10 text-gold border border-gold/25 glow-amber">
                 ⭐ {emp.potential.toFixed(1)}
               </span>
               <RiskBadge risk={emp.risk} />
             </div>
 
             {emp.flag && (
-              <div className="bg-risk-high/8 border border-risk-high/20 rounded-lg px-3 py-2 mb-4">
+              <div className="bg-risk-high/5 border border-risk-high/15 rounded-lg px-3 py-2 mb-4">
                 <p className="text-xs text-risk-high">⚠ {emp.flag}</p>
               </div>
             )}
 
-            <button className="w-full py-2 rounded-lg text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+            <button className="w-full py-2 rounded-lg text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
               Deep Dive →
             </button>
           </div>

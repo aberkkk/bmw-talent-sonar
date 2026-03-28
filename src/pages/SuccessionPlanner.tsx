@@ -7,9 +7,9 @@ const positions = [
 ];
 
 function readinessColor(potential: number) {
-  if (potential > 9) return { bg: "bg-risk-low/15", border: "border-risk-low/30", text: "text-risk-low", label: "Ready Now" };
-  if (potential >= 7) return { bg: "bg-risk-medium/15", border: "border-risk-medium/30", text: "text-risk-medium", label: "Ready in 1yr" };
-  return { bg: "bg-risk-critical/15", border: "border-risk-critical/30", text: "text-risk-critical", label: "Needs Development" };
+  if (potential > 9) return { bg: "bg-risk-low/10", border: "border-risk-low/25", text: "text-risk-low", label: "Ready Now", glow: "glow-green" };
+  if (potential >= 7) return { bg: "bg-risk-medium/10", border: "border-risk-medium/25", text: "text-risk-medium", label: "Ready in 1yr", glow: "glow-amber" };
+  return { bg: "bg-risk-high/10", border: "border-risk-high/25", text: "text-risk-high", label: "Needs Development", glow: "glow-red" };
 }
 
 export default function SuccessionPlanner() {
@@ -27,18 +27,16 @@ export default function SuccessionPlanner() {
             .sort((a, b) => b.potential - a.potential);
           return (
             <div key={pos.title} className="space-y-4">
-              <div className="bg-primary/15 border-2 border-primary/40 rounded-xl p-5 text-center">
+              <div className="bg-primary/10 border-2 border-primary/30 rounded-xl p-5 text-center glow-purple">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Key Position</p>
                 <h3 className="text-lg font-bold text-primary">{pos.title}</h3>
               </div>
-              <div className="flex justify-center">
-                <div className="w-0.5 h-6 bg-border" />
-              </div>
+              <div className="flex justify-center"><div className="w-0.5 h-6 bg-border" /></div>
               <div className="space-y-3">
                 {candidates.map((emp, i) => {
                   const r = readinessColor(emp.potential);
                   return (
-                    <div key={emp.id} className={`${r.bg} border ${r.border} rounded-xl p-4`}>
+                    <div key={emp.id} className={`${r.bg} border ${r.border} rounded-xl p-4 card-glow`}>
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-xs text-muted-foreground font-medium">#{i + 1} Successor</span>
                         <span className={`text-xs font-semibold ${r.text}`}>{r.label}</span>
