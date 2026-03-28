@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { employees } from "@/data/employees";
-import { Send } from "lucide-react";
+import { advisorChat } from "@/lib/gemini";
+import { Send, Loader2 } from "lucide-react";
 
 const exampleQuestions = [
   "Who is most at risk of leaving in Q2?",
@@ -8,39 +8,36 @@ const exampleQuestions = [
   "Who should we promote first?",
 ];
 
-interface Message { role: "user" | "ai"; content: string; }
-
-function generateResponse(q: string): string {
-  const lower = q.toLowerCase();
-  if (lower.includes("risk") || lower.includes("leaving")) {
-    const highRisk = employees.filter((e) => e.risk === "High" || e.risk === "Critical");
-    return `Based on current data, **${highRisk.map((e) => e.name).join(", ")}** are at highest risk of attrition.\n\n• **${highRisk[0]?.name}**: ${highRisk[0]?.flag}\n• **${highRisk[1]?.name}**: ${highRisk[1]?.flag}\n\nRecommendation: Schedule retention conversations within 2 weeks and consider compensation adjustments for underpaid high-performers.`;
-  }
-  if (lower.includes("succession") || lower.includes("gap")) {
-    return `**Engineering** has the biggest succession gap. Only Anna Müller and Sofia Chen are viable VP Engineering candidates.\n\n• Anna: Potential 9.1, but no promotion in 18 months — engagement risk\n• Sofia: Potential 9.5, but only 1yr tenure — needs development time\n\nRecommendation: Fast-track Anna's promotion and create a 12-month leadership development program for Sofia.`;
-  }
-  if (lower.includes("promote")) {
-    const top = [...employees].sort((a, b) => b.potential - a.potential).slice(0, 3);
-    return `Top promotion candidates ranked by potential:\n\n1. **${top[0].name}** (${top[0].potential}) — ${top[0].role}. ${top[0].flag || "Strong trajectory."}\n2. **${top[1].name}** (${top[1].potential}) — ${top[1].role}. ${top[1].flag || "Consistent performer."}\n3. **${top[2].name}** (${top[2].potential}) — ${top[2].role}.\n\nRecommendation: Prioritize Lena Schmidt — she's the highest potential employee but critically underpaid. Promote + adjust compensation simultaneously.`;
-  }
-  return `I've analyzed the workforce data for your query: "${q}"\n\nKey insights:\n• Average team performance score: ${(employees.reduce((a, e) => a + e.score, 0) / employees.length).toFixed(1)}\n• ${employees.filter((e) => e.risk === "High" || e.risk === "Critical").length} employees flagged as high/critical risk\n• Average tenure: ${(employees.reduce((a, e) => a + e.tenure, 0) / employees.length).toFixed(1)} years\n\nWould you like me to dive deeper into any specific area?`;
-}
+interface Message { role: "user" | "assistant"; content: string; }
 
 export default function AIAdvisor() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const send = (text: string) => {
-    if (!text.trim()) return;
-    setMessages((prev) => [...prev, { role: "user", content: text }, { role: "ai", content: generateResponse(text) }]);
+  const send = async (text: string) => {
+    if (!text.trim() || loading) return;
+    const userMsg: Message = { role: "user", content: text };
+    const updated = [...messages, userMsg];
+    setMessages(updated);
     setInput("");
+    setLoading(true);
+    try {
+      const history = updated.map((m) => ({ role: m.role, content: m.content }));
+      const response = await advisorChat(text, history.slice(0, -1));
+      setMessages((prev) => [...prev, { role: "assistant", content: response }]);
+    } catch {
+      setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, I encountered an error. Please try again." }]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="animate-fade-in flex flex-col h-[calc(100vh-4rem)]">
       <div className="mb-6">
         <h1 className="text-2xl font-bold">AI Advisor</h1>
-        <p className="text-muted-foreground text-sm mt-1">Ask questions about your workforce data</p>
+        <p className="text-muted-foreground text-sm mt-1">Ask questions about your workforce data — powered by Gemini AI</p>
       </div>
 
       {messages.length === 0 && (
@@ -63,11 +60,19 @@ export default function AIAdvisor() {
             </div>
           </div>
         ))}
+        {loading && (
+          <div className="flex justify-start">
+            <div className="bg-card border border-border rounded-xl px-4 py-3 flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              <span className="text-sm text-muted-foreground">Thinking...</span>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-3">
-        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send(input)} placeholder="Ask about your workforce..." className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none" />
-        <button onClick={() => send(input)} className="px-5 py-3 rounded-xl btn-gradient text-primary-foreground transition-all">
+        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send(input)} placeholder="Ask about your workforce..." className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none" disabled={loading} />
+        <button onClick={() => send(input)} disabled={loading} className="px-5 py-3 rounded-xl btn-gradient text-primary-foreground transition-all disabled:opacity-50">
           <Send className="w-4 h-4" />
         </button>
       </div>
