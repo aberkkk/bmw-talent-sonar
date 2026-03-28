@@ -4,7 +4,8 @@ import { Employee } from "@/data/employees";
 import RiskBadge from "@/components/RiskBadge";
 import { deepDiveAnalysis, employeeChat } from "@/lib/gemini";
 import AddEmployeeModal from "@/components/AddEmployeeModal";
-import { Loader2, X, Info, Send, MessageCircle, Users, Plus } from "lucide-react";
+import BulkImportModal from "@/components/BulkImportModal";
+import { Loader2, X, Info, Send, MessageCircle, Users, Plus, FileSpreadsheet } from "lucide-react";
 
 const departments = (emps: Employee[]) => ["All", ...Array.from(new Set(emps.map((e) => e.dept)))];
 
