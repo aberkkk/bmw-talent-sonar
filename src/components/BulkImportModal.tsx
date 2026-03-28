@@ -42,7 +42,7 @@ function parseCSV(text: string): string[][] {
   return rows;
 }
 
-function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "id"> | null; errors: string[] } {
+function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "id" | "employeeId"> | null; errors: string[] } {
   const errors: string[] = [];
   const get = (key: string) => {
     const idx = headers.indexOf(key);
