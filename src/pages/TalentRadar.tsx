@@ -165,6 +165,7 @@ export default function TalentRadar() {
               <div>
                 <h3 className="font-semibold text-card-foreground">{emp.name}</h3>
                 <p className="text-sm text-muted-foreground">{emp.role}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{emp.employeeId} · {emp.jobGrade}</p>
               </div>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">{emp.dept}</span>
             </div>

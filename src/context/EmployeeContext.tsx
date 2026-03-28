@@ -3,9 +3,9 @@ import { Employee } from "@/data/employees";
 
 interface EmployeeContextType {
   employees: Employee[];
-  addEmployee: (emp: Omit<Employee, "id">) => void;
-  addEmployees: (emps: Omit<Employee, "id">[]) => void;
-  updateEmployee: (id: number, changes: Partial<Omit<Employee, "id">>) => void;
+  addEmployee: (emp: Omit<Employee, "id" | "employeeId">) => void;
+  addEmployees: (emps: Omit<Employee, "id" | "employeeId">[]) => void;
+  updateEmployee: (id: number, changes: Partial<Omit<Employee, "id" | "employeeId">>) => void;
   removeEmployee: (id: number) => void;
 }
 
@@ -13,9 +13,17 @@ const EmployeeContext = createContext<EmployeeContextType | undefined>(undefined
 
 const STORAGE_KEY = "bmw-workforce-employees";
 
+function generateEmployeeId(nextNum: number): string {
+  return `BMW-${String(nextNum).padStart(4, "0")}`;
+}
+
 /** Auto-compute risk level and flag from employee data */
 function computeRiskAndFlag(emp: Employee): Pick<Employee, "risk" | "flag"> {
-  const benchmark = Math.round(emp.salary * 1.12);
+  const gradeMultiplier: Record<string, number> = {
+    "L1": 1.08, "L2": 1.10, "L3": 1.12, "L4": 1.15, "L5": 1.18, "Director": 1.20, "VP": 1.25,
+  };
+  const mult = gradeMultiplier[emp.jobGrade] || 1.12;
+  const benchmark = Math.round(emp.salary * mult);
   const salaryGap = Math.round(((benchmark - emp.salary) / emp.salary) * 100);
   const flags: string[] = [];
 
@@ -46,12 +54,25 @@ function applyAutoFields(emp: Employee): Employee {
   return { ...emp, risk, flag };
 }
 
+function migrateEmployee(e: any): Employee {
+  return {
+    ...e,
+    employeeId: e.employeeId || `BMW-${String(e.id).padStart(4, "0")}`,
+    jobGrade: e.jobGrade || "L3",
+    managerName: e.managerName || "",
+    startDate: e.startDate || "",
+    deptCode: e.deptCode || "",
+    lastReviewScore: e.lastReviewScore || 3,
+    trainingHours: e.trainingHours || 0,
+  };
+}
+
 export function EmployeeProvider({ children }: { children: ReactNode }) {
   const [employees, setEmployees] = useState<Employee[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       const parsed = stored ? JSON.parse(stored) : [];
-      return parsed.map(applyAutoFields);
+      return parsed.map((e: any) => applyAutoFields(migrateEmployee(e)));
     } catch {
       return [];
     }
@@ -61,19 +82,21 @@ export function EmployeeProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
   }, [employees]);
 
-  const addEmployee = useCallback((emp: Omit<Employee, "id">) => {
+  const addEmployee = useCallback((emp: Omit<Employee, "id" | "employeeId">) => {
     setEmployees(prev => {
       const id = prev.length > 0 ? Math.max(...prev.map(e => e.id)) + 1 : 1;
-      const newEmp = applyAutoFields({ ...emp, id } as Employee);
+      const employeeId = generateEmployeeId(id);
+      const newEmp = applyAutoFields({ ...emp, id, employeeId } as Employee);
       return [...prev, newEmp];
     });
   }, []);
 
-  const addEmployees = useCallback((emps: Omit<Employee, "id">[]) => {
+  const addEmployees = useCallback((emps: Omit<Employee, "id" | "employeeId">[]) => {
     setEmployees(prev => {
       let nextId = prev.length > 0 ? Math.max(...prev.map(e => e.id)) + 1 : 1;
       const newEmps = emps.map(emp => {
-        const e = applyAutoFields({ ...emp, id: nextId } as Employee);
+        const employeeId = generateEmployeeId(nextId);
+        const e = applyAutoFields({ ...emp, id: nextId, employeeId } as Employee);
         nextId++;
         return e;
       });
@@ -81,7 +104,7 @@ export function EmployeeProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const updateEmployee = useCallback((id: number, changes: Partial<Omit<Employee, "id">>) => {
+  const updateEmployee = useCallback((id: number, changes: Partial<Omit<Employee, "id" | "employeeId">>) => {
     setEmployees(prev => prev.map(e => {
       if (e.id !== id) return e;
       const updated = { ...e, ...changes };

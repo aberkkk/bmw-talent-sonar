@@ -5,15 +5,15 @@ import { X, Upload, FileSpreadsheet, AlertCircle, CheckCircle2, Download } from 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onImport: (employees: Omit<Employee, "id">[]) => void;
+  onImport: (employees: Omit<Employee, "id" | "employeeId">[]) => void;
 }
 
 const EXPECTED_HEADERS = ["name", "role", "dept", "skills", "tenure", "score", "salary", "trend", "lastPromo", "potential"];
 
-const SAMPLE_CSV = `name,role,dept,skills,tenure,score,salary,trend,lastPromo,potential
-Anna Müller,Senior Engineer,Engineering,"Python, ML, Battery Systems",4.5,8.2,82,improving,6,9.1
-Markus Weber,Product Manager,Product,"Agile, Roadmapping, UX",3,7.5,78,stable,14,7.8
-Sofia Rossi,Data Scientist,Analytics,"R, Python, Tableau",2,9.1,71,rapidly improving,3,9.5`;
+const SAMPLE_CSV = `name,role,dept,skills,tenure,score,salary,trend,lastPromo,potential,jobGrade,managerName,deptCode,startDate,lastReviewScore,trainingHours
+Anna Müller,Senior Engineer,Engineering,"Python, ML, Battery Systems",4.5,8.2,82,improving,6,9.1,L4,Thomas Schmidt,ENG-01,2021-06-15,4.5,32
+Markus Weber,Product Manager,Product,"Agile, Roadmapping, UX",3,7.5,78,stable,14,7.8,L3,Lisa König,PRD-01,2022-03-01,3.8,24
+Sofia Rossi,Data Scientist,Analytics,"R, Python, Tableau",2,9.1,71,rapidly improving,3,9.5,L3,Marco Bianchi,ANA-01,2023-01-10,4.8,48`;
 
 function parseCSV(text: string): string[][] {
   const rows: string[][] = [];
@@ -42,7 +42,7 @@ function parseCSV(text: string): string[][] {
   return rows;
 }
 
-function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "id"> | null; errors: string[] } {
+function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "id" | "employeeId"> | null; errors: string[] } {
   const errors: string[] = [];
   const get = (key: string) => {
     const idx = headers.indexOf(key);
@@ -78,13 +78,26 @@ function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "i
 
   if (errors.length > 0) return { emp: null, errors };
 
+  const jobGrade = get("jobgrade") || get("jobGrade") || "L3";
+  const managerNameVal = get("managername") || get("managerName") || "";
+  const deptCodeVal = get("deptcode") || get("deptCode") || "";
+  const startDateVal = get("startdate") || get("startDate") || "";
+  const lastReviewScoreVal = parseFloat(get("lastreviewscore") || get("lastReviewScore") || "3");
+  const trainingHoursVal = parseInt(get("traininghours") || get("trainingHours") || "0");
+
   return {
     emp: {
       name, role, dept,
+      deptCode: deptCodeVal,
+      jobGrade,
+      managerName: managerNameVal,
+      startDate: startDateVal,
       skills: skillsRaw.split(",").map(s => s.trim()).filter(Boolean),
       tenure, score, salary,
       trend: ["improving", "rapidly improving", "stable", "declining"].includes(trend) ? trend : "stable",
       lastPromo, potential,
+      lastReviewScore: isNaN(lastReviewScoreVal) ? 3 : lastReviewScoreVal,
+      trainingHours: isNaN(trainingHoursVal) ? 0 : trainingHoursVal,
       risk: "Low" as const,
       flag: null,
     },
@@ -94,7 +107,7 @@ function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "i
 
 export default function BulkImportModal({ open, onClose, onImport }: Props) {
   const [step, setStep] = useState<"upload" | "preview" | "done">("upload");
-  const [parsed, setParsed] = useState<{ emp: Omit<Employee, "id"> | null; errors: string[]; row: number }[]>([]);
+  const [parsed, setParsed] = useState<{ emp: Omit<Employee, "id" | "employeeId"> | null; errors: string[]; row: number }[]>([]);
   const [fileName, setFileName] = useState("");
   const [rawError, setRawError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);

@@ -18,9 +18,14 @@ export default function CompensationPulse() {
     );
   }
 
+  const gradeMultiplier: Record<string, number> = {
+    "L1": 1.08, "L2": 1.10, "L3": 1.12, "L4": 1.15, "L5": 1.18, "Director": 1.20, "VP": 1.25,
+  };
+
   const data = employees.map((e) => {
-    const benchmarkMultiplier = 1.1 + (e.potential >= 9 ? 0.08 : e.score >= 8 ? 0.05 : 0.02);
-    const benchmark = Math.round(e.salary * benchmarkMultiplier);
+    const baseMult = gradeMultiplier[e.jobGrade] || 1.12;
+    const potentialAdj = e.potential >= 9 ? 0.05 : e.score >= 8 ? 0.03 : 0;
+    const benchmark = Math.round(e.salary * (baseMult + potentialAdj));
     const gap = Math.round(((benchmark - e.salary) / e.salary) * 100);
     const source = e.potential >= 9 ? "Levels.fyi + LinkedIn Salary" : "Hays Salary Guide 2024";
     const reasoning = gap > 15
