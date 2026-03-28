@@ -34,8 +34,13 @@ export async function simulateScenarios(prompt: string): Promise<{
 
 export async function advisorChat(message: string, history: { role: string; content: string }[]): Promise<string> {
   const contextMessages = history.map(m => `${m.role}: ${m.content}`).join("\n");
-  const result = await model.generateContent([
-    `You are BMW Workforce Oracle AI assistant. Help HR managers make smarter people decisions. Max 150 words. Always remind final decisions rest with humans.\n\n${contextMessages ? `Conversation so far:\n${contextMessages}\n\n` : ""}User: ${message}`
-  ]);
-  return result.response.text();
+  try {
+    const result = await model.generateContent([
+      `You are BMW Workforce Oracle AI assistant. Help HR managers make smarter people decisions. Max 150 words. Always remind final decisions rest with humans.\n\n${contextMessages ? `Conversation so far:\n${contextMessages}\n\n` : ""}User: ${message}`
+    ]);
+    return result.response.text();
+  } catch (error) {
+    console.error("Gemini advisor error:", error);
+    throw error;
+  }
 }
