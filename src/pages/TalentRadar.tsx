@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { employees } from "@/data/employees";
 import RiskBadge from "@/components/RiskBadge";
-import { deepDiveAnalysis } from "@/lib/gemini";
-import { Loader2, X, Info } from "lucide-react";
+import { deepDiveAnalysis, employeeChat } from "@/lib/gemini";
+import { Loader2, X, Info, Send, MessageCircle } from "lucide-react";
 
 const departments = ["All", ...Array.from(new Set(employees.map((e) => e.dept)))];
 
@@ -17,6 +17,15 @@ function riskReasoning(emp: typeof employees[0]) {
   return reasons.join("; ");
 }
 
+interface ChatMsg { role: "user" | "assistant"; content: string; }
+
+const quickQuestions = [
+  "How do we retain them?",
+  "Are they ready for promotion?",
+  "Is their salary competitive?",
+  "What should they learn next?",
+];
+
 export default function TalentRadar() {
   const [filter, setFilter] = useState("All");
   const [modalOpen, setModalOpen] = useState(false);
@@ -24,8 +33,17 @@ export default function TalentRadar() {
   const [modalEmployee, setModalEmployee] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  // Chat state
+  const [chatMessages, setChatMessages] = useState<ChatMsg[]>([]);
+  const [chatInput, setChatInput] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   const filtered = filter === "All" ? employees : employees.filter((e) => e.dept === filter);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages]);
 
   const handleDeepDive = async (emp: typeof employees[0]) => {
     setModalOpen(true);
@@ -33,6 +51,8 @@ export default function TalentRadar() {
     setModalContent("");
     setError("");
     setLoading(true);
+    setChatMessages([]);
+    setChatInput("");
     try {
       const info = `Name: ${emp.name}, Role: ${emp.role}, Department: ${emp.dept}, Skills: ${emp.skills.join(", ")}, Tenure: ${emp.tenure} years, Performance Score: ${emp.score}, Salary: €${emp.salary}k, Trend: ${emp.trend}, Last Promotion: ${emp.lastPromo} months ago, Potential Score: ${emp.potential}, Risk Level: ${emp.risk}${emp.flag ? `, Flag: ${emp.flag}` : ""}`;
       const result = await deepDiveAnalysis(info);
@@ -41,6 +61,22 @@ export default function TalentRadar() {
       setError("Failed to get AI analysis. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const sendChat = async (text: string) => {
+    if (!text.trim() || chatLoading) return;
+    const userMsg: ChatMsg = { role: "user", content: text };
+    setChatMessages(prev => [...prev, userMsg]);
+    setChatInput("");
+    setChatLoading(true);
+    try {
+      const response = await employeeChat(modalEmployee, text);
+      setChatMessages(prev => [...prev, { role: "assistant", content: response }]);
+    } catch {
+      setChatMessages(prev => [...prev, { role: "assistant", content: "Sorry, I couldn't process that. Try again." }]);
+    } finally {
+      setChatLoading(false);
     }
   };
 
@@ -102,21 +138,90 @@ export default function TalentRadar() {
         ))}
       </div>
 
+      {/* Modal with Deep Dive + Chat */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 backdrop-blur-sm" onClick={() => setModalOpen(false)}>
-          <div className="bg-card border border-border rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-auto shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
+          <div className="bg-card border border-border rounded-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden shadow-xl flex flex-col" onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 pb-0">
               <h2 className="text-lg font-bold">AI Deep Dive — {modalEmployee}</h2>
               <button onClick={() => setModalOpen(false)} className="p-1 rounded-lg hover:bg-secondary transition-colors"><X className="w-5 h-5" /></button>
             </div>
-            {loading && (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                <span className="ml-3 text-sm text-muted-foreground">Analyzing...</span>
-              </div>
-            )}
-            {error && <p className="text-risk-high text-sm py-4">{error}</p>}
-            {modalContent && <div className="text-sm leading-relaxed whitespace-pre-wrap text-card-foreground">{modalContent}</div>}
+
+            {/* Scrollable content */}
+            <div className="flex-1 overflow-auto p-6 space-y-5">
+              {/* Analysis section */}
+              {loading && (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                  <span className="ml-3 text-sm text-muted-foreground">Analyzing...</span>
+                </div>
+              )}
+              {error && <p className="text-risk-high text-sm py-4">{error}</p>}
+              {modalContent && (
+                <div className="text-sm leading-relaxed whitespace-pre-wrap text-card-foreground bg-muted/20 border border-border rounded-xl p-4">
+                  {modalContent}
+                </div>
+              )}
+
+              {/* Chat section */}
+              {modalContent && (
+                <div className="border-t border-border pt-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <MessageCircle className="w-4 h-4 text-primary" />
+                    <h3 className="text-sm font-semibold">Ask more about {modalEmployee}</h3>
+                  </div>
+
+                  {/* Quick questions */}
+                  {chatMessages.length === 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {quickQuestions.map((q) => (
+                        <button key={q} onClick={() => sendChat(q)} className="px-3 py-1.5 rounded-lg text-xs bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors">
+                          {q}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Chat messages */}
+                  <div className="space-y-3 max-h-[300px] overflow-auto mb-3">
+                    {chatMessages.map((msg, i) => (
+                      <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                        <div className={`max-w-[85%] px-3 py-2 rounded-xl text-sm leading-relaxed whitespace-pre-wrap ${
+                          msg.role === "user" ? "btn-gradient text-primary-foreground" : "bg-secondary text-secondary-foreground border border-border"
+                        }`}>
+                          {msg.content}
+                        </div>
+                      </div>
+                    ))}
+                    {chatLoading && (
+                      <div className="flex justify-start">
+                        <div className="bg-secondary border border-border rounded-xl px-3 py-2 flex items-center gap-2">
+                          <Loader2 className="w-3 h-3 animate-spin text-primary" />
+                          <span className="text-xs text-muted-foreground">Thinking...</span>
+                        </div>
+                      </div>
+                    )}
+                    <div ref={chatEndRef} />
+                  </div>
+
+                  {/* Chat input */}
+                  <div className="flex gap-2">
+                    <input
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && sendChat(chatInput)}
+                      placeholder={`Ask about ${modalEmployee}...`}
+                      className="flex-1 bg-secondary border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none"
+                      disabled={chatLoading}
+                    />
+                    <button onClick={() => sendChat(chatInput)} disabled={chatLoading} className="px-3 py-2 rounded-xl btn-gradient text-primary-foreground transition-all disabled:opacity-50">
+                      <Send className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
