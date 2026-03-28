@@ -20,22 +20,15 @@ export default function CompensationPulse() {
       <div className="bg-card border border-border rounded-xl p-6 mb-6">
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={data} barGap={4}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(213 25% 22%)" />
-            <XAxis dataKey="name" tick={{ fill: "hsl(213 15% 55%)", fontSize: 12 }} />
-            <YAxis tick={{ fill: "hsl(213 15% 55%)", fontSize: 12 }} tickFormatter={(v) => `€${v}k`} />
-            <Tooltip
-              contentStyle={{ background: "hsl(213 35% 14%)", border: "1px solid hsl(213 25% 22%)", borderRadius: 8, color: "hsl(210 40% 96%)" }}
-              formatter={(value: number) => [`€${value}k`]}
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(240 33% 18%)" />
+            <XAxis dataKey="name" tick={{ fill: "hsl(240 15% 60%)", fontSize: 12 }} />
+            <YAxis tick={{ fill: "hsl(240 15% 60%)", fontSize: 12 }} tickFormatter={(v) => `€${v}k`} />
+            <Tooltip contentStyle={{ background: "#111128", border: "1px solid #1E1E3F", borderRadius: 8, color: "#fff" }} formatter={(value: number) => [`€${value}k`]} />
             <Bar dataKey="current" name="Current" radius={[4, 4, 0, 0]}>
-              {data.map((d, i) => (
-                <Cell key={i} fill="hsl(210 100% 40%)" />
-              ))}
+              {data.map((_, i) => <Cell key={i} fill="#6C63FF" />)}
             </Bar>
             <Bar dataKey="benchmark" name="Benchmark" radius={[4, 4, 0, 0]}>
-              {data.map((d, i) => (
-                <Cell key={i} fill={d.isHigh ? "hsl(0 72% 51%)" : "hsl(213 15% 45%)"} />
-              ))}
+              {data.map((d, i) => <Cell key={i} fill={d.isHigh ? "#FF4757" : "#8888AA"} />)}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
@@ -58,11 +51,9 @@ export default function CompensationPulse() {
                 <td className="p-4 font-medium">{d.fullName}</td>
                 <td className="p-4 text-right">€{d.current}k</td>
                 <td className="p-4 text-right">€{d.benchmark}k</td>
-                <td className={`p-4 text-right font-semibold ${d.isHigh ? "text-risk-critical" : "text-risk-low"}`}>{d.gap}%</td>
+                <td className={`p-4 text-right font-semibold ${d.isHigh ? "text-risk-high" : "text-risk-low"}`}>{d.gap}%</td>
                 <td className="p-4 text-right">
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                    d.isHigh ? "bg-risk-critical/15 text-risk-critical" : "bg-risk-low/15 text-risk-low"
-                  }`}>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${d.isHigh ? "bg-risk-high/10 text-risk-high" : "bg-risk-low/10 text-risk-low"}`}>
                     {d.isHigh ? "Below Market" : "Aligned"}
                   </span>
                 </td>
