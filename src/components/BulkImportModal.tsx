@@ -78,13 +78,26 @@ function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "i
 
   if (errors.length > 0) return { emp: null, errors };
 
+  const jobGrade = get("jobgrade") || get("jobGrade") || "L3";
+  const managerNameVal = get("managername") || get("managerName") || "";
+  const deptCodeVal = get("deptcode") || get("deptCode") || "";
+  const startDateVal = get("startdate") || get("startDate") || "";
+  const lastReviewScoreVal = parseFloat(get("lastreviewscore") || get("lastReviewScore") || "3");
+  const trainingHoursVal = parseInt(get("traininghours") || get("trainingHours") || "0");
+
   return {
     emp: {
       name, role, dept,
+      deptCode: deptCodeVal,
+      jobGrade,
+      managerName: managerNameVal,
+      startDate: startDateVal,
       skills: skillsRaw.split(",").map(s => s.trim()).filter(Boolean),
       tenure, score, salary,
       trend: ["improving", "rapidly improving", "stable", "declining"].includes(trend) ? trend : "stable",
       lastPromo, potential,
+      lastReviewScore: isNaN(lastReviewScoreVal) ? 3 : lastReviewScoreVal,
+      trainingHours: isNaN(trainingHoursVal) ? 0 : trainingHoursVal,
       risk: "Low" as const,
       flag: null,
     },
