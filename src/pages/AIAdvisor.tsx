@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useEmployees } from "@/context/EmployeeContext";
 import { advisorChat } from "@/lib/gemini";
 import { Send, Loader2 } from "lucide-react";
+import EmptyState from "@/components/EmptyState";
 
 const exampleQuestions = [
-  "Who is most at risk of leaving in Q2?",
+  "Who is most at risk of leaving?",
   "Which team has the biggest succession gap?",
   "Who should we promote first?",
 ];
@@ -11,9 +13,22 @@ const exampleQuestions = [
 interface Message { role: "user" | "assistant"; content: string; }
 
 export default function AIAdvisor() {
+  const { employees } = useEmployees();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  if (employees.length === 0) {
+    return (
+      <div className="animate-fade-in">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold">AI Advisor</h1>
+          <p className="text-muted-foreground text-sm mt-1">Ask questions about your workforce data — powered by AI</p>
+        </div>
+        <EmptyState />
+      </div>
+    );
+  }
 
   const send = async (text: string) => {
     if (!text.trim() || loading) return;
@@ -24,7 +39,7 @@ export default function AIAdvisor() {
     setLoading(true);
     try {
       const history = updated.map((m) => ({ role: m.role, content: m.content }));
-      const response = await advisorChat(text, history.slice(0, -1));
+      const response = await advisorChat(text, history.slice(0, -1), employees);
       setMessages((prev) => [...prev, { role: "assistant", content: response }]);
     } catch {
       setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, I encountered an error. Please try again." }]);
