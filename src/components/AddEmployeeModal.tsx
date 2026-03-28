@@ -94,9 +94,22 @@ export default function AddEmployeeModal({ open, onClose, onAdd }: Props) {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className={labelCls}>Department *</label>
-              <input value={dept} onChange={e => setDept(e.target.value)} placeholder="e.g. Engineering" className={inputCls} />
+              <label className={labelCls}>Role *</label>
+              <select value={role} onChange={e => setRole(e.target.value)} className={inputCls}>
+                <option value="">Select role...</option>
+                {roleOptions.map(r => <option key={r} value={r}>{r}</option>)}
+              </select>
             </div>
+            <div className="space-y-1.5">
+              <label className={labelCls}>Department *</label>
+              <select value={dept} onChange={e => setDept(e.target.value)} className={inputCls}>
+                <option value="">Select department...</option>
+                {departmentOptions.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label className={labelCls}>Salary (€k/year) *</label>
               <input type="number" value={salary} onChange={e => setSalary(e.target.value)} placeholder="e.g. 85" className={inputCls} />
