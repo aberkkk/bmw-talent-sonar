@@ -239,6 +239,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: closesGap ? "Low" : "Medium",
         description: `A ${pct}% raise brings ${emp.name} from €${emp.salary}k to €${newSalary}k. ${closesGap ? "Meets market benchmark." : `Still below benchmark (€${marketBenchmark}k).`}`,
         reasoning: `Market benchmark: €${marketBenchmark}k (${marketGap}% gap). ${closesGap ? "Gap closed." : `Only closes ${Math.round((pct / marketGap) * 100)}% of gap.`}`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: raiseCost },
       },
       {
         title: `Market-Rate (${marketGap}%)`,
@@ -247,6 +248,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: "Low",
         description: `Full market alignment to €${marketBenchmark}k. Maximum retention impact.`,
         reasoning: `Full alignment has 90% retention probability. Cost vs replacement (€${replacementCost}k) is economically sound.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: marketBenchmark - emp.salary },
       },
       {
         title: "Non-Monetary Package",
