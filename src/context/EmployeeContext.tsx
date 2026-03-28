@@ -69,6 +69,18 @@ export function EmployeeProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const addEmployees = useCallback((emps: Omit<Employee, "id">[]) => {
+    setEmployees(prev => {
+      let nextId = prev.length > 0 ? Math.max(...prev.map(e => e.id)) + 1 : 1;
+      const newEmps = emps.map(emp => {
+        const e = applyAutoFields({ ...emp, id: nextId } as Employee);
+        nextId++;
+        return e;
+      });
+      return [...prev, ...newEmps];
+    });
+  }, []);
+
   const updateEmployee = useCallback((id: number, changes: Partial<Omit<Employee, "id">>) => {
     setEmployees(prev => prev.map(e => {
       if (e.id !== id) return e;
