@@ -3,8 +3,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import DashboardLayout from "@/components/DashboardLayout";
+import TalentRadar from "@/pages/TalentRadar";
+import SuccessionPlanner from "@/pages/SuccessionPlanner";
+import ScenarioSimulator from "@/pages/ScenarioSimulator";
+import UpskillingMap from "@/pages/UpskillingMap";
+import CompensationPulse from "@/pages/CompensationPulse";
+import AIAdvisor from "@/pages/AIAdvisor";
+import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -14,11 +20,17 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <DashboardLayout>
+          <Routes>
+            <Route path="/" element={<TalentRadar />} />
+            <Route path="/succession" element={<SuccessionPlanner />} />
+            <Route path="/simulator" element={<ScenarioSimulator />} />
+            <Route path="/upskilling" element={<UpskillingMap />} />
+            <Route path="/compensation" element={<CompensationPulse />} />
+            <Route path="/advisor" element={<AIAdvisor />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </DashboardLayout>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
