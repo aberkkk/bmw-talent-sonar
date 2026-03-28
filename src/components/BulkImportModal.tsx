@@ -107,7 +107,7 @@ function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "i
 
 export default function BulkImportModal({ open, onClose, onImport }: Props) {
   const [step, setStep] = useState<"upload" | "preview" | "done">("upload");
-  const [parsed, setParsed] = useState<{ emp: Omit<Employee, "id"> | null; errors: string[]; row: number }[]>([]);
+  const [parsed, setParsed] = useState<{ emp: Omit<Employee, "id" | "employeeId"> | null; errors: string[]; row: number }[]>([]);
   const [fileName, setFileName] = useState("");
   const [rawError, setRawError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
