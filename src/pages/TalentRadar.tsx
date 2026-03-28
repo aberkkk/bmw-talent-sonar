@@ -264,6 +264,7 @@ export default function TalentRadar() {
       )}
 
       <AddEmployeeModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onAdd={addEmployee} />
+      <BulkImportModal open={bulkModalOpen} onClose={() => setBulkModalOpen(false)} onImport={addEmployees} />
     </div>
   );
 }
