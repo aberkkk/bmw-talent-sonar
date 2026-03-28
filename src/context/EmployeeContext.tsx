@@ -4,6 +4,7 @@ import { Employee } from "@/data/employees";
 interface EmployeeContextType {
   employees: Employee[];
   addEmployee: (emp: Omit<Employee, "id">) => void;
+  addEmployees: (emps: Omit<Employee, "id">[]) => void;
   updateEmployee: (id: number, changes: Partial<Omit<Employee, "id">>) => void;
   removeEmployee: (id: number) => void;
 }
