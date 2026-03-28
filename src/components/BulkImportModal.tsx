@@ -10,10 +10,10 @@ interface Props {
 
 const EXPECTED_HEADERS = ["name", "role", "dept", "skills", "tenure", "score", "salary", "trend", "lastPromo", "potential"];
 
-const SAMPLE_CSV = `name,role,dept,skills,tenure,score,salary,trend,lastPromo,potential
-Anna Müller,Senior Engineer,Engineering,"Python, ML, Battery Systems",4.5,8.2,82,improving,6,9.1
-Markus Weber,Product Manager,Product,"Agile, Roadmapping, UX",3,7.5,78,stable,14,7.8
-Sofia Rossi,Data Scientist,Analytics,"R, Python, Tableau",2,9.1,71,rapidly improving,3,9.5`;
+const SAMPLE_CSV = `name,role,dept,skills,tenure,score,salary,trend,lastPromo,potential,jobGrade,managerName,deptCode,startDate,lastReviewScore,trainingHours
+Anna Müller,Senior Engineer,Engineering,"Python, ML, Battery Systems",4.5,8.2,82,improving,6,9.1,L4,Thomas Schmidt,ENG-01,2021-06-15,4.5,32
+Markus Weber,Product Manager,Product,"Agile, Roadmapping, UX",3,7.5,78,stable,14,7.8,L3,Lisa König,PRD-01,2022-03-01,3.8,24
+Sofia Rossi,Data Scientist,Analytics,"R, Python, Tableau",2,9.1,71,rapidly improving,3,9.5,L3,Marco Bianchi,ANA-01,2023-01-10,4.8,48`;
 
 function parseCSV(text: string): string[][] {
   const rows: string[][] = [];
