@@ -2,9 +2,20 @@ import { useState } from "react";
 import { employees } from "@/data/employees";
 import RiskBadge from "@/components/RiskBadge";
 import { deepDiveAnalysis } from "@/lib/gemini";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, Info } from "lucide-react";
 
 const departments = ["All", ...Array.from(new Set(employees.map((e) => e.dept)))];
+
+function riskReasoning(emp: typeof employees[0]) {
+  const reasons: string[] = [];
+  if (emp.lastPromo > 18) reasons.push(`no promotion in ${emp.lastPromo} months`);
+  if (emp.trend === "declining") reasons.push("declining performance trend");
+  if (emp.potential >= 9 && emp.salary < 75) reasons.push("high potential but below-market compensation");
+  if (emp.tenure <= 2 && emp.potential >= 9) reasons.push("short tenure with high poaching risk");
+  if (emp.flag) reasons.push(emp.flag.toLowerCase());
+  if (reasons.length === 0) reasons.push("stable performance, competitive compensation, recent promotion");
+  return reasons.join("; ");
+}
 
 export default function TalentRadar() {
   const [filter, setFilter] = useState("All");
@@ -40,6 +51,13 @@ export default function TalentRadar() {
         <p className="text-muted-foreground text-sm mt-1">Real-time workforce intelligence overview</p>
       </div>
 
+      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
+        <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+        <div className="text-sm text-muted-foreground leading-relaxed">
+          <span className="font-semibold text-foreground">How scores are calculated:</span> <span className="text-gold font-medium">Potential</span> is a composite of learning agility, leadership assessment, and 360° feedback (scale 1–10). <span className="font-medium text-foreground">Risk level</span> is determined by: promotion recency, compensation gap vs. market, performance trend, and tenure-to-potential ratio. Flags are auto-generated when thresholds are breached.
+        </div>
+      </div>
+
       <div className="flex gap-2 mb-6 flex-wrap">
         {departments.map((d) => (
           <button key={d} onClick={() => setFilter(d)} className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filter === d ? "btn-gradient text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"}`}>
@@ -68,10 +86,15 @@ export default function TalentRadar() {
               <RiskBadge risk={emp.risk} />
             </div>
             {emp.flag && (
-              <div className="bg-risk-high/5 border border-risk-high/15 rounded-lg px-3 py-2 mb-4">
+              <div className="bg-risk-high/5 border border-risk-high/15 rounded-lg px-3 py-2 mb-3">
                 <p className="text-xs text-risk-high">⚠ {emp.flag}</p>
               </div>
             )}
+            <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 mb-4">
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                <span className="font-semibold">Risk reasoning:</span> {riskReasoning(emp)}
+              </p>
+            </div>
             <button onClick={() => handleDeepDive(emp)} className="w-full py-2 rounded-lg text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
               Deep Dive →
             </button>
@@ -79,7 +102,6 @@ export default function TalentRadar() {
         ))}
       </div>
 
-      {/* Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 backdrop-blur-sm" onClick={() => setModalOpen(false)}>
           <div className="bg-card border border-border rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-auto shadow-xl" onClick={(e) => e.stopPropagation()}>
