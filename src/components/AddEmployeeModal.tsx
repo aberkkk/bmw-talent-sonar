@@ -11,6 +11,25 @@ interface Props {
 const riskOptions: Employee["risk"][] = ["Low", "Medium", "High", "Critical"];
 const trendOptions = ["improving", "rapidly improving", "stable", "declining"];
 
+const departmentOptions = [
+  "Engineering", "Product", "Analytics", "Design", "Marketing",
+  "Sales", "Finance", "HR", "Operations", "Legal", "IT", "R&D",
+  "Supply Chain", "Manufacturing", "Customer Success"
+];
+
+const roleOptions = [
+  "Junior Engineer", "Engineer", "Senior Engineer", "Lead Engineer", "Staff Engineer", "Principal Engineer",
+  "Junior Designer", "Designer", "Senior Designer", "Lead Designer",
+  "Analyst", "Senior Analyst", "Lead Analyst", "Data Scientist", "Senior Data Scientist",
+  "Product Manager", "Senior Product Manager", "Director of Product",
+  "Marketing Specialist", "Senior Marketing Specialist", "Marketing Manager",
+  "Sales Representative", "Senior Sales Representative", "Sales Manager",
+  "HR Specialist", "HR Manager", "HR Director",
+  "Finance Analyst", "Senior Finance Analyst", "Finance Manager",
+  "Operations Manager", "Senior Operations Manager",
+  "Team Lead", "Manager", "Senior Manager", "Director", "VP", "SVP"
+];
+
 export default function AddEmployeeModal({ open, onClose, onAdd }: Props) {
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
@@ -63,21 +82,30 @@ export default function AddEmployeeModal({ open, onClose, onAdd }: Props) {
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className={labelCls}>Full Name *</label>
-              <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Anna Müller" className={inputCls} />
-            </div>
-            <div className="space-y-1.5">
-              <label className={labelCls}>Role *</label>
-              <input value={role} onChange={e => setRole(e.target.value)} placeholder="e.g. Senior Engineer" className={inputCls} />
-            </div>
+          <div className="space-y-1.5">
+            <label className={labelCls}>Full Name *</label>
+            <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Anna Müller" className={inputCls} />
+          </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className={labelCls}>Department *</label>
-              <input value={dept} onChange={e => setDept(e.target.value)} placeholder="e.g. Engineering" className={inputCls} />
+              <label className={labelCls}>Role *</label>
+              <select value={role} onChange={e => setRole(e.target.value)} className={inputCls}>
+                <option value="">Select role...</option>
+                {roleOptions.map(r => <option key={r} value={r}>{r}</option>)}
+              </select>
             </div>
+            <div className="space-y-1.5">
+              <label className={labelCls}>Department *</label>
+              <select value={dept} onChange={e => setDept(e.target.value)} className={inputCls}>
+                <option value="">Select department...</option>
+                {departmentOptions.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label className={labelCls}>Salary (€k/year) *</label>
               <input type="number" value={salary} onChange={e => setSalary(e.target.value)} placeholder="e.g. 85" className={inputCls} />
