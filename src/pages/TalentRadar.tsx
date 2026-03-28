@@ -38,6 +38,7 @@ export default function TalentRadar() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [bulkModalOpen, setBulkModalOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMsg[]>([]);
   const [chatInput, setChatInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
