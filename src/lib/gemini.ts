@@ -4,10 +4,15 @@ const genAI = new GoogleGenerativeAI("AIzaSyCsgx-J26r3eEo-QuI4j0Dg3GSoDaRYmlM");
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 export async function deepDiveAnalysis(employeeInfo: string): Promise<string> {
-  const result = await model.generateContent([
-    `You are BMW's Talent Intelligence Agent. Analyze the employee profile and give: 1) Key Strengths, 2) Hidden Potential, 3) Risk Factors, 4) Recommended Action. Max 200 words. Always note final decisions rest with humans.\n\nEmployee Profile:\n${employeeInfo}`
-  ]);
-  return result.response.text();
+  try {
+    const result = await model.generateContent([
+      `You are BMW's Talent Intelligence Agent. Analyze the employee profile and give: 1) Key Strengths, 2) Hidden Potential, 3) Risk Factors, 4) Recommended Action. Max 200 words. Always note final decisions rest with humans.\n\nEmployee Profile:\n${employeeInfo}`
+    ]);
+    return result.response.text();
+  } catch (error) {
+    console.error("Gemini deepDive error:", error);
+    throw error;
+  }
 }
 
 export async function simulateScenarios(prompt: string): Promise<{
