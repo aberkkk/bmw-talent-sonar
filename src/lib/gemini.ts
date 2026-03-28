@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI("AIzaSyCsgx-J26r3eEo-QuI4j0Dg3GSoDaRYmlM");
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 export async function deepDiveAnalysis(employeeInfo: string): Promise<string> {
   const result = await model.generateContent([
