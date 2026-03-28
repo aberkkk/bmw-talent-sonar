@@ -2,14 +2,37 @@ import { useState, useRef, useEffect } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
 import RiskBadge from "@/components/RiskBadge";
 import { scenarioChat } from "@/lib/gemini";
-import { Loader2, Send, Info, MessageCircle } from "lucide-react";
+import { Loader2, Send, Info, MessageCircle, CheckCircle2 } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
+import { toast } from "@/hooks/use-toast";
 
-interface ChatMsg { role: "user" | "assistant"; content: string; scenarios?: Scenario[] | null; }
-interface Scenario { title: string; probability: number; cost: string; risk: "Low" | "Medium" | "High" | "Critical"; description: string; reasoning: string; }
+interface ScenarioChanges {
+  employeeId: number;
+  employeeName: string;
+  salaryChange?: number;
+  newRole?: string;
+  resetPromo?: boolean;
+}
+
+interface Scenario {
+  title: string;
+  probability: number;
+  cost: string;
+  risk: "Low" | "Medium" | "High" | "Critical";
+  description: string;
+  reasoning: string;
+  changes?: ScenarioChanges;
+}
+
+interface ChatMsg {
+  role: "user" | "assistant";
+  content: string;
+  scenarios?: Scenario[] | null;
+  appliedIndex?: number;
+}
 
 export default function ScenarioSimulator() {
-  const { employees } = useEmployees();
+  const { employees, updateEmployee } = useEmployees();
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -46,7 +69,7 @@ export default function ScenarioSimulator() {
     setLoading(true);
     try {
       const result = await scenarioChat(text, employees);
-      setMessages(prev => [...prev, { role: "assistant", content: result.analysis, scenarios: result.scenarios }]);
+      setMessages(prev => [...prev, { role: "assistant", content: result.analysis, scenarios: result.scenarios as Scenario[] }]);
     } catch {
       setMessages(prev => [...prev, { role: "assistant", content: "Sorry, I couldn't process that scenario." }]);
     } finally {
@@ -54,17 +77,40 @@ export default function ScenarioSimulator() {
     }
   };
 
+  const applyScenario = (msgIndex: number, scenarioIndex: number, scenario: Scenario) => {
+    if (!scenario.changes) return;
+    const { employeeId, salaryChange, newRole, resetPromo } = scenario.changes;
+    const emp = employees.find(e => e.id === employeeId);
+    if (!emp) return;
+
+    const changes: Partial<typeof emp> = {};
+    if (salaryChange) changes.salary = Math.round(emp.salary + salaryChange);
+    if (newRole) changes.role = newRole;
+    if (resetPromo) changes.lastPromo = 0;
+    if (newRole) changes.trend = "improving";
+
+    updateEmployee(employeeId, changes);
+
+    // Mark as applied
+    setMessages(prev => prev.map((m, i) => i === msgIndex ? { ...m, appliedIndex: scenarioIndex } : m));
+
+    toast({
+      title: "Scenario Applied ✅",
+      description: `${scenario.title} applied to ${scenario.changes.employeeName}. All modules updated.`,
+    });
+  };
+
   return (
     <div className="animate-fade-in flex flex-col h-[calc(100vh-4rem)]">
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Scenario Simulator ⭐</h1>
-        <p className="text-muted-foreground text-sm mt-1">Describe any workforce decision in plain language — get scenario analysis</p>
+        <p className="text-muted-foreground text-sm mt-1">Describe any workforce decision — simulate & apply it live</p>
       </div>
 
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
         <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
         <div className="text-sm text-muted-foreground leading-relaxed">
-          <span className="font-semibold text-foreground">How it works:</span> Describe any HR decision naturally. The simulator models outcomes based on employee performance, risk, market benchmarks, and tenure.
+          <span className="font-semibold text-foreground">How it works:</span> Describe any HR decision naturally. The simulator models outcomes. Click <span className="font-semibold text-primary">"Apply"</span> on a scenario to update the employee's data across ALL modules instantly.
         </div>
       </div>
 
@@ -95,22 +141,41 @@ export default function ScenarioSimulator() {
             </div>
             {msg.scenarios && msg.scenarios.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 max-w-[90%]">
-                {msg.scenarios.map((s, j) => (
-                  <div key={j} className="bg-card border border-border rounded-xl p-4 card-glow transition-all">
-                    <p className="text-xs text-muted-foreground mb-1">Scenario {String.fromCharCode(65 + j)}</p>
-                    <h3 className="font-semibold text-sm mb-3">{s.title}</h3>
-                    <p className="text-3xl font-bold text-primary mb-1">{s.probability}%</p>
-                    <p className="text-xs text-muted-foreground mb-2">probability of positive outcome</p>
-                    <p className="text-sm font-medium text-accent mb-2">{s.cost}</p>
-                    <RiskBadge risk={s.risk} />
-                    <p className="text-xs text-muted-foreground mt-3 leading-relaxed">{s.description}</p>
-                    <div className="mt-3 pt-2 border-t border-border">
-                      <p className="text-[11px] text-muted-foreground leading-relaxed italic">
-                        <span className="font-semibold not-italic">Reasoning:</span> {s.reasoning}
-                      </p>
+                {msg.scenarios.map((s, j) => {
+                  const isApplied = msg.appliedIndex === j;
+                  const anotherApplied = msg.appliedIndex !== undefined && msg.appliedIndex !== j;
+                  return (
+                    <div key={j} className={`bg-card border rounded-xl p-4 card-glow transition-all ${isApplied ? "border-primary/50 ring-2 ring-primary/20" : "border-border"} ${anotherApplied ? "opacity-50" : ""}`}>
+                      <p className="text-xs text-muted-foreground mb-1">Scenario {String.fromCharCode(65 + j)}</p>
+                      <h3 className="font-semibold text-sm mb-3">{s.title}</h3>
+                      <p className="text-3xl font-bold text-primary mb-1">{s.probability}%</p>
+                      <p className="text-xs text-muted-foreground mb-2">probability of positive outcome</p>
+                      <p className="text-sm font-medium text-accent mb-2">{s.cost}</p>
+                      <RiskBadge risk={s.risk} />
+                      <p className="text-xs text-muted-foreground mt-3 leading-relaxed">{s.description}</p>
+                      <div className="mt-3 pt-2 border-t border-border">
+                        <p className="text-[11px] text-muted-foreground leading-relaxed italic">
+                          <span className="font-semibold not-italic">Reasoning:</span> {s.reasoning}
+                        </p>
+                      </div>
+                      {s.changes && (
+                        <button
+                          onClick={() => applyScenario(i, j, s)}
+                          disabled={msg.appliedIndex !== undefined}
+                          className={`w-full mt-3 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                            isApplied
+                              ? "bg-risk-low/15 text-risk-low border border-risk-low/30 cursor-default"
+                              : anotherApplied
+                              ? "bg-muted text-muted-foreground cursor-not-allowed"
+                              : "btn-gradient text-primary-foreground hover:opacity-90"
+                          }`}
+                        >
+                          {isApplied ? <><CheckCircle2 className="w-3.5 h-3.5" /> Applied</> : "Apply This Scenario"}
+                        </button>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
