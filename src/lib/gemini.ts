@@ -193,6 +193,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
 
   if (isPromotion) {
     const promoCost = Math.round(emp.salary * 0.2);
+    const nextRole = "Senior " + emp.role;
     scenarios = [
       {
         title: "Promote Now",
@@ -201,6 +202,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: emp.trend === "declining" ? "Medium" : "Low",
         description: `Promoting ${emp.name} signals career investment. ${isHighPotential ? "Their 9+ potential strongly supports this." : "Score of " + emp.score + " suggests they can grow into the role."}`,
         reasoning: `Probability based on potential (${emp.potential}/10), performance (${emp.score}/10), trend (${emp.trend}). Cost ~20% salary increase (industry standard).`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: promoCost, newRole: nextRole, resetPromo: true },
       },
       {
         title: "Promote in 6 Months",
@@ -209,6 +211,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: isHighRisk ? "High" : "Medium",
         description: `Delayed promotion with stretch assignments. ${isHighRisk ? `Risk: ${emp.name} may not wait.` : "Allows time to build a stronger case."}`,
         reasoning: `6-month delay drops probability because ${isHighRisk ? `risk is ${emp.risk}` : "market conditions may shift"}.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(promoCost * 0.5) },
       },
       {
         title: "Lateral Move Instead",
@@ -217,6 +220,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: "Medium",
         description: `Cross-functional role move. Broadens experience without full promotion commitment.`,
         reasoning: `Lateral moves have ~${emp.trend === "improving" ? "70" : "50"}% success rate based on trend and skill breadth (${emp.skills.length} skills).`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(promoCost * 0.3), resetPromo: true },
       },
     ];
     analysis = `**Promotion Analysis for ${emp.name}** (${emp.role})\n\nKey factors: potential ${emp.potential}/10, score ${emp.score}/10, trend ${emp.trend}, last promoted ${emp.lastPromo} months ago.`;
