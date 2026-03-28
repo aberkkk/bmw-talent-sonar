@@ -16,14 +16,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen w-full">
-      <aside className="w-64 shrink-0 border-r border-border bg-sidebar flex flex-col">
-        {/* Logo area with purple glow */}
-        <div className="p-5 border-b border-border relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
-          <div className="flex items-center gap-3 relative">
-            <div className="w-9 h-9 rounded-lg bg-primary/20 border border-primary/30 flex items-center justify-center glow-purple">
-              <span className="text-primary font-extrabold text-xs tracking-tight">BMW</span>
-            </div>
+      <aside className="w-64 shrink-0 bg-sidebar sidebar-shadow flex flex-col z-10">
+        <div className="p-5 border-b border-border">
+          <div className="flex items-center gap-3">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/600px-BMW.svg.png"
+              alt="BMW"
+              className="w-10 h-10 rounded-full"
+            />
             <div>
               <h1 className="text-sm font-bold text-foreground leading-tight">BMW Workforce</h1>
               <p className="text-xs text-muted-foreground">Oracle</p>
@@ -38,10 +38,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all relative ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-primary/10 text-primary border-l-2 border-l-primary glow-purple"
-                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground border-l-2 border-l-transparent"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 }`}
               >
                 <item.icon className="w-4 h-4" />

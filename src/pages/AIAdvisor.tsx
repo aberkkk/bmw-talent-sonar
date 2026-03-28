@@ -8,10 +8,7 @@ const exampleQuestions = [
   "Who should we promote first?",
 ];
 
-interface Message {
-  role: "user" | "ai";
-  content: string;
-}
+interface Message { role: "user" | "ai"; content: string; }
 
 function generateResponse(q: string): string {
   const lower = q.toLowerCase();
@@ -35,9 +32,7 @@ export default function AIAdvisor() {
 
   const send = (text: string) => {
     if (!text.trim()) return;
-    const userMsg: Message = { role: "user", content: text };
-    const aiMsg: Message = { role: "ai", content: generateResponse(text) };
-    setMessages((prev) => [...prev, userMsg, aiMsg]);
+    setMessages((prev) => [...prev, { role: "user", content: text }, { role: "ai", content: generateResponse(text) }]);
     setInput("");
   };
 
@@ -51,11 +46,7 @@ export default function AIAdvisor() {
       {messages.length === 0 && (
         <div className="flex gap-3 mb-6 flex-wrap">
           {exampleQuestions.map((q) => (
-            <button
-              key={q}
-              onClick={() => send(q)}
-              className="px-4 py-2.5 rounded-xl text-sm bg-card border border-border hover:border-primary/40 text-card-foreground transition-all"
-            >
+            <button key={q} onClick={() => send(q)} className="px-4 py-2.5 rounded-xl text-sm bg-card border border-border hover:border-primary/40 text-card-foreground transition-all card-glow">
               {q}
             </button>
           ))}
@@ -66,9 +57,7 @@ export default function AIAdvisor() {
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div className={`max-w-[70%] px-4 py-3 rounded-xl text-sm leading-relaxed whitespace-pre-wrap ${
-              msg.role === "user"
-                ? "bg-primary text-primary-foreground"
-                : "bg-card border border-border text-card-foreground"
+              msg.role === "user" ? "btn-gradient text-primary-foreground" : "bg-card border border-border text-card-foreground"
             }`}>
               {msg.content}
             </div>
@@ -77,17 +66,8 @@ export default function AIAdvisor() {
       </div>
 
       <div className="flex gap-3">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && send(input)}
-          placeholder="Ask about your workforce..."
-          className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none"
-        />
-        <button
-          onClick={() => send(input)}
-          className="px-5 py-3 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-        >
+        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send(input)} placeholder="Ask about your workforce..." className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none" />
+        <button onClick={() => send(input)} className="px-5 py-3 rounded-xl btn-gradient text-primary-foreground transition-all">
           <Send className="w-4 h-4" />
         </button>
       </div>
