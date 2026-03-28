@@ -11,6 +11,25 @@ interface Props {
 const riskOptions: Employee["risk"][] = ["Low", "Medium", "High", "Critical"];
 const trendOptions = ["improving", "rapidly improving", "stable", "declining"];
 
+const departmentOptions = [
+  "Engineering", "Product", "Analytics", "Design", "Marketing",
+  "Sales", "Finance", "HR", "Operations", "Legal", "IT", "R&D",
+  "Supply Chain", "Manufacturing", "Customer Success"
+];
+
+const roleOptions = [
+  "Junior Engineer", "Engineer", "Senior Engineer", "Lead Engineer", "Staff Engineer", "Principal Engineer",
+  "Junior Designer", "Designer", "Senior Designer", "Lead Designer",
+  "Analyst", "Senior Analyst", "Lead Analyst", "Data Scientist", "Senior Data Scientist",
+  "Product Manager", "Senior Product Manager", "Director of Product",
+  "Marketing Specialist", "Senior Marketing Specialist", "Marketing Manager",
+  "Sales Representative", "Senior Sales Representative", "Sales Manager",
+  "HR Specialist", "HR Manager", "HR Director",
+  "Finance Analyst", "Senior Finance Analyst", "Finance Manager",
+  "Operations Manager", "Senior Operations Manager",
+  "Team Lead", "Manager", "Senior Manager", "Director", "VP", "SVP"
+];
+
 export default function AddEmployeeModal({ open, onClose, onAdd }: Props) {
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
