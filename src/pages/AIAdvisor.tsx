@@ -37,7 +37,7 @@ export default function AIAdvisor() {
     <div className="animate-fade-in flex flex-col h-[calc(100vh-4rem)]">
       <div className="mb-6">
         <h1 className="text-2xl font-bold">AI Advisor</h1>
-        <p className="text-muted-foreground text-sm mt-1">Ask questions about your workforce data — powered by Gemini AI</p>
+        <p className="text-muted-foreground text-sm mt-1">Ask questions about your workforce data — powered by AI</p>
       </div>
 
       {messages.length === 0 && (

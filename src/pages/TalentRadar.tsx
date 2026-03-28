@@ -90,7 +90,7 @@ export default function TalentRadar() {
             {loading && (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                <span className="ml-3 text-sm text-muted-foreground">Analyzing with Gemini AI...</span>
+                <span className="ml-3 text-sm text-muted-foreground">Analyzing...</span>
               </div>
             )}
             {error && <p className="text-risk-high text-sm py-4">{error}</p>}
