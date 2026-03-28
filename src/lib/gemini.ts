@@ -331,6 +331,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: "Low",
         description: `Immediate action: address ${emp.flag || "development needs"} with a tailored plan.`,
         reasoning: `Based on potential (${emp.potential}/10) and trend (${emp.trend}). ${isHighPotential ? "85%+" : "~70%"} success rate.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(actionCost * 0.5), resetPromo: true },
       },
       {
         title: "Delayed Action",
@@ -347,6 +348,7 @@ export async function scenarioChat(message: string, allEmployees: Employee[]): P
         risk: "Medium",
         description: `Hybrid: ${isHighPotential ? "mentorship + stretch project" : "cross-training + rotation"}.`,
         reasoning: `~65% success rate. Lower cost but depends on responsiveness.`,
+        changes: { employeeId: emp.id, employeeName: emp.name, salaryChange: Math.round(actionCost * 0.3) },
       },
     ];
     analysis = `**Scenario Analysis for ${emp.name}** (${emp.role})\n\nPerformance ${emp.score}/10, potential ${emp.potential}/10, risk ${emp.risk}, salary €${emp.salary}k.`;
