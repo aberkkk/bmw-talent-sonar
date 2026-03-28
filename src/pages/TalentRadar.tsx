@@ -30,7 +30,7 @@ const quickQuestions = [
 ];
 
 export default function TalentRadar() {
-  const { employees, addEmployee } = useEmployees();
+  const { employees, addEmployee, addEmployees } = useEmployees();
   const [filter, setFilter] = useState("All");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
