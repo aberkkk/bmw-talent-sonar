@@ -53,7 +53,7 @@ export default function SuccessionPlanner() {
           </button>
           <div className="absolute left-0 top-full mt-2 w-80 bg-card border border-border rounded-xl p-4 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
             <p className="text-sm text-muted-foreground leading-relaxed">
-              <span className="font-semibold text-foreground">Methodology:</span> Candidates ranked by tenure and promotion recency. Thresholds: <span className="text-risk-low font-medium">"Ready Now" (5+ yr tenure, recent promo)</span>, <span className="text-risk-medium font-medium">"Ready in 1yr" (3+ yr tenure)</span>, <span className="text-risk-high font-medium">"Needs Development" (&lt;3yr)</span>.
+              <span className="font-semibold text-foreground">{t("succession.methodology")}</span> {t("succession.methodologyDesc")}
             </p>
           </div>
         </div>
