@@ -228,7 +228,7 @@ export default function ScenarioSimulator() {
               className="px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all border bg-secondary text-secondary-foreground border-border hover:border-primary/40"
             >
               <Download className="w-4 h-4" />
-              Export PDF
+              {t("scenario.exportPdf")}
             </button>
           )}
           <button
