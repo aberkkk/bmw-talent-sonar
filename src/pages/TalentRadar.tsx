@@ -209,7 +209,7 @@ export default function TalentRadar() {
             )}
             <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 mb-4">
               <p className="text-[11px] text-muted-foreground leading-relaxed">
-                <span className="font-semibold">Risk reasoning:</span> {riskReasoning(emp)}
+                <span className="font-semibold">{t("talent.riskReasoning")}</span> {riskReasoning(emp)}
               </p>
             </div>
             <div className="flex gap-2">
