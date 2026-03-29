@@ -2,9 +2,11 @@ import { useEmployees } from "@/context/EmployeeContext";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { Info } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
+import { useChartColors } from "@/hooks/useChartColors";
 
 export default function CompensationPulse() {
   const { employees } = useEmployees();
+  const colors = useChartColors();
 
   if (employees.length === 0) {
     return (
@@ -58,10 +60,10 @@ export default function CompensationPulse() {
         </div>
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={data} barGap={4}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-            <XAxis dataKey="name" tick={{ fill: "#64748B", fontSize: 12 }} />
-            <YAxis tick={{ fill: "#64748B", fontSize: 12 }} tickFormatter={(v) => `€${v}k`} />
-            <Tooltip contentStyle={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 8, color: "#0F172A" }} formatter={(value: number) => [`€${value}k`]} />
+            <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} />
+            <XAxis dataKey="name" tick={{ fill: colors.tick, fontSize: 12 }} />
+            <YAxis tick={{ fill: colors.tick, fontSize: 12 }} tickFormatter={(v) => `€${v}k`} />
+            <Tooltip contentStyle={{ background: colors.tooltipBg, border: `1px solid ${colors.tooltipBorder}`, borderRadius: 8, color: colors.tooltipText }} formatter={(value: number) => [`€${value}k`]} />
             <Bar dataKey="current" name="Current" radius={[4, 4, 0, 0]}>
               {data.map((_, i) => <Cell key={i} fill="#0D9488" />)}
             </Bar>
