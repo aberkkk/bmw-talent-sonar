@@ -24,6 +24,9 @@ export default function CompensationPulse() {
         <div className="mb-8">
           <h1 className="text-2xl font-bold">{t("comp.title")}</h1>
           <p className="text-muted-foreground text-sm mt-1">{t("comp.subtitle")}</p>
+        </div>
+        <EmptyState />
+      </div>
     );
   }
 
