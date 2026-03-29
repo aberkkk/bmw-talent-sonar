@@ -132,8 +132,8 @@ export default function OnboardingTour({ active, onEnd }: Props) {
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
-        <h3 className="text-base font-bold text-foreground mb-1">{current.title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-4">{current.description}</p>
+        <h3 className="text-base font-bold text-foreground mb-1">{t(current.titleKey)}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-4">{t(current.descKey)}</p>
 
         <div className="flex items-center justify-between">
           <button onClick={onEnd} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
