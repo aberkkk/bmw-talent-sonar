@@ -134,11 +134,7 @@ Natural language interface for hiring queries. Ask complex questions about candi
         - - **Natural language queries** — the AI Advisor translates complex HR questions into actionable data insights
          
           - ---
-
-          ## 🌍 Internationalization
-
-          Full support for **Turkish (TR)** and **English (EN)** via a custom i18n context — toggle language with the flag switcher in the top navigation.
-
+          
           ---
 
           ## 📊 Business Value
