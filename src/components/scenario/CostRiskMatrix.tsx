@@ -1,4 +1,4 @@
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Cell, Label } from "recharts";
+import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Cell, Label } from "recharts";
 import { useChartColors } from "@/hooks/useChartColors";
 
 interface Scenario {
@@ -26,10 +26,10 @@ function parseCost(costStr: string): number {
 }
 
 const riskColor: Record<string, string> = {
-  Low: "#22C55E",
+  Low: "#10B981",
   Medium: "#F59E0B",
   High: "#EF4444",
-  Critical: "#991B1B",
+  Critical: "#DC2626",
 };
 
 interface Props {
@@ -39,9 +39,12 @@ interface Props {
 export default function CostRiskMatrix({ scenarios }: Props) {
   const colors = useChartColors();
 
+  if (scenarios.length < 3) return null;
+
   const data = scenarios.map((s, i) => ({
+    name: `Scenario ${String.fromCharCode(65 + i)}`,
     label: String.fromCharCode(65 + i),
-    cost: parseCost(s.cost),
+    cost: parseFloat(s.cost.replace(/[^0-9.]/g, '')) || 0,
     probability: s.probability,
     risk: s.risk,
     title: s.title,
@@ -88,7 +91,9 @@ export default function CostRiskMatrix({ scenarios }: Props) {
             >
               <Label value="Retention %" angle={-90} position="left" offset={5} style={{ fill: colors.tick, fontSize: 11 }} />
             </YAxis>
+            <ZAxis range={[400, 400]} />
             <ReferenceLine x={20000} stroke={colors.referenceLine} strokeDasharray="6 4" strokeOpacity={0.5} />
+            <ReferenceLine y={70} stroke={colors.referenceLine} strokeDasharray="6 4" strokeOpacity={0.5} />
             <ReferenceLine y={70} stroke={colors.referenceLine} strokeDasharray="6 4" strokeOpacity={0.5} />
             <Tooltip
               cursor={{ strokeDasharray: "3 3" }}
@@ -111,9 +116,9 @@ export default function CostRiskMatrix({ scenarios }: Props) {
                 return "";
               }}
             />
-            <Scatter data={data} shape="circle">
+            <Scatter data={data} shape="circle" legendType="none">
               {data.map((d, i) => (
-                <Cell key={i} fill={riskColor[d.risk]} r={12} />
+                <Cell key={`cell-${i}`} fill={riskColor[d.risk]} />
               ))}
             </Scatter>
           </ScatterChart>
