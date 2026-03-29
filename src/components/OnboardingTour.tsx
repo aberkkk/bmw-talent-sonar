@@ -137,7 +137,7 @@ export default function OnboardingTour({ active, onEnd }: Props) {
 
         <div className="flex items-center justify-between">
           <button onClick={onEnd} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-            Skip Tour
+            {t("tour.skip")}
           </button>
           <div className="flex gap-2">
             {step > 0 && (
