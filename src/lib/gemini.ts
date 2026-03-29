@@ -29,7 +29,7 @@ export async function advisorChat(message: string, history: { role: string; cont
   await new Promise(r => setTimeout(r, 600 + Math.random() * 400));
 
   if (allEmployees.length === 0) {
-    return "No employee data available yet. Add employees in Talent Radar to start getting workforce intelligence insights.\n\n⚠️ *All recommendations are data-driven suggestions. Final decisions rest with human leadership.*";
+    return "No employee data available yet. Add employees in Talent Radar to start getting XA-108 Technologies insights.\n\n⚠️ *All recommendations are data-driven suggestions. Final decisions rest with human leadership.*";
   }
 
   const lower = message.toLowerCase();
