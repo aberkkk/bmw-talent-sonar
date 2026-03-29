@@ -89,7 +89,7 @@ export default function UpskillingMap() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="bg-muted/30 border border-border rounded-lg p-3">
-                  <p className="text-[11px] font-semibold text-muted-foreground mb-1">Next Step Reasoning</p>
+                  <p className="text-[11px] font-semibold text-muted-foreground mb-1">{t("upskill.nextStep")}</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">{path.nextReason}</p>
                 </div>
                 <div className="bg-muted/30 border border-border rounded-lg p-3">
