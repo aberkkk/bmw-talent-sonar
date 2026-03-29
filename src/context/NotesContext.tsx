@@ -61,7 +61,7 @@ export function NotesProvider({ children }: { children: ReactNode }) {
   }, [notes]);
 
   return (
-    <NotesContext.Provider value={{ notes, addNote, getNotesForEmployee, hasNotes }}>
+    <NotesContext.Provider value={{ notes, addNote, deleteNote, updateNote, getNotesForEmployee, hasNotes }}>
       {children}
     </NotesContext.Provider>
   );
