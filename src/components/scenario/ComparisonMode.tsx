@@ -182,9 +182,11 @@ export default function ComparisonMode({ onClose }: Props) {
                   </select>
                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                 </div>
-                <button onClick={() => simulate(panel)} disabled={panel.loading} className="w-full py-2 rounded-xl text-xs font-bold btn-gradient text-primary-foreground disabled:opacity-40 transition-all flex items-center justify-center gap-1.5">
-                  {panel.loading ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Running...</> : `Simulate ${label}`}
-                </button>
+                {panel.loading && (
+                  <div className="w-full py-2 rounded-xl text-xs font-medium bg-muted/50 text-muted-foreground flex items-center justify-center gap-1.5">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" /> Running...
+                  </div>
+                )}
 
                 {/* Result preview */}
                 {s && (
