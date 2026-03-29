@@ -151,7 +151,7 @@ export default function TalentRadar() {
             </button>
             <div className="absolute left-0 top-full mt-2 w-80 bg-card border border-border rounded-xl p-4 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                <span className="font-semibold text-foreground">How risk is calculated:</span> Risk level is determined by: promotion recency, compensation gap vs. market benchmark, and tenure-to-poaching ratio.
+                <span className="font-semibold text-foreground">{t("talent.howRiskCalculated")}</span> {t("talent.howRiskDesc")}
               </p>
             </div>
           </div>
