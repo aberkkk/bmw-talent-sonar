@@ -93,7 +93,7 @@ export default function UpskillingMap() {
                   <p className="text-xs text-muted-foreground leading-relaxed">{path.nextReason}</p>
                 </div>
                 <div className="bg-muted/30 border border-border rounded-lg p-3">
-                  <p className="text-[11px] font-semibold text-muted-foreground mb-1">Long-Term Path Reasoning</p>
+                  <p className="text-[11px] font-semibold text-muted-foreground mb-1">{t("upskill.longTerm")}</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">{path.futureReason}</p>
                 </div>
               </div>

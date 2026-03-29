@@ -81,7 +81,7 @@ export default function SuccessionPlanner() {
                       <h4 className="font-semibold text-card-foreground">{emp.name}</h4>
                       <p className="text-xs text-muted-foreground">{emp.role} · {emp.tenure}yr tenure</p>
                       <div className="mt-2 flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">Last promo: {emp.lastPromo}mo ago</span>
+                        <span className="text-xs text-muted-foreground">{t("succession.lastPromo")} {emp.lastPromo}mo</span>
                         <span className="text-xs text-muted-foreground">€{emp.salary}k</span>
                       </div>
                       <p className="mt-2 text-[11px] text-muted-foreground leading-relaxed italic border-t border-border/50 pt-2">
