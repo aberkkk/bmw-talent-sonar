@@ -175,7 +175,7 @@ export default function TalentRadar() {
           <div key={emp.id} className="bg-card border border-border rounded-xl p-5 transition-all card-glow">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h3 className="font-semibold text-card-foreground">{emp.name}</h3>
+                <h3 className="font-semibold text-card-foreground truncate max-w-[180px]" title={emp.name}>{emp.name}</h3>
                 <p className="text-sm text-muted-foreground">{emp.role}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">{emp.employeeId} · {emp.jobGrade}</p>
               </div>
