@@ -5,7 +5,8 @@ import RiskBadge from "@/components/RiskBadge";
 import { deepDiveAnalysis, employeeChat } from "@/lib/gemini";
 import AddEmployeeModal from "@/components/AddEmployeeModal";
 import BulkImportModal from "@/components/BulkImportModal";
-import { Loader2, X, Info, Send, MessageCircle, Users, Plus, FileSpreadsheet } from "lucide-react";
+import { Loader2, X, Info, Send, MessageCircle, Users, Plus, FileSpreadsheet, Pencil, Trash2 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const departments = (emps: Employee[]) => ["All", ...Array.from(new Set(emps.map((e) => e.dept)))];
 
@@ -28,7 +29,8 @@ const quickQuestions = [
 ];
 
 export default function TalentRadar() {
-  const { employees, addEmployee, addEmployees } = useEmployees();
+  const { employees, addEmployee, addEmployees, updateEmployee, removeEmployee } = useEmployees();
+  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [filter, setFilter] = useState("All");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
@@ -96,7 +98,7 @@ export default function TalentRadar() {
             <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors">
               <FileSpreadsheet className="w-4 h-4" /> Bulk Import
             </button>
-            <button onClick={() => setAddModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
+            <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
               <Plus className="w-4 h-4" /> Add Employee
             </button>
           </div>
@@ -113,12 +115,12 @@ export default function TalentRadar() {
             <button onClick={() => setBulkModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors border border-border">
               <FileSpreadsheet className="w-4 h-4" /> Bulk Import CSV
             </button>
-            <button onClick={() => setAddModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
+            <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
               <Plus className="w-4 h-4" /> Add Employee +
             </button>
           </div>
         </div>
-        <AddEmployeeModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onAdd={addEmployee} />
+        <AddEmployeeModal open={addModalOpen} onClose={() => { setAddModalOpen(false); setEditingEmployee(null); }} onAdd={addEmployee} onUpdate={updateEmployee} editEmployee={editingEmployee} />
         <BulkImportModal open={bulkModalOpen} onClose={() => setBulkModalOpen(false)} onImport={addEmployees} />
       </div>
     );
@@ -135,7 +137,7 @@ export default function TalentRadar() {
           <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors border border-border">
             <FileSpreadsheet className="w-4 h-4" /> Bulk Import
           </button>
-          <button onClick={() => setAddModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
+          <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
             <Plus className="w-4 h-4" /> Add Employee +
           </button>
         </div>
@@ -165,7 +167,15 @@ export default function TalentRadar() {
                 <p className="text-sm text-muted-foreground">{emp.role}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">{emp.employeeId} · {emp.jobGrade}</p>
               </div>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">{emp.dept}</span>
+              <div className="flex items-center gap-1">
+                <button onClick={() => { setEditingEmployee(emp); setAddModalOpen(true); }} className="p-1.5 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors" title="Edit employee">
+                  <Pencil className="w-3.5 h-3.5" />
+                </button>
+                <button onClick={() => { removeEmployee(emp.id); toast({ title: "Employee removed", description: `${emp.name} has been removed.` }); }} className="p-1.5 rounded-lg hover:bg-risk-high/10 text-muted-foreground hover:text-risk-high transition-colors" title="Delete employee">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 ml-1">{emp.dept}</span>
+              </div>
             </div>
             <div className="flex flex-wrap gap-1.5 mb-4">
               {emp.skills.map((s) => (
@@ -262,7 +272,7 @@ export default function TalentRadar() {
         </div>
       )}
 
-      <AddEmployeeModal open={addModalOpen} onClose={() => setAddModalOpen(false)} onAdd={addEmployee} />
+      <AddEmployeeModal open={addModalOpen} onClose={() => { setAddModalOpen(false); setEditingEmployee(null); }} onAdd={addEmployee} onUpdate={updateEmployee} editEmployee={editingEmployee} />
       <BulkImportModal open={bulkModalOpen} onClose={() => setBulkModalOpen(false)} onImport={addEmployees} />
     </div>
   );
