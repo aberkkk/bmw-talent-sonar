@@ -167,7 +167,15 @@ export default function TalentRadar() {
                 <p className="text-sm text-muted-foreground">{emp.role}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">{emp.employeeId} · {emp.jobGrade}</p>
               </div>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">{emp.dept}</span>
+              <div className="flex items-center gap-1">
+                <button onClick={() => { setEditingEmployee(emp); setAddModalOpen(true); }} className="p-1.5 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors" title="Edit employee">
+                  <Pencil className="w-3.5 h-3.5" />
+                </button>
+                <button onClick={() => { removeEmployee(emp.id); toast({ title: "Employee removed", description: `${emp.name} has been removed.` }); }} className="p-1.5 rounded-lg hover:bg-risk-high/10 text-muted-foreground hover:text-risk-high transition-colors" title="Delete employee">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 ml-1">{emp.dept}</span>
+              </div>
             </div>
             <div className="flex flex-wrap gap-1.5 mb-4">
               {emp.skills.map((s) => (
