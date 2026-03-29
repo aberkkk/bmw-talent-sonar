@@ -129,9 +129,21 @@ export default function TalentRadar() {
   return (
     <div className="animate-fade-in">
       <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold">Talent Radar</h1>
-          <p className="text-muted-foreground text-sm mt-1">Real-time workforce intelligence overview</p>
+        <div className="flex items-center gap-3">
+          <div>
+            <h1 className="text-2xl font-bold">Talent Radar</h1>
+            <p className="text-muted-foreground text-sm mt-1">Real-time workforce intelligence overview</p>
+          </div>
+          <div className="relative group">
+            <button className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
+              <Info className="w-4 h-4" />
+            </button>
+            <div className="absolute left-0 top-full mt-2 w-80 bg-card border border-border rounded-xl p-4 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                <span className="font-semibold text-foreground">How risk is calculated:</span> Risk level is determined by: promotion recency, compensation gap vs. market benchmark, and tenure-to-poaching ratio.
+              </p>
+            </div>
+          </div>
         </div>
         <div className="flex gap-2">
           <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors border border-border">
@@ -140,13 +152,6 @@ export default function TalentRadar() {
           <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
             <Plus className="w-4 h-4" /> Add Employee +
           </button>
-        </div>
-      </div>
-
-      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
-        <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-        <div className="text-sm text-muted-foreground leading-relaxed">
-          <span className="font-semibold text-foreground">How risk is calculated:</span> <span className="font-medium text-foreground">Risk level</span> is determined by: promotion recency, compensation gap vs. market benchmark, and tenure-to-poaching ratio.
         </div>
       </div>
 
