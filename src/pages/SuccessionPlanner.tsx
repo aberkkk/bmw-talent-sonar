@@ -18,6 +18,7 @@ function readinessReasoning(emp: ReturnType<typeof useEmployees>["employees"][0]
 
 export default function SuccessionPlanner() {
   const { employees } = useEmployees();
+  const { t } = useLanguage();
 
   if (employees.length === 0) {
     return (
