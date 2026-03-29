@@ -10,6 +10,8 @@ export interface ManagerNote {
 interface NotesContextType {
   notes: ManagerNote[];
   addNote: (employeeId: number, text: string) => void;
+  deleteNote: (noteId: string) => void;
+  updateNote: (noteId: string, text: string) => void;
   getNotesForEmployee: (employeeId: number) => ManagerNote[];
   hasNotes: (employeeId: number) => boolean;
 }
