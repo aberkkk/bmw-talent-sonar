@@ -218,6 +218,7 @@ export default function TalentRadar() {
                   {getNotesForEmployee(emp.id).length}
                 </div>
               )}
+            </div>
           </div>
         ))}
       </div>
