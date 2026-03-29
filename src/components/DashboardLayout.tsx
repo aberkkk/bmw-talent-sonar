@@ -27,7 +27,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <div className="p-5 border-b border-sidebar-border">
           <div className="flex items-center gap-3">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/600px-BMW.svg.png"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/BMW_logo_%28gray%29.svg/600px-BMW_logo_%28gray%29.svg.png"
               alt="BMW"
               className="w-10 h-10 rounded-full"
             />
