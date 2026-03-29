@@ -161,7 +161,7 @@ export default function CompensationPulse() {
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
         <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
         <div className="text-sm text-muted-foreground leading-relaxed">
-          <span className="font-semibold text-foreground">Methodology:</span> Benchmarks from industry salary surveys for equivalent roles in the DACH region. Gap &gt;15% flagged as "Below Market". Benchmark multiplier adjusts based on job grade.
+          <span className="font-semibold text-foreground">{t("comp.methodology")}</span> {t("comp.methodologyDesc")}
         </div>
       </div>
 
