@@ -24,6 +24,7 @@ interface Props {
 }
 
 export default function OnboardingTour({ active, onEnd }: Props) {
+  const { t } = useLanguage();
   const [step, setStep] = useState(0);
   const [rect, setRect] = useState<DOMRect | null>(null);
   const [done, setDone] = useState(false);
