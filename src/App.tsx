@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { EmployeeProvider } from "@/context/EmployeeContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { NotesProvider } from "@/context/NotesContext";
 import DashboardLayout from "@/components/DashboardLayout";
 import TalentRadar from "@/pages/TalentRadar";
 import SuccessionPlanner from "@/pages/SuccessionPlanner";
@@ -21,6 +22,7 @@ const App = () => (
     <ThemeProvider>
       <TooltipProvider>
         <EmployeeProvider>
+          <NotesProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -36,6 +38,7 @@ const App = () => (
               </Routes>
             </DashboardLayout>
           </BrowserRouter>
+          </NotesProvider>
         </EmployeeProvider>
       </TooltipProvider>
     </ThemeProvider>

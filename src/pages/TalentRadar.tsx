@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
+import { useNotes } from "@/context/NotesContext";
 import { Employee } from "@/data/employees";
 import RiskBadge from "@/components/RiskBadge";
 import { deepDiveAnalysis, employeeChat } from "@/lib/gemini";
 import AddEmployeeModal from "@/components/AddEmployeeModal";
 import BulkImportModal from "@/components/BulkImportModal";
-import { Loader2, X, Info, Send, MessageCircle, Users, Plus, FileSpreadsheet, Pencil, Trash2 } from "lucide-react";
+import { Loader2, X, Info, Send, MessageCircle, Users, Plus, FileSpreadsheet, Pencil, Trash2, StickyNote } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { format } from "date-fns";
 
 const departments = (emps: Employee[]) => ["All", ...Array.from(new Set(emps.map((e) => e.dept)))];
 
@@ -30,7 +32,10 @@ const quickQuestions = [
 
 export default function TalentRadar() {
   const { employees, addEmployee, addEmployees, updateEmployee, removeEmployee } = useEmployees();
+  const { hasNotes, getNotesForEmployee, addNote } = useNotes();
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [modalEmployeeId, setModalEmployeeId] = useState<number | null>(null);
+  const [noteInput, setNoteInput] = useState("");
   const [filter, setFilter] = useState("All");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
@@ -53,11 +58,13 @@ export default function TalentRadar() {
   const handleDeepDive = async (emp: Employee) => {
     setModalOpen(true);
     setModalEmployee(emp.name);
+    setModalEmployeeId(emp.id);
     setModalContent("");
     setError("");
     setLoading(true);
     setChatMessages([]);
     setChatInput("");
+    setNoteInput("");
     try {
       const info = `Name: ${emp.name}, Role: ${emp.role}, Department: ${emp.dept}, Skills: ${emp.skills.join(", ")}, Tenure: ${emp.tenure} years, Salary: €${emp.salary}k, Last Promotion: ${emp.lastPromo} months ago, Risk Level: ${emp.risk}${emp.flag ? `, Flag: ${emp.flag}` : ""}`;
       const result = await deepDiveAnalysis(info, employees);
@@ -201,9 +208,17 @@ export default function TalentRadar() {
                 <span className="font-semibold">Risk reasoning:</span> {riskReasoning(emp)}
               </p>
             </div>
-            <button onClick={() => handleDeepDive(emp)} className="w-full py-2 rounded-lg text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-              Deep Dive →
-            </button>
+            <div className="flex gap-2">
+              <button onClick={() => handleDeepDive(emp)} className="flex-1 py-2 rounded-lg text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+                Deep Dive →
+              </button>
+              {hasNotes(emp.id) && (
+                <div className="flex items-center gap-1 px-2.5 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent text-xs font-medium">
+                  <StickyNote className="w-3 h-3" />
+                  {getNotesForEmployee(emp.id).length}
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -268,6 +283,32 @@ export default function TalentRadar() {
                     <input value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendChat(chatInput)} placeholder={`Ask about ${modalEmployee}...`} className="flex-1 bg-secondary border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none" disabled={chatLoading} />
                     <button onClick={() => sendChat(chatInput)} disabled={chatLoading} className="px-3 py-2 rounded-xl btn-gradient text-primary-foreground transition-all disabled:opacity-50">
                       <Send className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Manager Notes */}
+              {modalEmployeeId && (
+                <div className="border-t border-border pt-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <StickyNote className="w-4 h-4 text-accent" />
+                    <h3 className="text-sm font-semibold">Manager Notes</h3>
+                  </div>
+                  {getNotesForEmployee(modalEmployeeId).length > 0 && (
+                    <div className="space-y-2 mb-3 max-h-[200px] overflow-auto">
+                      {getNotesForEmployee(modalEmployeeId).map(note => (
+                        <div key={note.id} className="bg-muted/30 border border-border rounded-lg px-3 py-2">
+                          <p className="text-sm text-foreground leading-relaxed">{note.text}</p>
+                          <p className="text-[10px] text-muted-foreground mt-1">{format(new Date(note.timestamp), "MMM d, yyyy 'at' h:mm a")}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="flex gap-2">
+                    <input value={noteInput} onChange={e => setNoteInput(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && noteInput.trim()) { addNote(modalEmployeeId, noteInput); setNoteInput(""); }}} placeholder="Add a note..." className="flex-1 bg-secondary border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none" />
+                    <button onClick={() => { if (noteInput.trim()) { addNote(modalEmployeeId, noteInput); setNoteInput(""); }}} className="px-3 py-2 rounded-xl btn-gradient text-primary-foreground transition-all">
+                      <Plus className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
