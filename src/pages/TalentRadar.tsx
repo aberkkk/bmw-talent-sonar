@@ -118,16 +118,16 @@ export default function TalentRadar() {
           <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
             <Users className="w-10 h-10 text-primary" />
           </div>
-          <h2 className="text-xl font-bold mb-2 text-foreground">No employees added yet</h2>
+           <h2 className="text-xl font-bold mb-2 text-foreground">{t("talent.noEmployees")}</h2>
           <p className="text-sm text-muted-foreground max-w-md mb-6">
-            Add your first employee or bulk import from a CSV to start building your XA-108 Technologies dashboard
+            {t("talent.noEmployeesDesc")}
           </p>
           <div className="flex gap-3">
             <button onClick={() => setBulkModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
-              <FileSpreadsheet className="w-4 h-4" /> Bulk Import CSV
+              <FileSpreadsheet className="w-4 h-4" /> {t("talent.bulkImportCsv")}
             </button>
             <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
-              <Plus className="w-4 h-4" /> Add Employee +
+              <Plus className="w-4 h-4" /> {t("talent.addEmployee")} +
             </button>
           </div>
         </div>
