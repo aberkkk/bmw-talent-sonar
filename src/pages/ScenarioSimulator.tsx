@@ -39,6 +39,7 @@ interface ChatMsg {
 
 export default function ScenarioSimulator() {
   const { employees, updateEmployee } = useEmployees();
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
