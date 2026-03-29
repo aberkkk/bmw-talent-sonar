@@ -13,13 +13,18 @@ import { format } from "date-fns";
 
 const departments = (emps: Employee[]) => ["All", ...Array.from(new Set(emps.map((e) => e.dept)))];
 
-function riskReasoning(emp: Employee) {
-  const reasons: string[] = [];
-  if (emp.lastPromo > 18) reasons.push(`no promotion in ${emp.lastPromo} months`);
-  if (emp.tenure <= 2) reasons.push("short tenure with high poaching risk");
-  if (emp.flag) reasons.push(emp.flag.toLowerCase());
-  if (reasons.length === 0) reasons.push("stable indicators, competitive compensation, recent promotion");
-  return reasons.join("; ");
+function getRiskFlags(emp: Employee): string[] {
+  const gradeMultiplier: Record<string, number> = {
+    "L1": 1.08, "L2": 1.10, "L3": 1.12, "L4": 1.15, "L5": 1.18, "Director": 1.20, "VP": 1.25,
+  };
+  const mult = gradeMultiplier[emp.jobGrade] || 1.12;
+  const benchmark = Math.round(emp.salary * mult);
+  const salaryGap = Math.round(((benchmark - emp.salary) / emp.salary) * 100);
+  const flags: string[] = [];
+  if (emp.lastPromo > 18) flags.push(`No promotion in ${emp.lastPromo} months`);
+  if (salaryGap > 10) flags.push(`Underpaid vs market by ${salaryGap}%`);
+  if (emp.tenure <= 2) flags.push("Short tenure, at risk of poaching");
+  return flags;
 }
 
 interface ChatMsg { role: "user" | "assistant"; content: string; }
