@@ -65,7 +65,7 @@ export default function SuccessionPlanner() {
           return (
             <div key={pos.title} className="space-y-4">
               <div className="bg-primary/10 border-2 border-primary/30 rounded-xl p-5 text-center glow-purple">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Key Position</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{t("succession.keyPosition")}</p>
                 <h3 className="text-lg font-bold text-primary">{pos.title}</h3>
               </div>
               <div className="flex justify-center"><div className="w-0.5 h-6 bg-border" /></div>
