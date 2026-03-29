@@ -232,7 +232,7 @@ export default function TalentRadar() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 backdrop-blur-sm" onClick={() => setModalOpen(false)}>
           <div className="bg-card border border-border rounded-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden shadow-xl flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between p-6 pb-0">
-              <h2 className="text-lg font-bold">AI Deep Dive — {modalEmployee}</h2>
+              <h2 className="text-lg font-bold">{t("talent.aiDeepDive")} — {modalEmployee}</h2>
               <button onClick={() => setModalOpen(false)} className="p-1 rounded-lg hover:bg-secondary transition-colors"><X className="w-5 h-5" /></button>
             </div>
             <div className="flex-1 overflow-auto p-6 space-y-5">
