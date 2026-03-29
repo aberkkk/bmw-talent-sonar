@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
 import { useNotes } from "@/context/NotesContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { Employee } from "@/data/employees";
 import RiskBadge from "@/components/RiskBadge";
 import { deepDiveAnalysis, employeeChat } from "@/lib/gemini";
