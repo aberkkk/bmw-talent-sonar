@@ -132,8 +132,8 @@ export default function ComparisonMode({ onClose }: Props) {
               <Plus className="w-3.5 h-3.5" /> Add Slot
             </button>
           )}
-          <button onClick={simulateAll} className="px-4 py-2 rounded-xl text-xs font-bold btn-gradient text-primary-foreground flex items-center gap-1.5">
-            <Zap className="w-3.5 h-3.5" /> Simulate All
+          <button onClick={simulateAll} disabled={panels.some(p => p.loading)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 disabled:opacity-50 transition-all">
+            {panels.some(p => p.loading) ? <><Loader2 className="w-4 h-4 animate-spin" /> Comparing...</> : <><Zap className="w-4 h-4" /> Compare All</>}
           </button>
         </div>
       </div>
