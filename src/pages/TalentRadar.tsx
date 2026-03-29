@@ -58,11 +58,13 @@ export default function TalentRadar() {
   const handleDeepDive = async (emp: Employee) => {
     setModalOpen(true);
     setModalEmployee(emp.name);
+    setModalEmployeeId(emp.id);
     setModalContent("");
     setError("");
     setLoading(true);
     setChatMessages([]);
     setChatInput("");
+    setNoteInput("");
     try {
       const info = `Name: ${emp.name}, Role: ${emp.role}, Department: ${emp.dept}, Skills: ${emp.skills.join(", ")}, Tenure: ${emp.tenure} years, Salary: €${emp.salary}k, Last Promotion: ${emp.lastPromo} months ago, Risk Level: ${emp.risk}${emp.flag ? `, Flag: ${emp.flag}` : ""}`;
       const result = await deepDiveAnalysis(info, employees);
