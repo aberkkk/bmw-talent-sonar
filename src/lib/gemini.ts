@@ -29,7 +29,7 @@ export async function advisorChat(message: string, history: { role: string; cont
   await new Promise(r => setTimeout(r, 600 + Math.random() * 400));
 
   if (allEmployees.length === 0) {
-    return "No employee data available yet. Add employees in Talent Radar to start getting workforce intelligence insights.\n\n⚠️ *All recommendations are data-driven suggestions. Final decisions rest with human leadership.*";
+    return "No employee data available yet. Add employees in Talent Radar to start getting XA-108 Technologies insights.\n\n⚠️ *All recommendations are data-driven suggestions. Final decisions rest with human leadership.*";
   }
 
   const lower = message.toLowerCase();
@@ -65,7 +65,7 @@ export async function advisorChat(message: string, history: { role: string; cont
     return `**Team Overview:**\n\n${summary.join("\n")}\n\nTotal workforce: ${allEmployees.length} employees across ${depts.length} departments.\n\n⚠️ *Strategic workforce decisions require cross-functional alignment.*`;
   }
 
-  return `I can help you with workforce intelligence across ${allEmployees.length} employees. Try asking about:\n\n• **Flight risk** — Who's most likely to leave?\n• **Succession gaps** — Which teams need bench strength?\n• **Promotions** — Who's ready to advance?\n• **Compensation** — Any pay equity concerns?\n• **Team overview** — Department-level insights\n\n⚠️ *All recommendations are data-driven suggestions. Final decisions rest with human leadership.*`;
+  return `I can help you with XA-108 Technologies across ${allEmployees.length} employees. Try asking about:\n\n• **Flight risk** — Who's most likely to leave?\n• **Succession gaps** — Which teams need bench strength?\n• **Promotions** — Who's ready to advance?\n• **Compensation** — Any pay equity concerns?\n• **Team overview** — Department-level insights\n\n⚠️ *All recommendations are data-driven suggestions. Final decisions rest with human leadership.*`;
 }
 
 export async function employeeChat(employeeName: string, question: string, allEmployees: Employee[]): Promise<string> {

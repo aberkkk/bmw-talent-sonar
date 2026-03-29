@@ -99,7 +99,7 @@ export default function TalentRadar() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold">Talent Radar</h1>
-            <p className="text-muted-foreground text-sm mt-1">Real-time workforce intelligence overview</p>
+            <p className="text-muted-foreground text-sm mt-1">Real-time XA-108 Technologies overview</p>
           </div>
           <div className="flex gap-2">
             <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors">
@@ -116,7 +116,7 @@ export default function TalentRadar() {
           </div>
           <h2 className="text-xl font-bold mb-2 text-foreground">No employees added yet</h2>
           <p className="text-sm text-muted-foreground max-w-md mb-6">
-            Add your first employee or bulk import from a CSV to start building your workforce intelligence dashboard
+            Add your first employee or bulk import from a CSV to start building your XA-108 Technologies dashboard
           </p>
           <div className="flex gap-3">
             <button onClick={() => setBulkModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors border border-border">
@@ -139,7 +139,7 @@ export default function TalentRadar() {
         <div className="flex items-center gap-3">
           <div>
             <h1 className="text-2xl font-bold">Talent Radar</h1>
-            <p className="text-muted-foreground text-sm mt-1">Real-time workforce intelligence overview</p>
+            <p className="text-muted-foreground text-sm mt-1">Real-time XA-108 Technologies overview</p>
           </div>
           <div className="relative group">
             <button className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">

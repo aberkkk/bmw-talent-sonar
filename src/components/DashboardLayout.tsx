@@ -58,7 +58,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="p-4 border-t border-sidebar-border">
-          <p className="text-xs text-muted-foreground">v2.4 · Workforce Intelligence</p>
+          <p className="text-xs text-muted-foreground">v2.4 · XA-108 Technologies</p>
         </div>
       </aside>
 
