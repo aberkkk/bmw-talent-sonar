@@ -77,10 +77,10 @@ export default function CompensationPulse() {
   const trendColors = ["#0D9488", "#3B82F6", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899", "#06B6D4", "#84CC16"];
 
   const chartTitles: Record<ChartView, string> = {
-    bar: "Current vs. Market Benchmark",
-    gap: "Market Gap by Employee",
-    trend: "Salary Progression Over Time",
-    scatter: "Tenure vs. Salary (Peer Comparison)",
+    bar: t("comp.barVsBenchmark"),
+    gap: t("comp.gapByEmployee"),
+    trend: t("comp.salaryProgression"),
+    scatter: t("comp.peerComparison"),
   };
 
   console.log('CompChart data:', data);
