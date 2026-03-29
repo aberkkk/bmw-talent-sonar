@@ -15,6 +15,7 @@ interface Message { role: "user" | "assistant"; content: string; }
 
 export default function AIAdvisor() {
   const { employees } = useEmployees();
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
