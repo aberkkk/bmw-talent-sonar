@@ -170,7 +170,7 @@ export default function TalentRadar() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
         {filtered.map((emp) => (
           <div key={emp.id} className="bg-card border border-border rounded-xl p-5 transition-all card-glow">
             <div className="flex items-start justify-between mb-3">
