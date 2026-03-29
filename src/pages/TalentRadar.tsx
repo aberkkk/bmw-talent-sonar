@@ -287,6 +287,32 @@ export default function TalentRadar() {
                   </div>
                 </div>
               )}
+
+              {/* Manager Notes */}
+              {modalEmployeeId && (
+                <div className="border-t border-border pt-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <StickyNote className="w-4 h-4 text-accent" />
+                    <h3 className="text-sm font-semibold">Manager Notes</h3>
+                  </div>
+                  {getNotesForEmployee(modalEmployeeId).length > 0 && (
+                    <div className="space-y-2 mb-3 max-h-[200px] overflow-auto">
+                      {getNotesForEmployee(modalEmployeeId).map(note => (
+                        <div key={note.id} className="bg-muted/30 border border-border rounded-lg px-3 py-2">
+                          <p className="text-sm text-foreground leading-relaxed">{note.text}</p>
+                          <p className="text-[10px] text-muted-foreground mt-1">{format(new Date(note.timestamp), "MMM d, yyyy 'at' h:mm a")}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="flex gap-2">
+                    <input value={noteInput} onChange={e => setNoteInput(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && noteInput.trim()) { addNote(modalEmployeeId, noteInput); setNoteInput(""); }}} placeholder="Add a note..." className="flex-1 bg-secondary border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none" />
+                    <button onClick={() => { if (noteInput.trim()) { addNote(modalEmployeeId, noteInput); setNoteInput(""); }}} className="px-3 py-2 rounded-xl btn-gradient text-primary-foreground transition-all">
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
