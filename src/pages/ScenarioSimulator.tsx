@@ -2,12 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
 import RiskBadge from "@/components/RiskBadge";
 import { scenarioChat } from "@/lib/gemini";
-import { Loader2, Send, Info, MessageCircle, CheckCircle2, GitCompareArrows } from "lucide-react";
+import { Loader2, Send, Info, MessageCircle, CheckCircle2, GitCompareArrows, Download } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 import { toast } from "@/hooks/use-toast";
 import CostRiskMatrix from "@/components/scenario/CostRiskMatrix";
 import TimeSimulationSlider from "@/components/scenario/TimeSimulationSlider";
 import ComparisonMode from "@/components/scenario/ComparisonMode";
+import jsPDF from "jspdf";
 
 interface ScenarioChanges {
   employeeId: number;
