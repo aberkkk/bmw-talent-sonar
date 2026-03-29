@@ -216,7 +216,7 @@ export default function ScenarioSimulator() {
             </button>
             <div className="absolute left-0 top-full mt-2 w-80 bg-card border border-border rounded-xl p-4 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                <span className="font-semibold text-foreground">How it works:</span> Describe any HR decision naturally. The simulator models outcomes. Click <span className="font-semibold text-primary">"Apply"</span> on a scenario to update the employee's data across ALL modules instantly.
+                <span className="font-semibold text-foreground">{t("scenario.howItWorks")}</span> {t("scenario.howItWorksDesc")}
               </p>
             </div>
           </div>
