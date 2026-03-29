@@ -54,8 +54,8 @@ export default function ScenarioSimulator() {
     return (
       <div className="animate-fade-in">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold">Scenario Simulator ⭐</h1>
-          <p className="text-muted-foreground text-sm mt-1">Model workforce decisions before committing</p>
+          <h1 className="text-2xl font-bold">{t("scenario.title")} ⭐</h1>
+          <p className="text-muted-foreground text-sm mt-1">{t("scenario.subtitle")}</p>
         </div>
         <EmptyState />
       </div>
