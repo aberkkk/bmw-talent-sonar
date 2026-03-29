@@ -228,7 +228,7 @@ export default function CompensationPulse() {
                 <td className={`p-4 text-right font-semibold ${d.isHigh ? "text-risk-high" : "text-risk-low"}`}>{d.gap}%</td>
                 <td className="p-4 text-right">
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${d.isHigh ? "bg-risk-high/10 text-risk-high" : "bg-risk-low/10 text-risk-low"}`}>
-                    {d.isHigh ? "Below Market" : "Aligned"}
+                    {d.isHigh ? t("comp.belowMarket") : t("comp.aligned")}
                   </span>
                 </td>
               </tr>
