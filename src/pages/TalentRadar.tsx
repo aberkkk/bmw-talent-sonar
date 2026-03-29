@@ -166,7 +166,7 @@ export default function TalentRadar() {
         </div>
       </div>
 
-      <div data-tour="talent-cards" className="flex gap-2 mb-6 flex-wrap">
+      <div className="flex gap-2 mb-6 flex-wrap">
         {departments(employees).map((d) => (
           <button key={d} onClick={() => setFilter(d)} className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filter === d ? "btn-gradient text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"}`}>
             {d}
@@ -174,7 +174,7 @@ export default function TalentRadar() {
         ))}
       </div>
 
-      <div className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
+      <div data-tour="talent-cards" className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
         {filtered.map((emp) => (
           <div key={emp.id} className="bg-card border border-border rounded-xl p-5 transition-all card-glow">
             <div className="flex items-start justify-between mb-3">
