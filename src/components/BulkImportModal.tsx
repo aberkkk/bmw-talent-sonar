@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Employee } from "@/data/employees";
 import { X, Upload, FileSpreadsheet, AlertCircle, CheckCircle2, Download } from "lucide-react";
+import * as XLSX from "xlsx";
 
 interface Props {
   open: boolean;
@@ -95,6 +96,19 @@ function validateRow(row: string[], headers: string[]): { emp: Omit<Employee, "i
   };
 }
 
+function xlsxToRows(workbook: XLSX.WorkBook): string[][] {
+  const sheetName = workbook.SheetNames[0];
+  const sheet = workbook.Sheets[sheetName];
+  const jsonRows = XLSX.utils.sheet_to_json<Record<string, any>>(sheet, { defval: "" });
+  if (jsonRows.length === 0) return [];
+  const headers = Object.keys(jsonRows[0]);
+  const rows: string[][] = [headers];
+  jsonRows.forEach(row => {
+    rows.push(headers.map(h => String(row[h] ?? "")));
+  });
+  return rows;
+}
+
 export default function BulkImportModal({ open, onClose, onImport }: Props) {
   const [step, setStep] = useState<"upload" | "preview" | "done">("upload");
   const [parsed, setParsed] = useState<{ emp: Omit<Employee, "id" | "employeeId"> | null; errors: string[]; row: number }[]>([]);
@@ -105,9 +119,8 @@ export default function BulkImportModal({ open, onClose, onImport }: Props) {
 
   if (!open) return null;
 
-  const processCSV = (text: string) => {
+  const processRows = (rows: string[][]) => {
     setRawError("");
-    const rows = parseCSV(text);
     if (rows.length < 2) { setRawError("File must have a header row and at least one data row."); return; }
 
     const headers = rows[0].map(h => h.toLowerCase().replace(/[^a-z]/g, ""));
@@ -123,15 +136,32 @@ export default function BulkImportModal({ open, onClose, onImport }: Props) {
     const file = e.target.files?.[0];
     if (!file) return;
     setFileName(file.name);
-    const reader = new FileReader();
-    reader.onload = (ev) => processCSV(ev.target?.result as string);
-    reader.readAsText(file);
+    const isXlsx = file.name.toLowerCase().endsWith(".xlsx") || file.name.toLowerCase().endsWith(".xls");
+
+    if (isXlsx) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = new Uint8Array(ev.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+          const rows = xlsxToRows(workbook);
+          processRows(rows);
+        } catch {
+          setRawError("Failed to parse Excel file. Please ensure it's a valid .xlsx file.");
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (ev) => processRows(parseCSV(ev.target?.result as string));
+      reader.readAsText(file);
+    }
   };
 
   const handlePaste = () => {
     if (!pasteText.trim()) return;
     setFileName("Pasted data");
-    processCSV(pasteText);
+    processRows(parseCSV(pasteText));
   };
 
   const validEmployees = parsed.filter(p => p.emp !== null).map(p => p.emp!);
@@ -143,12 +173,25 @@ export default function BulkImportModal({ open, onClose, onImport }: Props) {
     setTimeout(() => { onClose(); setStep("upload"); setParsed([]); setFileName(""); setPasteText(""); }, 1500);
   };
 
-  const downloadTemplate = () => {
+  const downloadTemplateCSV = () => {
     const blob = new Blob([SAMPLE_CSV], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url; a.download = "employee_template.csv"; a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const downloadTemplateXLSX = () => {
+    const headers = ["name", "role", "dept", "skills", "tenure", "salary", "lastPromo", "jobGrade", "managerName", "deptCode", "startDate", "trainingHours"];
+    const sampleData = [
+      ["Anna Müller", "Senior Engineer", "Engineering", "Python, ML, Battery Systems", 4.5, 82, 6, "L4", "Thomas Schmidt", "ENG-01", "2021-06-15", 32],
+      ["Markus Weber", "Product Manager", "Product", "Agile, Roadmapping, UX", 3, 78, 14, "L3", "Lisa König", "PRD-01", "2022-03-01", 24],
+      ["Sofia Rossi", "Data Scientist", "Analytics", "R, Python, Tableau", 2, 71, 3, "L3", "Marco Bianchi", "ANA-01", "2023-01-10", 48],
+    ];
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...sampleData]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Employees");
+    XLSX.writeFile(wb, "employee_template.xlsx");
   };
 
   const reset = () => { setStep("upload"); setParsed([]); setFileName(""); setRawError(""); setPasteText(""); };
@@ -176,12 +219,17 @@ export default function BulkImportModal({ open, onClose, onImport }: Props) {
         {step === "upload" && (
           <div className="space-y-5">
             <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 text-sm text-muted-foreground">
-              <p className="font-semibold text-foreground mb-1">CSV Format Required</p>
+              <p className="font-semibold text-foreground mb-1">CSV or Excel (.xlsx) Format Required</p>
               <p>Columns: <code className="text-primary text-xs">name, role, dept, skills, tenure, salary, lastPromo</code></p>
-              <p className="mt-1">Skills should be comma-separated within quotes. Risk & flags are auto-calculated.</p>
-              <button onClick={downloadTemplate} className="mt-3 px-4 py-2 rounded-lg text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5">
-                <Download className="w-3.5 h-3.5" /> Download Template CSV
-              </button>
+              <p className="mt-1">Skills should be comma-separated within quotes (CSV) or in a single cell (Excel). Risk & flags are auto-calculated.</p>
+              <div className="flex gap-2 mt-3">
+                <button onClick={downloadTemplateCSV} className="px-4 py-2 rounded-lg text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5">
+                  <Download className="w-3.5 h-3.5" /> Template CSV
+                </button>
+                <button onClick={downloadTemplateXLSX} className="px-4 py-2 rounded-lg text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5">
+                  <Download className="w-3.5 h-3.5" /> Template Excel
+                </button>
+              </div>
             </div>
 
             {/* File upload */}
@@ -190,9 +238,9 @@ export default function BulkImportModal({ open, onClose, onImport }: Props) {
               className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all"
             >
               <Upload className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-              <p className="text-sm font-medium text-foreground">Click to upload CSV file</p>
-              <p className="text-xs text-muted-foreground mt-1">or drag and drop</p>
-              <input ref={fileRef} type="file" accept=".csv,.txt" onChange={handleFile} className="hidden" />
+              <p className="text-sm font-medium text-foreground">Click to upload CSV or Excel file</p>
+              <p className="text-xs text-muted-foreground mt-1">.csv, .xlsx supported</p>
+              <input ref={fileRef} type="file" accept=".csv,.txt,.xlsx,.xls" onChange={handleFile} className="hidden" />
             </div>
 
             {/* Paste option */}
