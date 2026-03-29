@@ -212,11 +212,11 @@ export default function CompensationPulse() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/50">
-              <th className="text-left p-4 text-muted-foreground font-medium">Employee</th>
-              <th className="text-right p-4 text-muted-foreground font-medium">Current</th>
-              <th className="text-right p-4 text-muted-foreground font-medium">Benchmark</th>
+              <th className="text-left p-4 text-muted-foreground font-medium">{t("comp.employee")}</th>
+              <th className="text-right p-4 text-muted-foreground font-medium">{t("comp.current")}</th>
+              <th className="text-right p-4 text-muted-foreground font-medium">{t("comp.benchmark")}</th>
               <th className="text-right p-4 text-muted-foreground font-medium">Gap%</th>
-              <th className="text-right p-4 text-muted-foreground font-medium">Status</th>
+              <th className="text-right p-4 text-muted-foreground font-medium">{t("comp.status")}</th>
             </tr>
           </thead>
           <tbody>
