@@ -122,9 +122,21 @@ export default function ScenarioSimulator() {
   return (
     <div className="animate-fade-in flex flex-col h-[calc(100vh-4rem)]">
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Scenario Simulator ⭐</h1>
-          <p className="text-muted-foreground text-sm mt-1">Describe any workforce decision — simulate & apply it live</p>
+        <div className="flex items-center gap-3">
+          <div>
+            <h1 className="text-2xl font-bold">Scenario Simulator ⭐</h1>
+            <p className="text-muted-foreground text-sm mt-1">Describe any workforce decision — simulate & apply it live</p>
+          </div>
+          <div className="relative group">
+            <button className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
+              <Info className="w-4 h-4" />
+            </button>
+            <div className="absolute left-0 top-full mt-2 w-80 bg-card border border-border rounded-xl p-4 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                <span className="font-semibold text-foreground">How it works:</span> Describe any HR decision naturally. The simulator models outcomes. Click <span className="font-semibold text-primary">"Apply"</span> on a scenario to update the employee's data across ALL modules instantly.
+              </p>
+            </div>
+          </div>
         </div>
         <button
           onClick={() => setCompareMode(!compareMode)}
