@@ -314,7 +314,7 @@ export default function ScenarioSimulator() {
                               {/* Reasoning - collapsible feel */}
                               <details className="group">
                                 <summary className="text-xs font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors flex items-center gap-1">
-                                  <Info className="w-3 h-3" /> View Reasoning
+                                  <Info className="w-3 h-3" /> {t("scenario.viewReasoning")}
                                 </summary>
                                 <p className="text-xs text-muted-foreground leading-relaxed mt-2 pl-4 border-l-2 border-primary/20 italic">{s.reasoning}</p>
                               </details>
