@@ -32,7 +32,10 @@ const quickQuestions = [
 
 export default function TalentRadar() {
   const { employees, addEmployee, addEmployees, updateEmployee, removeEmployee } = useEmployees();
+  const { hasNotes, getNotesForEmployee, addNote } = useNotes();
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [modalEmployeeId, setModalEmployeeId] = useState<number | null>(null);
+  const [noteInput, setNoteInput] = useState("");
   const [filter, setFilter] = useState("All");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
