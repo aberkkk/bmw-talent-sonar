@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
+import { useNotes } from "@/context/NotesContext";
 import { Employee } from "@/data/employees";
 import RiskBadge from "@/components/RiskBadge";
 import { deepDiveAnalysis, employeeChat } from "@/lib/gemini";
 import AddEmployeeModal from "@/components/AddEmployeeModal";
 import BulkImportModal from "@/components/BulkImportModal";
-import { Loader2, X, Info, Send, MessageCircle, Users, Plus, FileSpreadsheet, Pencil, Trash2 } from "lucide-react";
+import { Loader2, X, Info, Send, MessageCircle, Users, Plus, FileSpreadsheet, Pencil, Trash2, StickyNote } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { format } from "date-fns";
 
 const departments = (emps: Employee[]) => ["All", ...Array.from(new Set(emps.map((e) => e.dept)))];
 
