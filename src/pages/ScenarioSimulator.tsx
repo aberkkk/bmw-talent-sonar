@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
+import { useLanguage } from "@/context/LanguageContext";
 import RiskBadge from "@/components/RiskBadge";
 import { scenarioChat } from "@/lib/gemini";
 import { Loader2, Send, Info, MessageCircle, CheckCircle2, GitCompareArrows, Download } from "lucide-react";

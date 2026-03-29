@@ -1,4 +1,5 @@
 import { useEmployees } from "@/context/EmployeeContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { ArrowRight, Info } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 

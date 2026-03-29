@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
   LineChart, Line, ScatterChart, Scatter, ZAxis, ReferenceLine,

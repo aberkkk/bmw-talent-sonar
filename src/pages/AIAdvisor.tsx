@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { advisorChat } from "@/lib/gemini";
 import { Send, Loader2 } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
