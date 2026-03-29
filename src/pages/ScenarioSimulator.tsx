@@ -207,8 +207,8 @@ export default function ScenarioSimulator() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div>
-            <h1 className="text-2xl font-bold">Scenario Simulator ⭐</h1>
-            <p className="text-muted-foreground text-sm mt-1">Describe any workforce decision — simulate & apply it live</p>
+            <h1 className="text-2xl font-bold">{t("scenario.title")} ⭐</h1>
+            <p className="text-muted-foreground text-sm mt-1">{t("scenario.subtitle")}</p>
           </div>
           <div className="relative group">
             <button className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
