@@ -304,7 +304,7 @@ export default function ScenarioSimulator() {
                                 </div>
                                 <div className="bg-muted/30 rounded-xl p-3 text-center">
                                   <p className="text-2xl font-extrabold text-foreground">{s.cost}</p>
-                                  <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wide">Est. Cost</p>
+                                  <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wide">{t("scenario.estCost")}</p>
                                 </div>
                               </div>
 
