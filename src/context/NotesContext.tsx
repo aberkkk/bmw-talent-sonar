@@ -43,6 +43,15 @@ export function NotesProvider({ children }: { children: ReactNode }) {
     }]);
   }, []);
 
+  const deleteNote = useCallback((noteId: string) => {
+    setNotes(prev => prev.filter(n => n.id !== noteId));
+  }, []);
+
+  const updateNote = useCallback((noteId: string, text: string) => {
+    if (!text.trim()) return;
+    setNotes(prev => prev.map(n => n.id === noteId ? { ...n, text: text.trim() } : n));
+  }, []);
+
   const getNotesForEmployee = useCallback((employeeId: number) => {
     return notes.filter(n => n.employeeId === employeeId).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }, [notes]);
