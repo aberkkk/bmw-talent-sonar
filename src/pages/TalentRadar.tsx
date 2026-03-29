@@ -102,7 +102,7 @@ export default function TalentRadar() {
             <p className="text-muted-foreground text-sm mt-1">Real-time XA-108 Technologies overview</p>
           </div>
           <div className="flex gap-2">
-            <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors">
+            <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
               <FileSpreadsheet className="w-4 h-4" /> Bulk Import
             </button>
             <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
