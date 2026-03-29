@@ -300,9 +300,29 @@ export default function TalentRadar() {
                   {getNotesForEmployee(modalEmployeeId).length > 0 && (
                     <div className="space-y-2 mb-3 max-h-[200px] overflow-auto">
                       {getNotesForEmployee(modalEmployeeId).map(note => (
-                        <div key={note.id} className="bg-muted/30 border border-border rounded-lg px-3 py-2">
-                          <p className="text-sm text-foreground leading-relaxed">{note.text}</p>
-                          <p className="text-[10px] text-muted-foreground mt-1">{format(new Date(note.timestamp), "MMM d, yyyy 'at' h:mm a")}</p>
+                        <div key={note.id} className="bg-muted/30 border border-border rounded-lg px-3 py-2 group/note">
+                          {editingNoteId === note.id ? (
+                            <div className="flex gap-2">
+                              <input value={editingNoteText} onChange={e => setEditingNoteText(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && editingNoteText.trim()) { updateNote(note.id, editingNoteText); setEditingNoteId(null); }}} className="flex-1 bg-secondary border border-border rounded-lg px-2 py-1 text-sm text-foreground focus:ring-2 focus:ring-primary outline-none" autoFocus />
+                              <button onClick={() => { updateNote(note.id, editingNoteText); setEditingNoteId(null); }} className="text-xs text-primary hover:text-primary/80">Save</button>
+                              <button onClick={() => setEditingNoteId(null)} className="text-xs text-muted-foreground hover:text-foreground">Cancel</button>
+                            </div>
+                          ) : (
+                            <>
+                              <div className="flex items-start justify-between">
+                                <p className="text-sm text-foreground leading-relaxed flex-1">{note.text}</p>
+                                <div className="flex items-center gap-1 opacity-0 group-hover/note:opacity-100 transition-opacity ml-2 shrink-0">
+                                  <button onClick={() => { setEditingNoteId(note.id); setEditingNoteText(note.text); }} className="p-1 rounded hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors" title="Edit note">
+                                    <Pencil className="w-3 h-3" />
+                                  </button>
+                                  <button onClick={() => deleteNote(note.id)} className="p-1 rounded hover:bg-risk-high/10 text-muted-foreground hover:text-risk-high transition-colors" title="Delete note">
+                                    <Trash2 className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              </div>
+                              <p className="text-[10px] text-muted-foreground mt-1">{format(new Date(note.timestamp), "MMM d, yyyy 'at' h:mm a")}</p>
+                            </>
+                          )}
                         </div>
                       ))}
                     </div>
