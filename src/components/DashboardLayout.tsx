@@ -1,20 +1,22 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Radar, Users, Sparkles, BookOpen, DollarSign, Bot, Sun, Moon } from "lucide-react";
+import { Radar, Users, Sparkles, BookOpen, DollarSign, Bot, Sun, Moon, HelpCircle } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
+import OnboardingTour from "@/components/OnboardingTour";
 
 const navItems = [
-  { title: "Talent Radar", path: "/", icon: Radar },
-  { title: "Succession Planner", path: "/succession", icon: Users },
-  { title: "Scenario Simulator", path: "/simulator", icon: Sparkles, star: true },
-  { title: "Upskilling Map", path: "/upskilling", icon: BookOpen },
-  { title: "Compensation Pulse", path: "/compensation", icon: DollarSign },
+  { title: "Talent Radar", path: "/", icon: Radar, tourId: "talent-radar" },
+  { title: "Succession Planner", path: "/succession", icon: Users, tourId: "succession-planner" },
+  { title: "Scenario Simulator", path: "/simulator", icon: Sparkles, star: true, tourId: "scenario-simulator" },
+  { title: "Upskilling Map", path: "/upskilling", icon: BookOpen, tourId: "upskilling-map" },
+  { title: "Compensation Pulse", path: "/compensation", icon: DollarSign, tourId: "compensation-pulse" },
   { title: "AI Advisor", path: "/advisor", icon: Bot },
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const [tourActive, setTourActive] = useState(false);
 
   return (
     <div className="flex min-h-screen w-full">
@@ -40,6 +42,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <NavLink
                 key={item.path}
                 to={item.path}
+                data-tour={item.tourId}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   isActive
                     ? "bg-primary text-primary-foreground"
@@ -60,8 +63,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       </aside>
 
       <main className="flex-1 overflow-auto">
-        {/* Top bar with theme toggle */}
-        <div className="flex items-center justify-end px-8 pt-5 pb-0">
+        {/* Top bar with tour + theme toggle */}
+        <div className="flex items-center justify-end gap-2 px-8 pt-5 pb-0">
+          <button
+            onClick={() => setTourActive(true)}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 bg-secondary text-secondary-foreground border border-border hover:border-primary/40 transition-colors"
+          >
+            <HelpCircle className="w-3.5 h-3.5" />
+            Take a Tour
+          </button>
           <button
             onClick={toggleTheme}
             className="relative w-14 h-7 rounded-full border border-border bg-secondary transition-colors duration-300 flex items-center px-1 group hover:border-primary/40"
@@ -84,6 +94,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
         <div className="px-8 pb-8">{children}</div>
       </main>
+
+      <OnboardingTour active={tourActive} onEnd={() => setTourActive(false)} />
     </div>
   );
 }
