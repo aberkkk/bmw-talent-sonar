@@ -26,10 +26,10 @@ function parseCost(costStr: string): number {
 }
 
 const riskColor: Record<string, string> = {
-  Low: "#22C55E",
+  Low: "#10B981",
   Medium: "#F59E0B",
   High: "#EF4444",
-  Critical: "#991B1B",
+  Critical: "#DC2626",
 };
 
 interface Props {
