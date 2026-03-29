@@ -102,7 +102,7 @@ export default function TalentRadar() {
             <p className="text-muted-foreground text-sm mt-1">Real-time XA-108 Technologies overview</p>
           </div>
           <div className="flex gap-2">
-            <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors">
+            <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
               <FileSpreadsheet className="w-4 h-4" /> Bulk Import
             </button>
             <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
@@ -119,7 +119,7 @@ export default function TalentRadar() {
             Add your first employee or bulk import from a CSV to start building your XA-108 Technologies dashboard
           </p>
           <div className="flex gap-3">
-            <button onClick={() => setBulkModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors border border-border">
+            <button onClick={() => setBulkModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
               <FileSpreadsheet className="w-4 h-4" /> Bulk Import CSV
             </button>
             <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
@@ -153,7 +153,7 @@ export default function TalentRadar() {
           </div>
         </div>
         <div className="flex gap-2">
-          <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors border border-border">
+          <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
             <FileSpreadsheet className="w-4 h-4" /> Bulk Import
           </button>
           <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
@@ -170,12 +170,12 @@ export default function TalentRadar() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
         {filtered.map((emp) => (
           <div key={emp.id} className="bg-card border border-border rounded-xl p-5 transition-all card-glow">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h3 className="font-semibold text-card-foreground">{emp.name}</h3>
+                <h3 className="font-semibold text-card-foreground truncate max-w-[180px]" title={emp.name}>{emp.name}</h3>
                 <p className="text-sm text-muted-foreground">{emp.role}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">{emp.employeeId} · {emp.jobGrade}</p>
               </div>
