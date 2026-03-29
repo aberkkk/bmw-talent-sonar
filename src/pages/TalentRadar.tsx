@@ -102,8 +102,8 @@ export default function TalentRadar() {
       <div className="animate-fade-in">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold">Talent Radar</h1>
-            <p className="text-muted-foreground text-sm mt-1">Real-time XA-108 Technologies overview</p>
+            <h1 className="text-2xl font-bold">{t("talent.title")}</h1>
+            <p className="text-muted-foreground text-sm mt-1">{t("talent.subtitle")}</p>
           </div>
           <div className="flex gap-2">
             <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
