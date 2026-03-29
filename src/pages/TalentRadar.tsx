@@ -306,8 +306,8 @@ export default function TalentRadar() {
                           {editingNoteId === note.id ? (
                             <div className="flex gap-2">
                               <input value={editingNoteText} onChange={e => setEditingNoteText(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && editingNoteText.trim()) { updateNote(note.id, editingNoteText); setEditingNoteId(null); }}} className="flex-1 bg-secondary border border-border rounded-lg px-2 py-1 text-sm text-foreground focus:ring-2 focus:ring-primary outline-none" autoFocus />
-                              <button onClick={() => { updateNote(note.id, editingNoteText); setEditingNoteId(null); }} className="text-xs text-primary hover:text-primary/80">Save</button>
-                              <button onClick={() => setEditingNoteId(null)} className="text-xs text-muted-foreground hover:text-foreground">Cancel</button>
+                              <button onClick={() => { updateNote(note.id, editingNoteText); setEditingNoteId(null); }} className="text-xs text-primary hover:text-primary/80">{t("common.save")}</button>
+                              <button onClick={() => setEditingNoteId(null)} className="text-xs text-muted-foreground hover:text-foreground">{t("common.cancel")}</button>
                             </div>
                           ) : (
                             <>
