@@ -158,10 +158,10 @@ export default function TalentRadar() {
         </div>
         <div className="flex gap-2">
           <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
-            <FileSpreadsheet className="w-4 h-4" /> Bulk Import
+            <FileSpreadsheet className="w-4 h-4" /> {t("talent.bulkImport")}
           </button>
           <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
-            <Plus className="w-4 h-4" /> Add Employee +
+            <Plus className="w-4 h-4" /> {t("talent.addEmployee")} +
           </button>
         </div>
       </div>
