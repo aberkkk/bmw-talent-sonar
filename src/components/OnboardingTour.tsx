@@ -1,19 +1,21 @@
 import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { ChevronRight, ChevronLeft, X, PartyPopper } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import type { TranslationKey } from "@/context/LanguageContext";
 
 interface TourStep {
   selector: string;
-  title: string;
-  description: string;
+  titleKey: TranslationKey;
+  descKey: TranslationKey;
 }
 
 const TOUR_STEPS: TourStep[] = [
-  { selector: '[data-tour="talent-radar"]', title: "Talent Radar", description: "See all employees and their risk levels at a glance." },
-  { selector: '[data-tour="scenario-simulator"]', title: "Scenario Simulator", description: "Simulate decisions and compare outcomes before committing." },
-  { selector: '[data-tour="compensation-pulse"]', title: "Compensation Pulse", description: "Track salary gaps vs market benchmarks." },
-  { selector: '[data-tour="upskilling-map"]', title: "Upskilling Map", description: "Identify skill gaps and development paths per employee." },
-  { selector: '[data-tour="succession-planner"]', title: "Succession Planner", description: "See who is ready for the next leadership role." },
+  { selector: '[data-tour="talent-radar"]', titleKey: "nav.talentRadar", descKey: "tour.talentRadar" },
+  { selector: '[data-tour="scenario-simulator"]', titleKey: "nav.scenarioSimulator", descKey: "tour.scenarioSim" },
+  { selector: '[data-tour="compensation-pulse"]', titleKey: "nav.compensationPulse", descKey: "tour.compensation" },
+  { selector: '[data-tour="upskilling-map"]', titleKey: "nav.upskillingMap", descKey: "tour.upskilling" },
+  { selector: '[data-tour="succession-planner"]', titleKey: "nav.successionPlanner", descKey: "tour.succession" },
 ];
 
 interface Props {
