@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { EmployeeProvider } from "@/context/EmployeeContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { NotesProvider } from "@/context/NotesContext";
+import { LanguageProvider } from "@/context/LanguageContext";
 import DashboardLayout from "@/components/DashboardLayout";
 import TalentRadar from "@/pages/TalentRadar";
 import SuccessionPlanner from "@/pages/SuccessionPlanner";
@@ -20,6 +21,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
+      <LanguageProvider>
       <TooltipProvider>
         <EmployeeProvider>
           <NotesProvider>
@@ -41,6 +43,7 @@ const App = () => (
           </NotesProvider>
         </EmployeeProvider>
       </TooltipProvider>
+      </LanguageProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

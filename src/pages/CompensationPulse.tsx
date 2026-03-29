@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
   LineChart, Line, ScatterChart, Scatter, ZAxis, ReferenceLine,
@@ -13,6 +14,7 @@ type ChartView = "bar" | "gap" | "trend" | "scatter";
 
 export default function CompensationPulse() {
   const { employees } = useEmployees();
+  const { t } = useLanguage();
   const colors = useChartColors();
   const [chartView, setChartView] = useState<ChartView>("bar");
 
@@ -20,8 +22,8 @@ export default function CompensationPulse() {
     return (
       <div className="animate-fade-in">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold">Compensation Pulse</h1>
-          <p className="text-muted-foreground text-sm mt-1">Salary benchmarking & market alignment</p>
+          <h1 className="text-2xl font-bold">{t("comp.title")}</h1>
+          <p className="text-muted-foreground text-sm mt-1">{t("comp.subtitle")}</p>
         </div>
         <EmptyState />
       </div>
@@ -75,10 +77,10 @@ export default function CompensationPulse() {
   const trendColors = ["#0D9488", "#3B82F6", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899", "#06B6D4", "#84CC16"];
 
   const chartTitles: Record<ChartView, string> = {
-    bar: "Current vs. Market Benchmark",
-    gap: "Market Gap by Employee",
-    trend: "Salary Progression Over Time",
-    scatter: "Tenure vs. Salary (Peer Comparison)",
+    bar: t("comp.barVsBenchmark"),
+    gap: t("comp.gapByEmployee"),
+    trend: t("comp.salaryProgression"),
+    scatter: t("comp.peerComparison"),
   };
 
   console.log('CompChart data:', data);
@@ -152,14 +154,14 @@ export default function CompensationPulse() {
   return (
     <div className="animate-fade-in">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Compensation Pulse</h1>
-        <p className="text-muted-foreground text-sm mt-1">Salary benchmarking & market alignment</p>
+        <h1 className="text-2xl font-bold">{t("comp.title")}</h1>
+        <p className="text-muted-foreground text-sm mt-1">{t("comp.subtitle")}</p>
       </div>
 
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
         <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
         <div className="text-sm text-muted-foreground leading-relaxed">
-          <span className="font-semibold text-foreground">Methodology:</span> Benchmarks from industry salary surveys for equivalent roles in the DACH region. Gap &gt;15% flagged as "Below Market". Benchmark multiplier adjusts based on job grade.
+          <span className="font-semibold text-foreground">{t("comp.methodology")}</span> {t("comp.methodologyDesc")}
         </div>
       </div>
 
@@ -184,9 +186,9 @@ export default function CompensationPulse() {
 
         {chartView === "bar" && (
           <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
-            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-[#0D9488]" /> Current</span>
-            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-[#94A3B8]" /> Aligned</span>
-            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-[#EF4444]" /> Below Market</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-[#0D9488]" /> {t("comp.current")}</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-[#94A3B8]" /> {t("comp.aligned")}</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-[#EF4444]" /> {t("comp.belowMarket")}</span>
           </div>
         )}
         {chartView === "gap" && (
@@ -210,11 +212,11 @@ export default function CompensationPulse() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/50">
-              <th className="text-left p-4 text-muted-foreground font-medium">Employee</th>
-              <th className="text-right p-4 text-muted-foreground font-medium">Current</th>
-              <th className="text-right p-4 text-muted-foreground font-medium">Benchmark</th>
+              <th className="text-left p-4 text-muted-foreground font-medium">{t("comp.employee")}</th>
+              <th className="text-right p-4 text-muted-foreground font-medium">{t("comp.current")}</th>
+              <th className="text-right p-4 text-muted-foreground font-medium">{t("comp.benchmark")}</th>
               <th className="text-right p-4 text-muted-foreground font-medium">Gap%</th>
-              <th className="text-right p-4 text-muted-foreground font-medium">Status</th>
+              <th className="text-right p-4 text-muted-foreground font-medium">{t("comp.status")}</th>
             </tr>
           </thead>
           <tbody>
@@ -226,7 +228,7 @@ export default function CompensationPulse() {
                 <td className={`p-4 text-right font-semibold ${d.isHigh ? "text-risk-high" : "text-risk-low"}`}>{d.gap}%</td>
                 <td className="p-4 text-right">
                   <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${d.isHigh ? "bg-risk-high/10 text-risk-high" : "bg-risk-low/10 text-risk-low"}`}>
-                    {d.isHigh ? "Below Market" : "Aligned"}
+                    {d.isHigh ? t("comp.belowMarket") : t("comp.aligned")}
                   </span>
                 </td>
               </tr>
@@ -236,7 +238,7 @@ export default function CompensationPulse() {
       </div>
 
       <div className="space-y-3">
-        <h2 className="text-sm font-semibold text-muted-foreground flex items-center gap-2"><Info className="w-4 h-4" /> Detailed Reasoning</h2>
+        <h2 className="text-sm font-semibold text-muted-foreground flex items-center gap-2"><Info className="w-4 h-4" /> {t("comp.detailedReasoning")}</h2>
         {data.map((d) => (
           <div key={d.fullName} className={`rounded-xl p-4 text-sm leading-relaxed border ${d.isHigh ? "bg-risk-high/5 border-risk-high/15 text-foreground" : "bg-muted/30 border-border text-muted-foreground"}`}>
             <span className="font-semibold text-foreground">{d.fullName}:</span> {d.reasoning}

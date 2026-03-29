@@ -2,20 +2,23 @@ import { ReactNode, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Radar, Users, Sparkles, BookOpen, DollarSign, Bot, Sun, Moon, HelpCircle } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
+import { useLanguage } from "@/context/LanguageContext";
+import type { TranslationKey } from "@/context/LanguageContext";
 import OnboardingTour from "@/components/OnboardingTour";
 
 const navItems = [
-  { title: "Talent Radar", path: "/", icon: Radar, tourId: "talent-radar" },
-  { title: "Succession Planner", path: "/succession", icon: Users, tourId: "succession-planner" },
-  { title: "Scenario Simulator", path: "/simulator", icon: Sparkles, star: true, tourId: "scenario-simulator" },
-  { title: "Upskilling Map", path: "/upskilling", icon: BookOpen, tourId: "upskilling-map" },
-  { title: "Compensation Pulse", path: "/compensation", icon: DollarSign, tourId: "compensation-pulse" },
-  { title: "AI Advisor", path: "/advisor", icon: Bot },
+  { titleKey: "nav.talentRadar" as TranslationKey, path: "/", icon: Radar, tourId: "talent-radar" },
+  { titleKey: "nav.successionPlanner" as TranslationKey, path: "/succession", icon: Users, tourId: "succession-planner" },
+  { titleKey: "nav.scenarioSimulator" as TranslationKey, path: "/simulator", icon: Sparkles, star: true, tourId: "scenario-simulator" },
+  { titleKey: "nav.upskillingMap" as TranslationKey, path: "/upskilling", icon: BookOpen, tourId: "upskilling-map" },
+  { titleKey: "nav.compensationPulse" as TranslationKey, path: "/compensation", icon: DollarSign, tourId: "compensation-pulse" },
+  { titleKey: "nav.aiAdvisor" as TranslationKey, path: "/advisor", icon: Bot },
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { lang, setLang, t } = useLanguage();
   const [tourActive, setTourActive] = useState(false);
 
   return (
@@ -50,7 +53,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 }`}
               >
                 <item.icon className="w-4 h-4" />
-                <span>{item.title}</span>
+                <span>{t(item.titleKey)}</span>
                 {item.star && <span className="text-xs">⭐</span>}
               </NavLink>
             );
@@ -63,14 +66,42 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       </aside>
 
       <main className="flex-1 overflow-auto">
-        {/* Top bar with tour + theme toggle */}
+        {/* Top bar with language, tour + theme toggle */}
         <div className="flex items-center justify-end gap-2 px-8 pt-5 pb-0">
+          {/* Language Switcher */}
+          <div className="flex items-center bg-secondary border border-border rounded-lg overflow-hidden">
+            <button
+              onClick={() => setLang("en")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all ${
+                lang === "en"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              aria-label="English"
+            >
+              <span className="text-base leading-none">🇬🇧</span>
+              EN
+            </button>
+            <button
+              onClick={() => setLang("de")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all ${
+                lang === "de"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              aria-label="Deutsch"
+            >
+              <span className="text-base leading-none">🇩🇪</span>
+              DE
+            </button>
+          </div>
+
           <button
             onClick={() => setTourActive(true)}
             className="px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 bg-secondary text-secondary-foreground border border-border hover:border-primary/40 transition-colors"
           >
             <HelpCircle className="w-3.5 h-3.5" />
-            Take a Tour
+            {t("header.takeTour")}
           </button>
           <button
             onClick={toggleTheme}

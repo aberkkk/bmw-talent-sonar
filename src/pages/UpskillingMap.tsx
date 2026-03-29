@@ -1,4 +1,5 @@
 import { useEmployees } from "@/context/EmployeeContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { ArrowRight, Info } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
 
@@ -41,13 +42,14 @@ function generateCareerPath(emp: ReturnType<typeof useEmployees>["employees"][0]
 
 export default function UpskillingMap() {
   const { employees } = useEmployees();
+  const { t } = useLanguage();
 
   if (employees.length === 0) {
     return (
       <div className="animate-fade-in">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold">Upskilling Map</h1>
-          <p className="text-muted-foreground text-sm mt-1">Individual career progression paths & skill gaps</p>
+          <h1 className="text-2xl font-bold">{t("upskill.title")}</h1>
+          <p className="text-muted-foreground text-sm mt-1">{t("upskill.subtitle")}</p>
         </div>
         <EmptyState />
       </div>
@@ -57,14 +59,14 @@ export default function UpskillingMap() {
   return (
     <div className="animate-fade-in">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Upskilling Map</h1>
-        <p className="text-muted-foreground text-sm mt-1">Individual career progression paths & skill gaps</p>
+        <h1 className="text-2xl font-bold">{t("upskill.title")}</h1>
+        <p className="text-muted-foreground text-sm mt-1">{t("upskill.subtitle")}</p>
       </div>
 
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
         <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
         <div className="text-sm text-muted-foreground leading-relaxed">
-          <span className="font-semibold text-foreground">Methodology:</span> Career paths based on competency frameworks. Skill gaps (red) are competencies required for the next role not in the employee's current profile.
+          <span className="font-semibold text-foreground">{t("upskill.methodology")}</span> {t("upskill.methodologyDesc")}
         </div>
       </div>
 
@@ -87,11 +89,11 @@ export default function UpskillingMap() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="bg-muted/30 border border-border rounded-lg p-3">
-                  <p className="text-[11px] font-semibold text-muted-foreground mb-1">Next Step Reasoning</p>
+                  <p className="text-[11px] font-semibold text-muted-foreground mb-1">{t("upskill.nextStep")}</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">{path.nextReason}</p>
                 </div>
                 <div className="bg-muted/30 border border-border rounded-lg p-3">
-                  <p className="text-[11px] font-semibold text-muted-foreground mb-1">Long-Term Path Reasoning</p>
+                  <p className="text-[11px] font-semibold text-muted-foreground mb-1">{t("upskill.longTerm")}</p>
                   <p className="text-xs text-muted-foreground leading-relaxed">{path.futureReason}</p>
                 </div>
               </div>

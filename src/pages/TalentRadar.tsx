@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
 import { useNotes } from "@/context/NotesContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { Employee } from "@/data/employees";
 import RiskBadge from "@/components/RiskBadge";
 import { deepDiveAnalysis, employeeChat } from "@/lib/gemini";
@@ -33,6 +34,7 @@ const quickQuestions = [
 export default function TalentRadar() {
   const { employees, addEmployee, addEmployees, updateEmployee, removeEmployee } = useEmployees();
   const { hasNotes, getNotesForEmployee, addNote, deleteNote, updateNote } = useNotes();
+  const { t } = useLanguage();
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [modalEmployeeId, setModalEmployeeId] = useState<number | null>(null);
   const [noteInput, setNoteInput] = useState("");
@@ -100,15 +102,15 @@ export default function TalentRadar() {
       <div className="animate-fade-in">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold">Talent Radar</h1>
-            <p className="text-muted-foreground text-sm mt-1">Real-time XA-108 Technologies overview</p>
+            <h1 className="text-2xl font-bold">{t("talent.title")}</h1>
+            <p className="text-muted-foreground text-sm mt-1">{t("talent.subtitle")}</p>
           </div>
           <div className="flex gap-2">
             <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
-              <FileSpreadsheet className="w-4 h-4" /> Bulk Import
+              <FileSpreadsheet className="w-4 h-4" /> {t("talent.bulkImport")}
             </button>
             <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
-              <Plus className="w-4 h-4" /> Add Employee
+              <Plus className="w-4 h-4" /> {t("talent.addEmployee")}
             </button>
           </div>
         </div>
@@ -116,16 +118,16 @@ export default function TalentRadar() {
           <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
             <Users className="w-10 h-10 text-primary" />
           </div>
-          <h2 className="text-xl font-bold mb-2 text-foreground">No employees added yet</h2>
+           <h2 className="text-xl font-bold mb-2 text-foreground">{t("talent.noEmployees")}</h2>
           <p className="text-sm text-muted-foreground max-w-md mb-6">
-            Add your first employee or bulk import from a CSV to start building your XA-108 Technologies dashboard
+            {t("talent.noEmployeesDesc")}
           </p>
           <div className="flex gap-3">
             <button onClick={() => setBulkModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
-              <FileSpreadsheet className="w-4 h-4" /> Bulk Import CSV
+              <FileSpreadsheet className="w-4 h-4" /> {t("talent.bulkImportCsv")}
             </button>
             <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
-              <Plus className="w-4 h-4" /> Add Employee +
+              <Plus className="w-4 h-4" /> {t("talent.addEmployee")} +
             </button>
           </div>
         </div>
@@ -140,8 +142,8 @@ export default function TalentRadar() {
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <div>
-            <h1 className="text-2xl font-bold">Talent Radar</h1>
-            <p className="text-muted-foreground text-sm mt-1">Real-time XA-108 Technologies overview</p>
+            <h1 className="text-2xl font-bold">{t("talent.title")}</h1>
+            <p className="text-muted-foreground text-sm mt-1">{t("talent.subtitle")}</p>
           </div>
           <div className="relative group">
             <button className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
@@ -149,17 +151,17 @@ export default function TalentRadar() {
             </button>
             <div className="absolute left-0 top-full mt-2 w-80 bg-card border border-border rounded-xl p-4 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                <span className="font-semibold text-foreground">How risk is calculated:</span> Risk level is determined by: promotion recency, compensation gap vs. market benchmark, and tenure-to-poaching ratio.
+                <span className="font-semibold text-foreground">{t("talent.howRiskCalculated")}</span> {t("talent.howRiskDesc")}
               </p>
             </div>
           </div>
         </div>
         <div className="flex gap-2">
           <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
-            <FileSpreadsheet className="w-4 h-4" /> Bulk Import
+            <FileSpreadsheet className="w-4 h-4" /> {t("talent.bulkImport")}
           </button>
           <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
-            <Plus className="w-4 h-4" /> Add Employee +
+            <Plus className="w-4 h-4" /> {t("talent.addEmployee")} +
           </button>
         </div>
       </div>
@@ -207,12 +209,12 @@ export default function TalentRadar() {
             )}
             <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 mb-4">
               <p className="text-[11px] text-muted-foreground leading-relaxed">
-                <span className="font-semibold">Risk reasoning:</span> {riskReasoning(emp)}
+                <span className="font-semibold">{t("talent.riskReasoning")}</span> {riskReasoning(emp)}
               </p>
             </div>
             <div className="flex gap-2">
               <button onClick={() => handleDeepDive(emp)} className="flex-1 py-2 rounded-lg text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-                Deep Dive →
+                {t("talent.deepDive")}
               </button>
               {hasNotes(emp.id) && (
                 <div className="flex items-center gap-1 px-2.5 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent text-xs font-medium">
@@ -230,7 +232,7 @@ export default function TalentRadar() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 backdrop-blur-sm" onClick={() => setModalOpen(false)}>
           <div className="bg-card border border-border rounded-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden shadow-xl flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between p-6 pb-0">
-              <h2 className="text-lg font-bold">AI Deep Dive — {modalEmployee}</h2>
+              <h2 className="text-lg font-bold">{t("talent.aiDeepDive")} — {modalEmployee}</h2>
               <button onClick={() => setModalOpen(false)} className="p-1 rounded-lg hover:bg-secondary transition-colors"><X className="w-5 h-5" /></button>
             </div>
             <div className="flex-1 overflow-auto p-6 space-y-5">
@@ -250,7 +252,7 @@ export default function TalentRadar() {
                 <div className="border-t border-border pt-5">
                   <div className="flex items-center gap-2 mb-3">
                     <MessageCircle className="w-4 h-4 text-primary" />
-                    <h3 className="text-sm font-semibold">Ask more about {modalEmployee}</h3>
+                    <h3 className="text-sm font-semibold">{t("talent.askMore")} {modalEmployee}</h3>
                   </div>
                   {chatMessages.length === 0 && (
                     <div className="flex flex-wrap gap-2 mb-4">
@@ -295,7 +297,7 @@ export default function TalentRadar() {
                 <div className="border-t border-border pt-5">
                   <div className="flex items-center gap-2 mb-3">
                     <StickyNote className="w-4 h-4 text-accent" />
-                    <h3 className="text-sm font-semibold">Manager Notes</h3>
+                    <h3 className="text-sm font-semibold">{t("talent.managerNotes")}</h3>
                   </div>
                   {getNotesForEmployee(modalEmployeeId).length > 0 && (
                     <div className="space-y-2 mb-3 max-h-[200px] overflow-auto">
@@ -304,8 +306,8 @@ export default function TalentRadar() {
                           {editingNoteId === note.id ? (
                             <div className="flex gap-2">
                               <input value={editingNoteText} onChange={e => setEditingNoteText(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && editingNoteText.trim()) { updateNote(note.id, editingNoteText); setEditingNoteId(null); }}} className="flex-1 bg-secondary border border-border rounded-lg px-2 py-1 text-sm text-foreground focus:ring-2 focus:ring-primary outline-none" autoFocus />
-                              <button onClick={() => { updateNote(note.id, editingNoteText); setEditingNoteId(null); }} className="text-xs text-primary hover:text-primary/80">Save</button>
-                              <button onClick={() => setEditingNoteId(null)} className="text-xs text-muted-foreground hover:text-foreground">Cancel</button>
+                              <button onClick={() => { updateNote(note.id, editingNoteText); setEditingNoteId(null); }} className="text-xs text-primary hover:text-primary/80">{t("common.save")}</button>
+                              <button onClick={() => setEditingNoteId(null)} className="text-xs text-muted-foreground hover:text-foreground">{t("common.cancel")}</button>
                             </div>
                           ) : (
                             <>

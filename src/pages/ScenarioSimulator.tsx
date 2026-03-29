@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
+import { useLanguage } from "@/context/LanguageContext";
 import RiskBadge from "@/components/RiskBadge";
 import { scenarioChat } from "@/lib/gemini";
 import { Loader2, Send, Info, MessageCircle, CheckCircle2, GitCompareArrows, Download } from "lucide-react";
@@ -38,6 +39,7 @@ interface ChatMsg {
 
 export default function ScenarioSimulator() {
   const { employees, updateEmployee } = useEmployees();
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -52,8 +54,8 @@ export default function ScenarioSimulator() {
     return (
       <div className="animate-fade-in">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold">Scenario Simulator ⭐</h1>
-          <p className="text-muted-foreground text-sm mt-1">Model workforce decisions before committing</p>
+          <h1 className="text-2xl font-bold">{t("scenario.title")} ⭐</h1>
+          <p className="text-muted-foreground text-sm mt-1">{t("scenario.subtitle")}</p>
         </div>
         <EmptyState />
       </div>
@@ -205,8 +207,8 @@ export default function ScenarioSimulator() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div>
-            <h1 className="text-2xl font-bold">Scenario Simulator ⭐</h1>
-            <p className="text-muted-foreground text-sm mt-1">Describe any workforce decision — simulate & apply it live</p>
+            <h1 className="text-2xl font-bold">{t("scenario.title")} ⭐</h1>
+            <p className="text-muted-foreground text-sm mt-1">{t("scenario.subtitle")}</p>
           </div>
           <div className="relative group">
             <button className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
@@ -214,7 +216,7 @@ export default function ScenarioSimulator() {
             </button>
             <div className="absolute left-0 top-full mt-2 w-80 bg-card border border-border rounded-xl p-4 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                <span className="font-semibold text-foreground">How it works:</span> Describe any HR decision naturally. The simulator models outcomes. Click <span className="font-semibold text-primary">"Apply"</span> on a scenario to update the employee's data across ALL modules instantly.
+                <span className="font-semibold text-foreground">{t("scenario.howItWorks")}</span> {t("scenario.howItWorksDesc")}
               </p>
             </div>
           </div>
@@ -226,7 +228,7 @@ export default function ScenarioSimulator() {
               className="px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all border bg-secondary text-secondary-foreground border-border hover:border-primary/40"
             >
               <Download className="w-4 h-4" />
-              Export PDF
+              {t("scenario.exportPdf")}
             </button>
           )}
           <button
@@ -238,7 +240,7 @@ export default function ScenarioSimulator() {
             }`}
           >
             <GitCompareArrows className="w-4 h-4" />
-            {compareMode ? "Exit Compare" : "Compare Two Employees"}
+            {compareMode ? t("scenario.exitCompare") : t("scenario.compare")}
           </button>
         </div>
       </div>
@@ -253,7 +255,7 @@ export default function ScenarioSimulator() {
           {messages.length === 0 && (
             <div className="mb-6">
               <p className="text-sm text-muted-foreground mb-3 flex items-center gap-2">
-                <MessageCircle className="w-4 h-4" /> Try asking:
+                <MessageCircle className="w-4 h-4" /> {t("scenario.tryAsking")}
               </p>
               <div className="flex flex-wrap gap-2">
                 {quickPrompts.map((q) => (
@@ -298,11 +300,11 @@ export default function ScenarioSimulator() {
                               <div className="grid grid-cols-2 gap-3">
                                 <div className="bg-muted/30 rounded-xl p-3 text-center">
                                   <p className={`text-2xl font-extrabold ${probColor}`}>{s.probability}%</p>
-                                  <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wide">Success Rate</p>
+                                  <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wide">{t("scenario.successRate")}</p>
                                 </div>
                                 <div className="bg-muted/30 rounded-xl p-3 text-center">
                                   <p className="text-2xl font-extrabold text-foreground">{s.cost}</p>
-                                  <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wide">Est. Cost</p>
+                                  <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wide">{t("scenario.estCost")}</p>
                                 </div>
                               </div>
 
@@ -312,7 +314,7 @@ export default function ScenarioSimulator() {
                               {/* Reasoning - collapsible feel */}
                               <details className="group">
                                 <summary className="text-xs font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors flex items-center gap-1">
-                                  <Info className="w-3 h-3" /> View Reasoning
+                                  <Info className="w-3 h-3" /> {t("scenario.viewReasoning")}
                                 </summary>
                                 <p className="text-xs text-muted-foreground leading-relaxed mt-2 pl-4 border-l-2 border-primary/20 italic">{s.reasoning}</p>
                               </details>
@@ -330,7 +332,7 @@ export default function ScenarioSimulator() {
                                       : "btn-gradient text-primary-foreground hover:opacity-90"
                                   }`}
                                 >
-                                  {isApplied ? <><CheckCircle2 className="w-4 h-4" /> Applied</> : "Apply This Scenario"}
+                                  {isApplied ? <><CheckCircle2 className="w-4 h-4" /> {t("scenario.applied")}</> : t("scenario.applyScenario")}
                                 </button>
                               </div>
                             )}
@@ -358,7 +360,7 @@ export default function ScenarioSimulator() {
               <div className="flex justify-start">
                 <div className="bg-card border border-border rounded-xl px-4 py-3 flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                  <span className="text-sm text-muted-foreground">Simulating scenarios...</span>
+                  <span className="text-sm text-muted-foreground">{t("scenario.simulating")}</span>
                 </div>
               </div>
             )}
@@ -366,7 +368,7 @@ export default function ScenarioSimulator() {
           </div>
 
           <div className="flex gap-3">
-            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send(input)} placeholder="Describe a decision... e.g. 'What if we give Sofia a 30% raise?'" className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none" disabled={loading} />
+            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send(input)} placeholder={t("scenario.inputPlaceholder")} className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none" disabled={loading} />
             <button onClick={() => send(input)} disabled={loading} className="px-5 py-3 rounded-xl btn-gradient text-primary-foreground transition-all disabled:opacity-50">
               <Send className="w-4 h-4" />
             </button>

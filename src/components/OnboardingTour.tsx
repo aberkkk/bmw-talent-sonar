@@ -1,19 +1,21 @@
 import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { ChevronRight, ChevronLeft, X, PartyPopper } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import type { TranslationKey } from "@/context/LanguageContext";
 
 interface TourStep {
   selector: string;
-  title: string;
-  description: string;
+  titleKey: TranslationKey;
+  descKey: TranslationKey;
 }
 
 const TOUR_STEPS: TourStep[] = [
-  { selector: '[data-tour="talent-radar"]', title: "Talent Radar", description: "See all employees and their risk levels at a glance." },
-  { selector: '[data-tour="scenario-simulator"]', title: "Scenario Simulator", description: "Simulate decisions and compare outcomes before committing." },
-  { selector: '[data-tour="compensation-pulse"]', title: "Compensation Pulse", description: "Track salary gaps vs market benchmarks." },
-  { selector: '[data-tour="upskilling-map"]', title: "Upskilling Map", description: "Identify skill gaps and development paths per employee." },
-  { selector: '[data-tour="succession-planner"]', title: "Succession Planner", description: "See who is ready for the next leadership role." },
+  { selector: '[data-tour="talent-radar"]', titleKey: "nav.talentRadar", descKey: "tour.talentRadar" },
+  { selector: '[data-tour="scenario-simulator"]', titleKey: "nav.scenarioSimulator", descKey: "tour.scenarioSim" },
+  { selector: '[data-tour="compensation-pulse"]', titleKey: "nav.compensationPulse", descKey: "tour.compensation" },
+  { selector: '[data-tour="upskilling-map"]', titleKey: "nav.upskillingMap", descKey: "tour.upskilling" },
+  { selector: '[data-tour="succession-planner"]', titleKey: "nav.successionPlanner", descKey: "tour.succession" },
 ];
 
 interface Props {
@@ -22,6 +24,7 @@ interface Props {
 }
 
 export default function OnboardingTour({ active, onEnd }: Props) {
+  const { t } = useLanguage();
   const [step, setStep] = useState(0);
   const [rect, setRect] = useState<DOMRect | null>(null);
   const [done, setDone] = useState(false);
@@ -54,10 +57,10 @@ export default function OnboardingTour({ active, onEnd }: Props) {
           <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <PartyPopper className="w-8 h-8 text-primary" />
           </div>
-          <h2 className="text-xl font-bold text-foreground mb-2">You're ready! 🎉</h2>
-          <p className="text-sm text-muted-foreground mb-6">You've completed the tour. Start exploring the BMW Scenario Simulator to manage your workforce intelligently.</p>
+          <h2 className="text-xl font-bold text-foreground mb-2">{t("tour.complete")} 🎉</h2>
+          <p className="text-sm text-muted-foreground mb-6">{t("tour.completeDesc")}</p>
           <button onClick={onEnd} className="px-6 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground">
-            Get Started
+            {t("tour.close")}
           </button>
         </div>
       </div>,
@@ -129,17 +132,17 @@ export default function OnboardingTour({ active, onEnd }: Props) {
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
-        <h3 className="text-base font-bold text-foreground mb-1">{current.title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-4">{current.description}</p>
+        <h3 className="text-base font-bold text-foreground mb-1">{t(current.titleKey)}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-4">{t(current.descKey)}</p>
 
         <div className="flex items-center justify-between">
           <button onClick={onEnd} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-            Skip Tour
+            {t("tour.skip")}
           </button>
           <div className="flex gap-2">
             {step > 0 && (
               <button onClick={() => setStep(s => s - 1)} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-1 transition-colors">
-                <ChevronLeft className="w-3 h-3" /> Back
+                <ChevronLeft className="w-3 h-3" /> {t("tour.prev")}
               </button>
             )}
             <button
@@ -149,7 +152,7 @@ export default function OnboardingTour({ active, onEnd }: Props) {
               }}
               className="px-3 py-1.5 rounded-lg text-xs font-bold btn-gradient text-primary-foreground flex items-center gap-1"
             >
-              {step < TOUR_STEPS.length - 1 ? <>Next <ChevronRight className="w-3 h-3" /></> : "Finish"}
+              {step < TOUR_STEPS.length - 1 ? <>{t("tour.next")} <ChevronRight className="w-3 h-3" /></> : t("tour.close")}
             </button>
           </div>
         </div>

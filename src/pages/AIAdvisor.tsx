@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useEmployees } from "@/context/EmployeeContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { advisorChat } from "@/lib/gemini";
 import { Send, Loader2 } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
@@ -14,6 +15,7 @@ interface Message { role: "user" | "assistant"; content: string; }
 
 export default function AIAdvisor() {
   const { employees } = useEmployees();
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,8 +24,8 @@ export default function AIAdvisor() {
     return (
       <div className="animate-fade-in">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold">AI Advisor</h1>
-          <p className="text-muted-foreground text-sm mt-1">Ask questions about your workforce data — powered by AI</p>
+          <h1 className="text-2xl font-bold">{t("advisor.title")}</h1>
+          <p className="text-muted-foreground text-sm mt-1">{t("advisor.subtitle")}</p>
         </div>
         <EmptyState />
       </div>
@@ -51,8 +53,8 @@ export default function AIAdvisor() {
   return (
     <div className="animate-fade-in flex flex-col h-[calc(100vh-4rem)]">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">AI Advisor</h1>
-        <p className="text-muted-foreground text-sm mt-1">Ask questions about your workforce data — powered by AI</p>
+        <h1 className="text-2xl font-bold">{t("advisor.title")}</h1>
+        <p className="text-muted-foreground text-sm mt-1">{t("advisor.subtitle")}</p>
       </div>
 
       {messages.length === 0 && (
@@ -86,7 +88,7 @@ export default function AIAdvisor() {
       </div>
 
       <div className="flex gap-3">
-        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send(input)} placeholder="Ask about your workforce..." className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none" disabled={loading} />
+        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send(input)} placeholder={t("advisor.placeholder")} className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary outline-none" disabled={loading} />
         <button onClick={() => send(input)} disabled={loading} className="px-5 py-3 rounded-xl btn-gradient text-primary-foreground transition-all disabled:opacity-50">
           <Send className="w-4 h-4" />
         </button>
