@@ -238,7 +238,7 @@ export default function CompensationPulse() {
       </div>
 
       <div className="space-y-3">
-        <h2 className="text-sm font-semibold text-muted-foreground flex items-center gap-2"><Info className="w-4 h-4" /> Detailed Reasoning</h2>
+        <h2 className="text-sm font-semibold text-muted-foreground flex items-center gap-2"><Info className="w-4 h-4" /> {t("comp.detailedReasoning")}</h2>
         {data.map((d) => (
           <div key={d.fullName} className={`rounded-xl p-4 text-sm leading-relaxed border ${d.isHigh ? "bg-risk-high/5 border-risk-high/15 text-foreground" : "bg-muted/30 border-border text-muted-foreground"}`}>
             <span className="font-semibold text-foreground">{d.fullName}:</span> {d.reasoning}
