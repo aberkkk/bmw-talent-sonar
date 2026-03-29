@@ -114,9 +114,9 @@ export default function CostRiskMatrix({ scenarios }: Props) {
                 return "";
               }}
             />
-            <Scatter data={data} shape="circle">
+            <Scatter data={data} shape="circle" legendType="none">
               {data.map((d, i) => (
-                <Cell key={i} fill={riskColor[d.risk]} r={12} />
+                <Cell key={`cell-${i}`} fill={riskColor[d.risk]} />
               ))}
             </Scatter>
           </ScatterChart>

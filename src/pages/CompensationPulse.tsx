@@ -81,6 +81,8 @@ export default function CompensationPulse() {
     scatter: "Tenure vs. Salary (Peer Comparison)",
   };
 
+  console.log('CompChart data:', data);
+
   const renderChart = () => {
     switch (chartView) {
       case "bar":
