@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Employee } from "@/data/employees";
-import { X, Plus } from "lucide-react";
+import { X, Plus, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -10,6 +10,8 @@ interface Props {
   open: boolean;
   onClose: () => void;
   onAdd: (emp: Omit<Employee, "id" | "employeeId">) => void;
+  onUpdate?: (id: number, changes: Partial<Omit<Employee, "id" | "employeeId">>) => void;
+  editEmployee?: Employee | null;
 }
 
 const jobGradeOptions = ["L1", "L2", "L3", "L4", "L5", "Director", "VP"];
@@ -33,7 +35,9 @@ const roleOptions = [
   "Team Lead", "Manager", "Senior Manager", "Director", "VP", "SVP"
 ];
 
-export default function AddEmployeeModal({ open, onClose, onAdd }: Props) {
+export default function AddEmployeeModal({ open, onClose, onAdd, onUpdate, editEmployee }: Props) {
+  const isEdit = !!editEmployee;
+
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
   const [dept, setDept] = useState("");
@@ -47,29 +51,59 @@ export default function AddEmployeeModal({ open, onClose, onAdd }: Props) {
   const [lastPromo, setLastPromo] = useState("");
   const [trainingHours, setTrainingHours] = useState("");
 
+  // Pre-fill form when editing
+  useEffect(() => {
+    if (editEmployee) {
+      setName(editEmployee.name);
+      setRole(editEmployee.role);
+      setDept(editEmployee.dept);
+      setDeptCode(editEmployee.deptCode);
+      setJobGrade(editEmployee.jobGrade);
+      setManagerName(editEmployee.managerName);
+      setStartDate(editEmployee.startDate ? new Date(editEmployee.startDate) : undefined);
+      setSkillsStr(editEmployee.skills.join(", "));
+      setTenure(String(editEmployee.tenure));
+      setSalary(String(editEmployee.salary));
+      setLastPromo(String(editEmployee.lastPromo));
+      setTrainingHours(String(editEmployee.trainingHours));
+    } else {
+      resetForm();
+    }
+  }, [editEmployee, open]);
+
+  function resetForm() {
+    setName(""); setRole(""); setDept(""); setDeptCode(""); setJobGrade("L3"); setManagerName(""); setStartDate(undefined); setSkillsStr(""); setTenure(""); setSalary(""); setLastPromo(""); setTrainingHours("");
+  }
+
   if (!open) return null;
 
   const isValid = name.trim() && role.trim() && dept.trim() && skillsStr.trim() && tenure && salary && lastPromo && jobGrade;
 
+  const buildData = (): Omit<Employee, "id" | "employeeId"> => ({
+    name: name.trim(),
+    role: role.trim(),
+    dept: dept.trim(),
+    deptCode: deptCode.trim(),
+    jobGrade,
+    managerName: managerName.trim(),
+    startDate: startDate ? startDate.toISOString() : "",
+    skills: skillsStr.split(",").map(s => s.trim()).filter(Boolean),
+    tenure: parseFloat(tenure),
+    salary: parseFloat(salary),
+    lastPromo: parseInt(lastPromo),
+    trainingHours: trainingHours ? parseInt(trainingHours) : 0,
+    risk: "Low",
+    flag: null,
+  });
+
   const handleSubmit = () => {
     if (!isValid) return;
-    onAdd({
-      name: name.trim(),
-      role: role.trim(),
-      dept: dept.trim(),
-      deptCode: deptCode.trim(),
-      jobGrade,
-      managerName: managerName.trim(),
-      startDate: startDate ? startDate.toISOString() : "",
-      skills: skillsStr.split(",").map(s => s.trim()).filter(Boolean),
-      tenure: parseFloat(tenure),
-      salary: parseFloat(salary),
-      lastPromo: parseInt(lastPromo),
-      trainingHours: trainingHours ? parseInt(trainingHours) : 0,
-      risk: "Low",
-      flag: null,
-    });
-    setName(""); setRole(""); setDept(""); setDeptCode(""); setJobGrade("L3"); setManagerName(""); setStartDate(undefined); setSkillsStr(""); setTenure(""); setSalary(""); setLastPromo(""); setTrainingHours("");
+    if (isEdit && onUpdate && editEmployee) {
+      onUpdate(editEmployee.id, buildData());
+    } else {
+      onAdd(buildData());
+    }
+    resetForm();
     onClose();
   };
 
@@ -80,7 +114,9 @@ export default function AddEmployeeModal({ open, onClose, onAdd }: Props) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-card border border-border rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[90vh] overflow-auto shadow-xl" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold flex items-center gap-2"><Plus className="w-5 h-5 text-primary" /> Add Employee</h2>
+          <h2 className="text-lg font-bold flex items-center gap-2">
+            {isEdit ? <><Pencil className="w-5 h-5 text-primary" /> Edit Employee — {editEmployee!.name}</> : <><Plus className="w-5 h-5 text-primary" /> Add Employee</>}
+          </h2>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-secondary transition-colors"><X className="w-5 h-5" /></button>
         </div>
 
@@ -167,7 +203,7 @@ export default function AddEmployeeModal({ open, onClose, onAdd }: Props) {
           </div>
 
           <button onClick={handleSubmit} disabled={!isValid} className="w-full py-3 rounded-lg text-sm font-bold btn-gradient text-primary-foreground disabled:opacity-40 disabled:cursor-not-allowed transition-all mt-2">
-            Add Employee
+            {isEdit ? "Save Changes" : "Add Employee"}
           </button>
         </div>
       </div>
