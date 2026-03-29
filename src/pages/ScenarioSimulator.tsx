@@ -332,7 +332,7 @@ export default function ScenarioSimulator() {
                                       : "btn-gradient text-primary-foreground hover:opacity-90"
                                   }`}
                                 >
-                                  {isApplied ? <><CheckCircle2 className="w-4 h-4" /> Applied</> : "Apply This Scenario"}
+                                  {isApplied ? <><CheckCircle2 className="w-4 h-4" /> {t("scenario.applied")}</> : t("scenario.applyScenario")}
                                 </button>
                               </div>
                             )}
