@@ -297,7 +297,7 @@ export default function TalentRadar() {
                 <div className="border-t border-border pt-5">
                   <div className="flex items-center gap-2 mb-3">
                     <StickyNote className="w-4 h-4 text-accent" />
-                    <h3 className="text-sm font-semibold">Manager Notes</h3>
+                    <h3 className="text-sm font-semibold">{t("talent.managerNotes")}</h3>
                   </div>
                   {getNotesForEmployee(modalEmployeeId).length > 0 && (
                     <div className="space-y-2 mb-3 max-h-[200px] overflow-auto">
