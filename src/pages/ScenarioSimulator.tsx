@@ -255,7 +255,7 @@ export default function ScenarioSimulator() {
           {messages.length === 0 && (
             <div className="mb-6">
               <p className="text-sm text-muted-foreground mb-3 flex items-center gap-2">
-                <MessageCircle className="w-4 h-4" /> Try asking:
+                <MessageCircle className="w-4 h-4" /> {t("scenario.tryAsking")}
               </p>
               <div className="flex flex-wrap gap-2">
                 {quickPrompts.map((q) => (
