@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🎯 XA-108 Talent Radar
+# BMW Talent Radar
 
-### AI-Powered Senior Hiring Decision Support System for BMW Group
+### AI-Powered Executive Hiring Decision Support System for BMW Group
 
 [![Built with Lovable](https://img.shields.io/badge/Built%20with-Lovable-ff69b4?style=for-the-badge)](https://lovable.dev)
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org)
@@ -10,45 +10,42 @@
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
 
-**🏆 BMW Hackathon 2025 — Submission**
+**BMW Hackathon 2025 — Submission**
 
-[🚀 Live Demo](https://lovable.dev/projects/ae63886f-10fd-4a86-a89d-cd387608acde) · [📋 Features](#-features) · [🛠 Tech Stack](#-tech-stack) · [🚀 Getting Started](#-getting-started)
+[Live Demo](https://lovable.dev/projects/a7995ddc-fdb2-4fdf-bdbe-60bf0c42ed2b) · [Features](#-features) · [Tech Stack](#-tech-stack) · [Getting Started](#-getting-started)
 
 </div>
 
 ---
 
-## 📌 Problem
+## Problem
 
-BMW Group's senior talent acquisition process lacks a **unified, data-driven decision support layer**. Recruiters and HR managers evaluate candidates across multiple dimensions — skills, succession fit, compensation benchmarks, and scenario planning — using disconnected tools and manual judgment.
+BMW Group's executive talent acquisition process lacks a **unified, data-driven decision support layer**. HR managers evaluate candidates across multiple dimensions — skills, retention risk, compensation benchmarks, and scenario planning — using disconnected tools and manual judgment.
 
-**XA-108 Talent Radar** solves this by providing a real-time, AI-augmented workspace that consolidates all hiring intelligence into one coherent platform.
+**BMW Talent Radar** solves this by providing a real-time, AI-augmented workspace that consolidates all hiring intelligence into one coherent platform.
 
 ---
 
-## ✨ Features
+## Features
 
-### 🔍 Talent Radar
-Real-time overview of XA-108 Technologies talent pool with multi-dimensional candidate scoring and ranking.
+### Talent Radar
+Real-time workforce overview with multi-dimensional candidate scoring, retention risk alerts, and leadership tagging. Deep Dive profiles give instant insight into each employee's compensation, tenure, and risk factors.
 
-### 🔁 Succession Planner
-Visual succession mapping for critical roles — identify internal candidates and external prospects for key positions.
-
-### 🎭 Scenario Simulator ⭐
+### Scenario Simulator
 **BMW-specific hiring scenario engine** — simulate different workforce compositions, budget constraints, and strategic objectives to evaluate decision outcomes before committing.
 
-### 🗺 Upskilling Map
-Identify skill gaps across the talent pipeline and generate personalized upskilling roadmaps aligned with BMW's strategic needs.
+### Executive Hiring
+End-to-end executive recruitment pipeline. Track candidates from sourcing to offer, with AI-assisted fit scoring aligned to BMW's leadership competency framework.
 
-### 💰 Compensation Pulse
-Live compensation benchmarking engine — compare candidate expectations against market data and internal bands for senior roles.
+### Compensation Pulse
+Live compensation benchmarking engine — compare candidate expectations against market data and internal bands for senior and executive roles.
 
-### 🤖 AI Advisor
+### AI Advisor
 Natural language interface for hiring queries. Ask complex questions about candidates, roles, or market trends and receive structured, explainable recommendations.
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -61,99 +58,90 @@ Natural language interface for hiring queries. Ask complex questions about candi
 | **AI Layer** | Custom AI Advisor with structured reasoning |
 | **Export** | jsPDF, XLSX |
 | **Testing** | Vitest, Playwright |
-| **i18n** | Custom language context (TR/EN) |
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 18+ or Bun
-- - npm / bun
- 
-  - ### Installation
- 
-  - ```bash
-    # Clone the repository
-    git clone https://github.com/aberkkk/bmw-talent-sonar.git
-    cd bmw-talent-sonar
 
-    # Install dependencies
-    npm install
-    # or
-    bun install
+- ### Installation
 
-    # Start development server
-    npm run dev
-    # or
-    bun dev
-    ```
+- ```bash
+  # Clone the repository
+  git clone https://github.com/aberkkk/bmw-talent-sonar.git
+  cd bmw-talent-sonar
 
-    The app will be available at `http://localhost:8080`
+  # Install dependencies
+  npm install
 
-    ### Available Scripts
+  # Start development server
+  npm run dev
+  ```
 
-    ```bash
-    npm run dev        # Start development server
-    npm run build      # Production build
-    npm run preview    # Preview production build
-    npm run test       # Run unit tests
-    npm run lint       # Lint codebase
-    ```
+  The app will be available at `http://localhost:8080`
 
-    ---
+  ### Available Scripts
 
-    ## 📁 Project Structure
+  ```bash
+  npm run dev        # Start development server
+  npm run build      # Production build
+  npm run preview    # Preview production build
+  npm run test       # Run unit tests
+  npm run lint       # Lint codebase
+  ```
 
-    ```
-    src/
-    ├── components/     # Reusable UI components
-    ├── context/        # React context providers (theme, language)
-    ├── data/           # Mock data & data models
-    ├── hooks/          # Custom React hooks
-    ├── lib/            # Utility functions
-    ├── pages/          # Route-level page components
-    │   ├── TalentRadar.tsx
-    │   ├── SuccessionPlanner.tsx
-    │   ├── ScenarioSimulator.tsx
-    │   ├── UpskillMap.tsx
-    │   ├── CompensationPulse.tsx
-    │   └── AIAdvisor.tsx
-    └── test/           # Test suites
-    ```
+  ---
 
-    ---
+  ## Project Structure
 
-    ## 🤖 AI & Decision Logic
+  ```
+  src/
+  ├── components/     # Reusable UI components
+  ├── context/        # React context providers (theme)
+  ├── data/           # Mock data & data models
+  ├── hooks/          # Custom React hooks
+  ├── lib/            # Utility functions
+  ├── pages/          # Route-level page components
+  │   ├── TalentRadar.tsx
+  │   ├── ScenarioSimulator.tsx
+  │   ├── ExecutiveHiring.tsx
+  │   ├── CompensationPulse.tsx
+  │   └── AIAdvisor.tsx
+  └── test/           # Test suites
+  ```
 
-    The platform is built around **explainable AI** principles:
+  ---
 
-    - **Structured scoring** — candidates are evaluated across weighted dimensions (skills match, experience, cultural fit, compensation alignment)
-    - - **Scenario modeling** — Monte Carlo-style simulations for workforce planning
-      - - **Ranking transparency** — every recommendation includes reasoning traces
-        - - **Natural language queries** — the AI Advisor translates complex HR questions into actionable data insights
-         
-          - ---
-          
-          ---
+  ## AI & Decision Logic
 
-          ## 📊 Business Value
+  The platform is built around **explainable AI** principles:
 
-          | Metric | Impact |
-          |--------|--------|
-          | Decision Speed | Reduces senior hiring cycle by up to **40%** |
-          | Data Centralization | Unifies **6 distinct** hiring dimensions in one view |
-          | Scenario Coverage | Simulates **N×M** workforce configurations instantly |
-          | Explainability | Every recommendation includes a full reasoning trace |
+  - **Retention risk scoring** — flags employees underpaid vs. market, short tenure, or high flight risk
+  - - **Scenario modeling** — workforce planning simulations across budget and headcount variables
+    - - **Ranking transparency** — every recommendation includes reasoning traces
+      - - **Natural language queries** — the AI Advisor translates complex HR questions into actionable data insights
+       
+        - ---
 
-          ---
+        ## Business Value
 
-          ## 👥 Team
+        | Metric | Impact |
+        |--------|--------|
+        | Decision Speed | Reduces executive hiring cycle by up to **40%** |
+        | Data Centralization | Unifies **5 distinct** hiring dimensions in one view |
+        | Scenario Coverage | Simulates **N×M** workforce configurations instantly |
+        | Explainability | Every recommendation includes a full reasoning trace |
 
-          Built by **XA-108 Technologies** for the **BMW Hackathon 2025**
+        ---
 
-          ---
+        ## Team
 
-          ## 📄 License
+        Built by **XA-108 Technologies** for the **BMW Hackathon 2025**
 
-          This project is private. All rights reserved © 2025 XA-108 Technologies.
+        ---
+
+        ## License
+
+        This project is open source. © 2025 XA-108 Technologies.
