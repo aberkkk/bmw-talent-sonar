@@ -207,16 +207,15 @@ export default function TalentRadar() {
               <RiskBadge risk={emp.risk} />
               <span className="text-xs text-muted-foreground">{emp.tenure}yr tenure · €{emp.salary}k</span>
             </div>
-            {emp.flag && (
-              <div className="bg-risk-high/5 border border-risk-high/15 rounded-lg px-3 py-2 mb-3">
-                <p className="text-xs text-risk-high">⚠ {emp.flag}</p>
+            {getRiskFlags(emp).length > 0 && (
+              <div className="space-y-1.5 mb-3">
+                {getRiskFlags(emp).map((flag, i) => (
+                  <div key={i} className="bg-risk-high/5 border border-risk-high/15 rounded-lg px-3 py-2">
+                    <p className="text-xs text-risk-high">⚠ {flag}</p>
+                  </div>
+                ))}
               </div>
             )}
-            <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 mb-4">
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
-                <span className="font-semibold">{t("talent.riskReasoning")}</span> {riskReasoning(emp)}
-              </p>
-            </div>
             <div className="flex gap-2">
               <button onClick={() => handleDeepDive(emp)} className="flex-1 py-2 rounded-lg text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
                 {t("talent.deepDive")}
