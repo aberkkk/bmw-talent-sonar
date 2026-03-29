@@ -153,22 +153,10 @@ export default function ScenarioSimulator() {
 
       {compareMode ? (
         <div className="flex-1 overflow-auto">
-          <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
-            <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-            <div className="text-sm text-muted-foreground leading-relaxed">
-              <span className="font-semibold text-foreground">Comparison Mode:</span> Select an employee and decision for each panel, then simulate both to see a side-by-side comparison of outcomes.
-            </div>
-          </div>
           <ComparisonMode onClose={() => setCompareMode(false)} />
         </div>
       ) : (
         <>
-          <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
-            <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-            <div className="text-sm text-muted-foreground leading-relaxed">
-              <span className="font-semibold text-foreground">How it works:</span> Describe any HR decision naturally. The simulator models outcomes. Click <span className="font-semibold text-primary">"Apply"</span> on a scenario to update the employee's data across ALL modules instantly.
-            </div>
-          </div>
 
           {messages.length === 0 && (
             <div className="mb-6">
