@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import { Slider } from "@/components/ui/slider";
 import { Employee } from "@/data/employees";
+import { useChartColors } from "@/hooks/useChartColors";
 
 function riskToNum(risk: Employee["risk"]): number {
   return risk === "Low" ? 1 : risk === "Medium" ? 2 : risk === "High" ? 3 : 4;
@@ -21,7 +22,6 @@ function numToColor(n: number): string {
 }
 
 function getEscalationRate(emp: Employee): number {
-  // Since trend was removed, base escalation on lastPromo and tenure
   if (emp.lastPromo > 24) return 0.3;
   if (emp.lastPromo > 18) return 0.2;
   if (emp.lastPromo > 12) return 0.15;
@@ -44,6 +44,7 @@ interface Props {
 
 export default function TimeSimulationSlider({ employee }: Props) {
   const [months, setMonths] = useState(3);
+  const colors = useChartColors();
 
   const escalationRate = getEscalationRate(employee);
   const startRisk = riskToNum(employee.risk);
@@ -57,9 +58,6 @@ export default function TimeSimulationSlider({ employee }: Props) {
 
   const currentProjection = chartData[months];
   const riskLabel = currentProjection?.label || "Low";
-
-  // Build gradient segments for line coloring
-  const segments = chartData.slice(0, months + 1);
 
   return (
     <div className="bg-card border border-border rounded-xl p-6 card-glow">
@@ -107,16 +105,16 @@ export default function TimeSimulationSlider({ employee }: Props) {
               <stop offset="100%" stopColor="#991B1B" />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} />
           <XAxis
             dataKey="month"
-            tick={{ fill: "#64748B", fontSize: 11 }}
+            tick={{ fill: colors.tick, fontSize: 11 }}
             tickFormatter={(v) => `${v}mo`}
           />
           <YAxis
             domain={[0, 4.5]}
             ticks={[1, 2, 3, 4]}
-            tick={{ fill: "#64748B", fontSize: 11 }}
+            tick={{ fill: colors.tick, fontSize: 11 }}
             tickFormatter={(v) => {
               if (v === 1) return "Low";
               if (v === 2) return "Med";
@@ -127,10 +125,10 @@ export default function TimeSimulationSlider({ employee }: Props) {
           />
           <Tooltip
             contentStyle={{
-              background: "hsl(var(--card))",
-              border: "1px solid hsl(var(--border))",
+              background: colors.tooltipBg,
+              border: `1px solid ${colors.tooltipBorder}`,
               borderRadius: 8,
-              color: "hsl(var(--foreground))",
+              color: colors.tooltipText,
               fontSize: 12,
             }}
             formatter={(value: number) => [numToRisk(value), "Risk Level"]}
@@ -143,10 +141,9 @@ export default function TimeSimulationSlider({ employee }: Props) {
             strokeWidth={1.5}
             label={{ value: "Critical Threshold", position: "right", fill: "#EF4444", fontSize: 10 }}
           />
-          {/* Highlight current slider position */}
           <ReferenceLine
             x={months}
-            stroke="hsl(var(--primary))"
+            stroke="hsl(173, 83%, 35%)"
             strokeDasharray="4 4"
             strokeOpacity={0.6}
           />
@@ -166,7 +163,7 @@ export default function TimeSimulationSlider({ employee }: Props) {
                   cy={cy}
                   r={isSelected ? 6 : 3}
                   fill={color}
-                  stroke={isSelected ? "hsl(var(--primary))" : "none"}
+                  stroke={isSelected ? "hsl(173, 83%, 35%)" : "none"}
                   strokeWidth={isSelected ? 2 : 0}
                 />
               );
