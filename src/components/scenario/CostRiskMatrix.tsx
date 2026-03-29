@@ -91,7 +91,9 @@ export default function CostRiskMatrix({ scenarios }: Props) {
             >
               <Label value="Retention %" angle={-90} position="left" offset={5} style={{ fill: colors.tick, fontSize: 11 }} />
             </YAxis>
+            <ZAxis range={[400, 400]} />
             <ReferenceLine x={20000} stroke={colors.referenceLine} strokeDasharray="6 4" strokeOpacity={0.5} />
+            <ReferenceLine y={70} stroke={colors.referenceLine} strokeDasharray="6 4" strokeOpacity={0.5} />
             <ReferenceLine y={70} stroke={colors.referenceLine} strokeDasharray="6 4" strokeOpacity={0.5} />
             <Tooltip
               cursor={{ strokeDasharray: "3 3" }}
