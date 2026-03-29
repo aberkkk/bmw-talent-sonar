@@ -116,7 +116,7 @@ export default function TalentRadar() {
           </div>
           <h2 className="text-xl font-bold mb-2 text-foreground">No employees added yet</h2>
           <p className="text-sm text-muted-foreground max-w-md mb-6">
-            Add your first employee or bulk import from a CSV to start building your workforce intelligence dashboard
+            Add your first employee or bulk import from a CSV to start building your XA-108 Technologies dashboard
           </p>
           <div className="flex gap-3">
             <button onClick={() => setBulkModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors border border-border">
