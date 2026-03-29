@@ -57,10 +57,10 @@ export default function OnboardingTour({ active, onEnd }: Props) {
           <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <PartyPopper className="w-8 h-8 text-primary" />
           </div>
-          <h2 className="text-xl font-bold text-foreground mb-2">You're ready! 🎉</h2>
-          <p className="text-sm text-muted-foreground mb-6">You've completed the tour. Start exploring the BMW Scenario Simulator to manage your workforce intelligently.</p>
+          <h2 className="text-xl font-bold text-foreground mb-2">{t("tour.complete")} 🎉</h2>
+          <p className="text-sm text-muted-foreground mb-6">{t("tour.completeDesc")}</p>
           <button onClick={onEnd} className="px-6 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground">
-            Get Started
+            {t("tour.close")}
           </button>
         </div>
       </div>,
