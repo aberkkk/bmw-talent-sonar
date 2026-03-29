@@ -252,7 +252,7 @@ export default function TalentRadar() {
                 <div className="border-t border-border pt-5">
                   <div className="flex items-center gap-2 mb-3">
                     <MessageCircle className="w-4 h-4 text-primary" />
-                    <h3 className="text-sm font-semibold">Ask more about {modalEmployee}</h3>
+                    <h3 className="text-sm font-semibold">{t("talent.askMore")} {modalEmployee}</h3>
                   </div>
                   {chatMessages.length === 0 && (
                     <div className="flex flex-wrap gap-2 mb-4">
