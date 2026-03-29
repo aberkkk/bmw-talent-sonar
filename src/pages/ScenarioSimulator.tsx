@@ -240,7 +240,7 @@ export default function ScenarioSimulator() {
             }`}
           >
             <GitCompareArrows className="w-4 h-4" />
-            {compareMode ? "Exit Compare" : "Compare Two Employees"}
+            {compareMode ? t("scenario.exitCompare") : t("scenario.compare")}
           </button>
         </div>
       </div>
