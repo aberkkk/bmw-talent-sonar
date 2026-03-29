@@ -51,6 +51,64 @@
     --risk-medium: 38 92% 50%;
     --risk-high: 0 84% 60%;
     --risk-critical: 0 74% 50%;
+
+    --chart-grid: 214 32% 91%;
+    --chart-tick: 215 16% 47%;
+    --chart-tooltip-bg: 0 0% 100%;
+    --chart-tooltip-border: 214 32% 91%;
+    --chart-tooltip-text: 222 47% 11%;
+  }
+
+  .dark {
+    --background: 228 60% 8%;
+    --foreground: 210 40% 92%;
+
+    --card: 228 45% 13%;
+    --card-foreground: 210 40% 92%;
+
+    --popover: 228 45% 13%;
+    --popover-foreground: 210 40% 92%;
+
+    --primary: 173 83% 38%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 228 40% 18%;
+    --secondary-foreground: 215 20% 70%;
+
+    --muted: 228 35% 16%;
+    --muted-foreground: 215 20% 60%;
+
+    --accent: 192 91% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 228 30% 22%;
+    --input: 228 30% 22%;
+    --ring: 173 83% 38%;
+
+    --sidebar-background: 228 50% 10%;
+    --sidebar-foreground: 215 20% 65%;
+    --sidebar-primary: 173 83% 38%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 228 35% 16%;
+    --sidebar-accent-foreground: 210 40% 92%;
+    --sidebar-border: 228 30% 20%;
+    --sidebar-ring: 173 83% 38%;
+
+    --cyan: 192 91% 42%;
+    --gold: 43 96% 56%;
+    --risk-low: 160 84% 42%;
+    --risk-medium: 38 92% 55%;
+    --risk-high: 0 72% 55%;
+    --risk-critical: 0 74% 45%;
+
+    --chart-grid: 228 30% 22%;
+    --chart-tick: 215 20% 60%;
+    --chart-tooltip-bg: 228 45% 15%;
+    --chart-tooltip-border: 228 30% 25%;
+    --chart-tooltip-text: 210 40% 92%;
   }
 }
 
@@ -68,8 +126,14 @@
   .card-glow:hover {
     box-shadow: 0 4px 20px rgba(13, 148, 136, 0.15);
   }
+  .dark .card-glow:hover {
+    box-shadow: 0 4px 24px rgba(13, 148, 136, 0.25);
+  }
   .sidebar-shadow {
     box-shadow: 2px 0 12px rgba(0, 0, 0, 0.04);
+  }
+  .dark .sidebar-shadow {
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.3);
   }
   .glow-green {
     box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);
@@ -83,8 +147,17 @@
   .glow-pink {
     box-shadow: 0 0 8px rgba(220, 38, 38, 0.25);
   }
+  .glow-purple {
+    box-shadow: 0 0 12px rgba(13, 148, 136, 0.2);
+  }
+  .dark .glow-purple {
+    box-shadow: 0 0 16px rgba(13, 148, 136, 0.35);
+  }
   .btn-gradient {
-    background: linear-gradient(135deg, #0D9488, #0891B2);
+    background: linear-gradient(135deg, hsl(173 83% 32%), hsl(192 91% 36%));
+  }
+  .dark .btn-gradient {
+    background: linear-gradient(135deg, hsl(173 83% 38%), hsl(192 91% 40%));
   }
   .btn-gradient:hover {
     box-shadow: 0 4px 16px rgba(13, 148, 136, 0.35);

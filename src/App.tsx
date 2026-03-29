@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { EmployeeProvider } from "@/context/EmployeeContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 import DashboardLayout from "@/components/DashboardLayout";
 import TalentRadar from "@/pages/TalentRadar";
 import SuccessionPlanner from "@/pages/SuccessionPlanner";
@@ -17,25 +18,27 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <EmployeeProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <DashboardLayout>
-            <Routes>
-              <Route path="/" element={<TalentRadar />} />
-              <Route path="/succession" element={<SuccessionPlanner />} />
-              <Route path="/simulator" element={<ScenarioSimulator />} />
-              <Route path="/upskilling" element={<UpskillingMap />} />
-              <Route path="/compensation" element={<CompensationPulse />} />
-              <Route path="/advisor" element={<AIAdvisor />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </DashboardLayout>
-        </BrowserRouter>
-      </EmployeeProvider>
-    </TooltipProvider>
+    <ThemeProvider>
+      <TooltipProvider>
+        <EmployeeProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <DashboardLayout>
+              <Routes>
+                <Route path="/" element={<TalentRadar />} />
+                <Route path="/succession" element={<SuccessionPlanner />} />
+                <Route path="/simulator" element={<ScenarioSimulator />} />
+                <Route path="/upskilling" element={<UpskillingMap />} />
+                <Route path="/compensation" element={<CompensationPulse />} />
+                <Route path="/advisor" element={<AIAdvisor />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </DashboardLayout>
+          </BrowserRouter>
+        </EmployeeProvider>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
