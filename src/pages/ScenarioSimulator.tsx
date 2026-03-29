@@ -360,7 +360,7 @@ export default function ScenarioSimulator() {
               <div className="flex justify-start">
                 <div className="bg-card border border-border rounded-xl px-4 py-3 flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                  <span className="text-sm text-muted-foreground">Simulating scenarios...</span>
+                  <span className="text-sm text-muted-foreground">{t("scenario.simulating")}</span>
                 </div>
               </div>
             )}
