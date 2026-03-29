@@ -44,8 +44,8 @@ export default function SuccessionPlanner() {
     <div className="animate-fade-in">
       <div className="mb-8 flex items-center gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Succession Planner</h1>
-          <p className="text-muted-foreground text-sm mt-1">Key leadership pipeline & readiness assessment</p>
+          <h1 className="text-2xl font-bold">{t("succession.title")}</h1>
+          <p className="text-muted-foreground text-sm mt-1">{t("succession.subtitle")}</p>
         </div>
         <div className="relative group">
           <button className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
