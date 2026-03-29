@@ -139,9 +139,9 @@ export default function TalentRadar() {
 
   return (
     <div className="animate-fade-in">
-      <div className="flex items-center justify-between mb-8">
+      <div className="mb-8 flex-row flex items-end justify-between gap-0 border-primary border-0">
         <div className="flex items-center gap-3">
-          <div>
+          <div className="text-left font-sans rounded-none">
             <h1 className="text-2xl font-bold">{t("talent.title")}</h1>
             <p className="text-muted-foreground text-sm mt-1">{t("talent.subtitle")}</p>
           </div>
@@ -157,10 +157,10 @@ export default function TalentRadar() {
           </div>
         </div>
         <div className="flex gap-2">
-          <button onClick={() => setBulkModalOpen(true)} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
+          <button onClick={() => setBulkModalOpen(true)} className="rounded-xl text-sm btn-gradient text-primary-foreground flex items-center gap-2 my-0 mx-0 px-[20px] py-[10px] font-bold">
             <FileSpreadsheet className="w-4 h-4" /> {t("talent.bulkImport")}
           </button>
-          <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-5 py-2.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2">
+          <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="rounded-xl text-sm btn-gradient text-primary-foreground flex items-center gap-2 my-0 mx-0 px-[20px] py-[10px] font-bold">
             <Plus className="w-4 h-4" /> {t("talent.addEmployee")} +
           </button>
         </div>
