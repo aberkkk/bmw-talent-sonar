@@ -24,8 +24,8 @@ export default function AIAdvisor() {
     return (
       <div className="animate-fade-in">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold">AI Advisor</h1>
-          <p className="text-muted-foreground text-sm mt-1">Ask questions about your workforce data — powered by AI</p>
+          <h1 className="text-2xl font-bold">{t("advisor.title")}</h1>
+          <p className="text-muted-foreground text-sm mt-1">{t("advisor.subtitle")}</p>
         </div>
         <EmptyState />
       </div>
