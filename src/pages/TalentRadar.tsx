@@ -115,7 +115,7 @@ export default function TalentRadar() {
             <button onClick={() => setBulkModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-2 transition-colors border border-border">
               <FileSpreadsheet className="w-4 h-4" /> Bulk Import CSV
             </button>
-            <button onClick={() => setAddModalOpen(true)} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
+            <button onClick={() => { setEditingEmployee(null); setAddModalOpen(true); }} className="px-8 py-3.5 rounded-xl text-sm font-bold btn-gradient text-primary-foreground flex items-center gap-2 transition-all">
               <Plus className="w-4 h-4" /> Add Employee +
             </button>
           </div>
