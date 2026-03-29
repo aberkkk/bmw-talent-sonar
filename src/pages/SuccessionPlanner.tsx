@@ -40,15 +40,20 @@ export default function SuccessionPlanner() {
 
   return (
     <div className="animate-fade-in">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold">Succession Planner</h1>
-        <p className="text-muted-foreground text-sm mt-1">Key leadership pipeline & readiness assessment</p>
-      </div>
-
-      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
-        <Info className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-        <div className="text-sm text-muted-foreground leading-relaxed">
-          <span className="font-semibold text-foreground">Methodology:</span> Candidates ranked by tenure and promotion recency. Thresholds: <span className="text-risk-low font-medium">"Ready Now" (5+ yr tenure, recent promo)</span>, <span className="text-risk-medium font-medium">"Ready in 1yr" (3+ yr tenure)</span>, <span className="text-risk-high font-medium">"Needs Development" (&lt;3yr)</span>.
+      <div className="mb-8 flex items-center gap-3">
+        <div>
+          <h1 className="text-2xl font-bold">Succession Planner</h1>
+          <p className="text-muted-foreground text-sm mt-1">Key leadership pipeline & readiness assessment</p>
+        </div>
+        <div className="relative group">
+          <button className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
+            <Info className="w-4 h-4" />
+          </button>
+          <div className="absolute left-0 top-full mt-2 w-80 bg-card border border-border rounded-xl p-4 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              <span className="font-semibold text-foreground">Methodology:</span> Candidates ranked by tenure and promotion recency. Thresholds: <span className="text-risk-low font-medium">"Ready Now" (5+ yr tenure, recent promo)</span>, <span className="text-risk-medium font-medium">"Ready in 1yr" (3+ yr tenure)</span>, <span className="text-risk-high font-medium">"Needs Development" (&lt;3yr)</span>.
+            </p>
+          </div>
         </div>
       </div>
 
