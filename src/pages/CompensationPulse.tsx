@@ -186,7 +186,7 @@ export default function CompensationPulse() {
 
         {chartView === "bar" && (
           <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
-            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-[#0D9488]" /> Current</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-[#0D9488]" /> {t("comp.current")}</span>
             <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-[#94A3B8]" /> Aligned</span>
             <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-[#EF4444]" /> Below Market</span>
           </div>
