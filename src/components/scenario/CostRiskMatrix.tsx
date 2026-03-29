@@ -39,9 +39,12 @@ interface Props {
 export default function CostRiskMatrix({ scenarios }: Props) {
   const colors = useChartColors();
 
+  if (scenarios.length < 3) return null;
+
   const data = scenarios.map((s, i) => ({
+    name: `Scenario ${String.fromCharCode(65 + i)}`,
     label: String.fromCharCode(65 + i),
-    cost: parseCost(s.cost),
+    cost: parseFloat(s.cost.replace(/[^0-9.]/g, '')) || 0,
     probability: s.probability,
     risk: s.risk,
     title: s.title,
