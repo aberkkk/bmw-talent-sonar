@@ -139,7 +139,7 @@ export default function TalentRadar() {
         <div className="flex items-center gap-3">
           <div>
             <h1 className="text-2xl font-bold">Talent Radar</h1>
-            <p className="text-muted-foreground text-sm mt-1">Real-time workforce intelligence overview</p>
+            <p className="text-muted-foreground text-sm mt-1">Real-time XA-108 Technologies overview</p>
           </div>
           <div className="relative group">
             <button className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
