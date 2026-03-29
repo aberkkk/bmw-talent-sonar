@@ -208,12 +208,17 @@ export default function TalentRadar() {
                 <span className="font-semibold">Risk reasoning:</span> {riskReasoning(emp)}
               </p>
             </div>
-            <button onClick={() => handleDeepDive(emp)} className="w-full py-2 rounded-lg text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-              Deep Dive →
-            </button>
-          </div>
-        ))}
-      </div>
+            <div className="flex gap-2">
+              <button onClick={() => handleDeepDive(emp)} className="flex-1 py-2 rounded-lg text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+                Deep Dive →
+              </button>
+              {hasNotes(emp.id) && (
+                <div className="flex items-center gap-1 px-2.5 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent text-xs font-medium">
+                  <StickyNote className="w-3 h-3" />
+                  {getNotesForEmployee(emp.id).length}
+                </div>
+              )}
+            </div>
 
       {/* Deep Dive Modal with Chat */}
       {modalOpen && (
