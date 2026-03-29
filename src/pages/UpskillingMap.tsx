@@ -70,7 +70,7 @@ export default function UpskillingMap() {
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div data-tour="career-paths" className="space-y-6">
         {employees.map((emp) => {
           const path = generateCareerPath(emp);
           return (

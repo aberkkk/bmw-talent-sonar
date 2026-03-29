@@ -59,7 +59,7 @@ export default function SuccessionPlanner() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div data-tour="succession-cards" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {positions.map((pos) => {
           const candidates = pos.candidateIds.map(id => employees.find(e => e.id === id)!).filter(Boolean);
           return (

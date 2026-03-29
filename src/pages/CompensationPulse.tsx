@@ -165,7 +165,7 @@ export default function CompensationPulse() {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-xl p-6 mb-6 card-glow transition-all">
+      <div data-tour="comp-chart" className="bg-card border border-border rounded-xl p-6 mb-6 card-glow transition-all">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
           <h2 className="text-sm font-semibold text-muted-foreground">{chartTitles[chartView]}</h2>
           <ToggleGroup type="single" value={chartView} onValueChange={(v) => v && setChartView(v as ChartView)} className="bg-muted/50 rounded-lg p-0.5">
