@@ -27,8 +27,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               className="w-10 h-10 rounded-full"
             />
             <div>
-              <h1 className="text-sm font-bold text-foreground leading-tight">BMW Workforce</h1>
-              <p className="text-xs text-muted-foreground">Oracle</p>
+              <h1 className="text-sm font-bold text-foreground leading-tight">BMW Scenario</h1>
+              <p className="text-xs text-muted-foreground">Simulator</p>
             </div>
           </div>
         </div>
