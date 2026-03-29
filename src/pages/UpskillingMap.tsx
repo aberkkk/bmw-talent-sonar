@@ -59,8 +59,8 @@ export default function UpskillingMap() {
   return (
     <div className="animate-fade-in">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Upskilling Map</h1>
-        <p className="text-muted-foreground text-sm mt-1">Individual career progression paths & skill gaps</p>
+        <h1 className="text-2xl font-bold">{t("upskill.title")}</h1>
+        <p className="text-muted-foreground text-sm mt-1">{t("upskill.subtitle")}</p>
       </div>
 
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
