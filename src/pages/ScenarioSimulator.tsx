@@ -219,17 +219,28 @@ export default function ScenarioSimulator() {
             </div>
           </div>
         </div>
-        <button
-          onClick={() => setCompareMode(!compareMode)}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all border ${
-            compareMode
-              ? "btn-gradient text-primary-foreground border-transparent"
-              : "bg-secondary text-secondary-foreground border-border hover:border-primary/40"
-          }`}
-        >
-          <GitCompareArrows className="w-4 h-4" />
-          {compareMode ? "Exit Compare" : "Compare Two Employees"}
-        </button>
+        <div className="flex items-center gap-2">
+          {latestWithScenarios && latestEmployee && (
+            <button
+              onClick={exportPdf}
+              className="px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all border bg-secondary text-secondary-foreground border-border hover:border-primary/40"
+            >
+              <Download className="w-4 h-4" />
+              Export PDF
+            </button>
+          )}
+          <button
+            onClick={() => setCompareMode(!compareMode)}
+            className={`px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all border ${
+              compareMode
+                ? "btn-gradient text-primary-foreground border-transparent"
+                : "bg-secondary text-secondary-foreground border-border hover:border-primary/40"
+            }`}
+          >
+            <GitCompareArrows className="w-4 h-4" />
+            {compareMode ? "Exit Compare" : "Compare Two Employees"}
+          </button>
+        </div>
       </div>
 
       {compareMode ? (
