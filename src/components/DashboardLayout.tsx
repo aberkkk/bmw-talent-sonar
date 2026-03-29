@@ -91,7 +91,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               }`}
               aria-label="Deutsch"
             >
-              <span className="text-base leading-none">🇩🇪</span>
               DE
             </button>
           </div>
