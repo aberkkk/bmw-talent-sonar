@@ -14,6 +14,7 @@ type ChartView = "bar" | "gap" | "trend" | "scatter";
 
 export default function CompensationPulse() {
   const { employees } = useEmployees();
+  const { t } = useLanguage();
   const colors = useChartColors();
   const [chartView, setChartView] = useState<ChartView>("bar");
 
