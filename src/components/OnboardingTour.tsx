@@ -142,7 +142,7 @@ export default function OnboardingTour({ active, onEnd }: Props) {
           <div className="flex gap-2">
             {step > 0 && (
               <button onClick={() => setStep(s => s - 1)} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 flex items-center gap-1 transition-colors">
-                <ChevronLeft className="w-3 h-3" /> Back
+                <ChevronLeft className="w-3 h-3" /> {t("tour.prev")}
               </button>
             )}
             <button
