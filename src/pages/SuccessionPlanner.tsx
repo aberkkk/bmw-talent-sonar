@@ -75,7 +75,7 @@ export default function SuccessionPlanner() {
                   return (
                     <div key={emp.id} className={`${r.bg} border ${r.border} rounded-xl p-4 card-glow`}>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs text-muted-foreground font-medium">#{i + 1} Successor</span>
+                        <span className="text-xs text-muted-foreground font-medium">#{i + 1} {t("succession.successor")}</span>
                         <span className={`text-xs font-semibold ${r.text}`}>{r.label}</span>
                       </div>
                       <h4 className="font-semibold text-card-foreground">{emp.name}</h4>
