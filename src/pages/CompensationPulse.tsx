@@ -154,8 +154,8 @@ export default function CompensationPulse() {
   return (
     <div className="animate-fade-in">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Compensation Pulse</h1>
-        <p className="text-muted-foreground text-sm mt-1">Salary benchmarking & market alignment</p>
+        <h1 className="text-2xl font-bold">{t("comp.title")}</h1>
+        <p className="text-muted-foreground text-sm mt-1">{t("comp.subtitle")}</p>
       </div>
 
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex gap-3 items-start">
