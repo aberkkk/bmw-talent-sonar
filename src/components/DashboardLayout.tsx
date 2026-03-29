@@ -79,7 +79,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               }`}
               aria-label="English"
             >
-              <span className="text-base leading-none">🇬🇧</span>
+              
               EN
             </button>
             <button
