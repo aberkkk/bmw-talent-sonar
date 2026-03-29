@@ -300,7 +300,7 @@ export default function ScenarioSimulator() {
                               <div className="grid grid-cols-2 gap-3">
                                 <div className="bg-muted/30 rounded-xl p-3 text-center">
                                   <p className={`text-2xl font-extrabold ${probColor}`}>{s.probability}%</p>
-                                  <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wide">Success Rate</p>
+                                  <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wide">{t("scenario.successRate")}</p>
                                 </div>
                                 <div className="bg-muted/30 rounded-xl p-3 text-center">
                                   <p className="text-2xl font-extrabold text-foreground">{s.cost}</p>
