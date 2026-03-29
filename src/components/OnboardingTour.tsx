@@ -152,7 +152,7 @@ export default function OnboardingTour({ active, onEnd }: Props) {
               }}
               className="px-3 py-1.5 rounded-lg text-xs font-bold btn-gradient text-primary-foreground flex items-center gap-1"
             >
-              {step < TOUR_STEPS.length - 1 ? <>Next <ChevronRight className="w-3 h-3" /></> : "Finish"}
+              {step < TOUR_STEPS.length - 1 ? <>{t("tour.next")} <ChevronRight className="w-3 h-3" /></> : t("tour.close")}
             </button>
           </div>
         </div>
